@@ -1,0 +1,38 @@
+﻿@model Roulette.Models.TableModel
+
+@{
+    ViewBag.Title = "Roulette";
+}
+
+@section Head
+{
+    
+     <script type="text/javascript" src="/Scripts/stake.js"></script>
+    <script type="text/javascript">
+
+       /* function getStakes() {
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: '/Stake/GetStakes',
+                    contentType: 'application/json',
+                    success: function (stakeJSON) {
+                        stakes = $.parseJSON(stakeJSON);
+                        getStakes();
+                    }
+                });
+            }, 5000);
+        }
+
+        $(function () {
+            getStakes();
+        });*/
+
+    </script>
+}
+
+<div id="user-board">
+<div id="centered-div">
+@Html.Partial("_Board",Model)
+</div>
+</div>

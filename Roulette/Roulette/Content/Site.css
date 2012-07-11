@@ -290,10 +290,15 @@ table th {
 /* Roulette board styles
 ----------------------------------------------------------*/
 
-.roulette-board
+#admin-board,#user-board
 {
-    margin-left:100px;
-    margin-top:100px;
+    text-align:center;
+}
+
+#centered-div
+{
+    margin:0 auto;
+    display:inline-block;
 }
 
 .roulette-board tr,.roulette-board td
@@ -302,6 +307,29 @@ table th {
     background: url('/img/green-texture.jpg');
 }
 
+#zero
+{
+    height:120px;
+    width:60px;
+    background: url('/img/green-texture.jpg');
+    margin-top:20px;
+    float:left;
+    border-radius:61px 0 0 61px;
+    border-left: 1px solid #FFE399;
+    border-top: 1px solid #FFE399;
+    border-bottom: 1px solid #FFE399;
+    position:relative;
+}
+
+#zero .round
+{
+    position:absolute;
+    top:35px;
+    left:12px;
+    line-height:40px;
+}
+
+
 .roulette-board td
 {
     width:40px;
@@ -309,6 +337,7 @@ table th {
     text-align:center;
     line-height:40px;
     font-size:18px;
+    position:relative;
 }
 
 .roulette-board tr:not(.reverse) td
@@ -359,6 +388,54 @@ table th {
 .reverse .black div.round
 {
     background-color:Black;
+}
+
+.roulette-chips
+{
+    margin-top:50px;
+}
+
+div[class^="chip-"],div[class^="chip-"] img
+{
+    width:20px;
+    height:20px;
+}
+
+div[class^="chip-"] img
+{
+    vertical-align:top;
+}
+
+.roulette-chips div[class^="chip-"]
+{
+    margin-right:10px;
+    cursor:pointer;
+    display:inline-block;
+}
+
+.roulette-board td.highlighted
+{
+    background:#228F22;
+}
+
+#zero.highlighted
+{
+    background:#228F22;
+}
+
+.highlighted div.round
+{
+    color:Yellow;
+}
+
+.selected
+{
+    opacity:0.5;
+}
+
+#buttons
+{
+    margin:0 0 10px 500px;
 }
 
 
