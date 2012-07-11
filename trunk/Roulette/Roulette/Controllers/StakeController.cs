@@ -27,10 +27,17 @@ namespace Roulette.Controllers
         }
 
         [HttpPost]
-        public JsonResult RefreshStakes(StakeDTO[] stakes)
+        [ValidateInput(false)]
+        public JsonResult RememberCurrentState(string currentState)
         {
-            Stakes = stakes != null ? stakes.ToList() : new List<StakeDTO>();
+            BoardCurrentState = currentState.Replace("highlighted","");
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public string GetStakes()
+        {
+            return BoardCurrentState;
         }
 
     }

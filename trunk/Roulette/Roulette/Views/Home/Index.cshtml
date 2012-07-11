@@ -7,26 +7,35 @@
 @section Head
 {
     
-     <script type="text/javascript" src="/Scripts/stake.js"></script>
     <script type="text/javascript">
 
-       /* function getStakes() {
+        function getStakes() {
             setTimeout(function () {
                 $.ajax({
                     type: "POST",
                     url: '/Stake/GetStakes',
-                    contentType: 'application/json',
-                    success: function (stakeJSON) {
-                        stakes = $.parseJSON(stakeJSON);
+                    success: function (stakes) {
+                        drawStakes(stakes);
                         getStakes();
                     }
                 });
-            }, 5000);
+            }, 200);
+        }
+
+        function drawStakes(stakes) {
+            if (stakes != "") {
+                if($("#centered-div").html() != stakes)
+                        $("#centered-div").html(stakes);
+            }
+            else {
+                $('.roulette-board div.chip').remove();
+                $('#zero div.chip').remove();
+            }
         }
 
         $(function () {
             getStakes();
-        });*/
+        });
 
     </script>
 }

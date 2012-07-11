@@ -19,10 +19,5 @@ namespace Roulette.Controllers
             };
             return View(model);
         }
-
-        public JsonResult GetStakes()
-        {
-            return Json(Stakes);
-        }
     }
 }
