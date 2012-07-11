@@ -12,11 +12,11 @@ namespace Roulette.Controllers
     public class ControllerBase : Controller
     {
         protected UnitOfWork Unit { get; private set; }
-        protected static List<StakeDTO> Stakes { get; set; }
+        protected static string BoardCurrentState { get; set; }
 
         static ControllerBase()
         {
-            Stakes = new List<StakeDTO>();
+            BoardCurrentState = "";
         }
 
         public ControllerBase()

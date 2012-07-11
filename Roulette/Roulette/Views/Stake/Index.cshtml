@@ -10,18 +10,26 @@
      <script type="text/javascript" src="/Scripts/stake.js"></script>
      <script type="text/javascript">
          $(function () {
+
+             $.ajax({
+                 type: "POST",
+                 url: '/Stake/RememberCurrentState',
+                 data: { currentState: "" }
+             });
+
              $("#cancel-button").click(function () {
                  stakes = new Array();
                  $.ajax({
                      type: "POST",
-                     url: '/Stake/RefreshStakes',
-                     contentType: 'application/json',
-                     data: JSON.stringify(stakes),
+                     url: '/Stake/RememberCurrentState',
+                     data: { currentState: "" },
                      success: function () {
-                         $('.roulette-board div[class^="chip-"]').remove();
+                         $('.roulette-board div.chip').remove();
+                         $('#zero div.chip').remove();
                      }
                  });
              });
+
              $("#submit-button").click(function () {
                  alert(stakes[0].Id + " " + stakes[0].Price + " " + stakes[0].Type);
                  $.ajax({
@@ -48,16 +56,16 @@
 </div>
 
 <div class="roulette-chips">
-<div class="chip-1" data-value="1">
+<div class="chip" data-value="1">
 <img src="/img/test-image.gif" alt="1"/>
 </div>
-<div class="chip-2" data-value="2">
+<div class="chip" data-value="2">
 <img src="/img/test-image.gif" alt="2"/>
 </div>
-<div class="chip-5" data-value="5">
+<div class="chip" data-value="5">
 <img src="/img/test-image.gif" alt="5"/>
 </div>
-<div class="chip-10" data-value="10">
+<div class="chip" data-value="10">
 <img src="/img/test-image.gif" alt="10"/>
 </div>
 </div>

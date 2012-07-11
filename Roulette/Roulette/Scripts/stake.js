@@ -10,7 +10,7 @@ function ContainStakesId(id, type) {
 }
 
 $(function () {
-    $('div[class^="chip-"]').click(function () {
+    $('div.chip').click(function () {
         $(this).siblings().removeClass("selected");
         if ($(this).hasClass("selected"))
             $(this).removeClass("selected");
@@ -175,31 +175,28 @@ $(function () {
 
             stakes.push({ Id: id, Price: $(".selected").data("value"), Type: type });
 
-            var elem = $(this);
+            if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6) {
+                $(".highlighted").eq(0).append(element);
+            }
+            else if ($(this).hasClass("number") && $(".highlighted").length == 3) {
+                if ($(".highlighted").eq(0).attr("id") != "zero") {
+                    $(".highlighted").eq(1).append(element);
+                }
+                else {
+                    $(".highlighted").eq(2).append(element);
+                }
+            }
+            else if ($(this).hasClass("number") && $(".highlighted").length == 6) {
+                $(".highlighted").eq(4).append(element);
+            }
+            else {
+                $(this).append(element);
+            }
+
             $.ajax({
                 type: "POST",
-                url: '/Stake/RefreshStakes',
-                contentType: 'application/json',
-                data: JSON.stringify(stakes),
-                success: function () {
-                    if (elem.hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6) {
-                        $(".highlighted").eq(0).append(element);
-                    }
-                    else if (elem.hasClass("number") && $(".highlighted").length == 3) {
-                        if ($(".highlighted").eq(0).attr("id") != "zero") {
-                            $(".highlighted").eq(1).append(element);
-                        }
-                        else {
-                            $(".highlighted").eq(2).append(element);
-                        }
-                    }
-                    else if (elem.hasClass("number") && $(".highlighted").length == 6) {
-                        $(".highlighted").eq(4).append(element);
-                    }
-                    else {
-                        elem.append(element);
-                    }
-                }
+                url: '/Stake/RememberCurrentState',
+                data: {currentState : $("#centered-div").html()}
             });
 
 

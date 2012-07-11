@@ -9,7 +9,7 @@ namespace Domain.Helpers
     {
         public byte Id { get; set; }
         public int Price { get; set; }
-        public TypesEnum Type { get; set; }
+        public string Type { get; set; }
     }
 
     public enum TypesEnum

@@ -395,18 +395,18 @@ table th {
     margin-top:50px;
 }
 
-div[class^="chip-"],div[class^="chip-"] img
+div.chip,div.chip img
 {
     width:20px;
     height:20px;
 }
 
-div[class^="chip-"] img
+div.chip img
 {
     vertical-align:top;
 }
 
-.roulette-chips div[class^="chip-"]
+.roulette-chips div.chip
 {
     margin-right:10px;
     cursor:pointer;
