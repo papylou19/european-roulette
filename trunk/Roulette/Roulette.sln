@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roulette", "Roulette\Roulette.csproj", "{8AE1E122-A897-4D2E-9ABE-812C197E9EDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{DA2641E6-BC39-4FB8-B8EE-C2BDD06E46C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{13270EB2-F59A-4CFF-9F37-D5AD59D7E618}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AE1E122-A897-4D2E-9ABE-812C197E9EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AE1E122-A897-4D2E-9ABE-812C197E9EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AE1E122-A897-4D2E-9ABE-812C197E9EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AE1E122-A897-4D2E-9ABE-812C197E9EDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA2641E6-BC39-4FB8-B8EE-C2BDD06E46C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA2641E6-BC39-4FB8-B8EE-C2BDD06E46C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA2641E6-BC39-4FB8-B8EE-C2BDD06E46C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA2641E6-BC39-4FB8-B8EE-C2BDD06E46C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13270EB2-F59A-4CFF-9F37-D5AD59D7E618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13270EB2-F59A-4CFF-9F37-D5AD59D7E618}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13270EB2-F59A-4CFF-9F37-D5AD59D7E618}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13270EB2-F59A-4CFF-9F37-D5AD59D7E618}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

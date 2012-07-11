@@ -5,16 +5,12 @@
 
 
     $.fn.highlight = function () {
-        $(this).find("div.round").css("color", "yellow");
-        $(this).css("background", "#228F22");
+        $(this).addClass("highlighted");
     };
 
 
     function ClearHighlight() {
-        $(".roulette-board td").find("div.round").css("color", "White");
-        $(".roulette-board td").css("background", "url('/img/green-texture.jpg')");
-        //$(".roulette-board td.black").find("div.round").css("background-color", "black");
-       // $(".roulette-board td.red").find("div.round").css("background-color", "red");
+        $(".highlighted").removeClass("highlighted");
     }
 
     function HighlightCellsWithColor(color) {
@@ -48,6 +44,14 @@
         ClearHighlight();
     });
 
+    $("#zero").mouseleave(function (e) {
+        ClearHighlight();
+    });
+
+    $("#zero").mousemove(function (e) {
+        $("#zero").highlight();
+    });
+
     $(".roulette-board tr").mousemove(function (e) {
         var x = e.pageX - $(this).offset().left;
         var y = e.pageY - $(this).offset().top;
@@ -61,11 +65,12 @@
             if (parseInt(pointX) == 12) {
                 HighlightCellsGroup($(this), 0, 12);
             }
-            else if (Math.abs(pointX - parseInt(pointX)) > 0.85) {
+            else if (Math.abs(pointX - parseInt(pointX)) > 0.8) {
                 HighlightCells($(this), parseInt(pointX), parseInt(pointX) + 2, pointX, pointY, index, 11);
             }
-            else if (Math.abs(pointX - parseInt(pointX)) < 0.15) {
+            else if (Math.abs(pointX - parseInt(pointX)) < 0.2) {
                 HighlightCells($(this), parseInt(pointX) - 1 < 0 ? 0 : parseInt(pointX) - 1, parseInt(pointX) + 1, pointX, pointY, index, 11);
+                if (parseInt(pointX) == 0) $("#zero").highlight();
             }
             else {
                 HighlightCells($(this), parseInt(pointX), parseInt(pointX) + 1, pointX, pointY, index, 12);

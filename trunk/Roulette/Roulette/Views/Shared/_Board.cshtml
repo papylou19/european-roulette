@@ -1,34 +1,28 @@
 ﻿@model Roulette.Models.TableModel
 
-@{
-    ViewBag.Title = "Home Page";
-}
-
-@section Head
-{
-     <script type="text/javascript" src="/Scripts/highlighter.js"></script>
-}
-
+<div id="zero" class="reverse">
+<div class="round">0</div>
+</div>
 
 <table class="roulette-board">
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-1].Color ? "red" : "black")'><div class="round">@Model.Colors[i * 3 - 1].Number</div></td>
+    <td class='@(Model.Colors[i*3-1].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 1].Number</div></td>
 }
 <td><div>2to1</div></td>
 </tr>
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-2].Color ? "red" : "black")'><div class="round">@Model.Colors[i * 3 - 2].Number</div></td>
+    <td class='@(Model.Colors[i*3-2].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 2].Number</div></td>
 }
 <td><div>2to1</div></td>
 </tr>
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-3].Color ? "red" : "black")'><div class="round">@Model.Colors[i * 3 - 3].Number</div></td>
+    <td class='@(Model.Colors[i*3-3].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 3].Number</div></td>
 }
 <td><div>2to1</div></td>
 </tr>
