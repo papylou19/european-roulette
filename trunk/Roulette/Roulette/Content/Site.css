@@ -301,10 +301,14 @@ table th {
     display:inline-block;
 }
 
-.roulette-board tr,.roulette-board td
+.roulette-board tr
+{
+    background: url('/img/green-texture.jpg');
+}
+
+.roulette-board td
 {
     border:1px solid #FFE399;
-    background: url('/img/green-texture.jpg');
 }
 
 #zero
@@ -329,7 +333,11 @@ table th {
     line-height:40px;
 }
 
-
+.roulette-board
+{
+    float:left;
+    border: 0;
+}
 .roulette-board td
 {
     width:40px;
@@ -338,14 +346,16 @@ table th {
     line-height:40px;
     font-size:18px;
     position:relative;
+    padding: 0;
 }
+
 
 .roulette-board tr:not(.reverse) td
 {
     font-size:24px;
 }
 
-.reverse div
+.reverse .round
 {
     -moz-transform:rotate(270deg); 
     -webkit-transform: rotate(270deg);
@@ -359,8 +369,12 @@ table th {
     border-radius:22px;
     border:2px White solid;
 }
-
-.black-all div
+.push-item
+{
+    position: relative;
+    padding: 5px;
+}
+.black-all .push-item .black-iamge
 {
     background-color:Black;
     width:40px;
@@ -370,7 +384,7 @@ table th {
     border:2px White solid;
 }
 
-.red-all div
+.red-all .push-item .red-iamge
 {
     background-color:#DF1111;
     width:40px;

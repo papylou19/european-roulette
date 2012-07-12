@@ -174,29 +174,28 @@ $(function () {
             });
 
             stakes.push({ Id: id, Price: $(".selected").data("value"), Type: type });
-
             if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6) {
-                $(".highlighted").eq(0).append(element);
+                $(".highlighted").eq(0).children(".push-item").eq(0).append(element);
             }
             else if ($(this).hasClass("number") && $(".highlighted").length == 3) {
                 if ($(".highlighted").eq(0).attr("id") != "zero") {
-                    $(".highlighted").eq(1).append(element);
+                    $(".highlighted").eq(1).children(".push-item").eq(0).append(element);
                 }
                 else {
-                    $(".highlighted").eq(2).append(element);
+                    $(".highlighted").eq(2).children(".push-item").eq(0).append(element);
                 }
             }
             else if ($(this).hasClass("number") && $(".highlighted").length == 6) {
-                $(".highlighted").eq(4).append(element);
+                $(".highlighted").eq(4).children(".push-item").eq(0).append(element);
             }
             else {
-                $(this).append(element);
+                $(this).children(".push-item").eq(0).append(element);
             }
 
             $.ajax({
                 type: "POST",
                 url: '/Stake/RememberCurrentState',
-                data: {currentState : $("#centered-div").html()}
+                data: { currentState: $("#centered-div").html() }
             });
 
 
