@@ -14,6 +14,7 @@
                 $.ajax({
                     type: "POST",
                     url: '/Stake/GetStakes',
+                    dataType: 'html',
                     success: function (stakes) {
                         drawStakes(stakes);
                         getStakes();
@@ -23,6 +24,7 @@
         }
 
         function drawStakes(stakes) {
+            
             if (stakes != "") {
                 if($("#centered-div").html() != stakes)
                         $("#centered-div").html(stakes);

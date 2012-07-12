@@ -1,42 +1,42 @@
 ﻿@model Roulette.Models.TableModel
 
 <div id="zero" class="reverse">
-<div class="round">0</div>
+<div class="push-item"><div class="round">0</div></div>
 </div>
 
 <table class="roulette-board">
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-1].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 1].Number</div></td>
+    <td class='@(Model.Colors[i*3-1].Color ? "red" : "black") number'><div class="push-item"><div class="round">@Model.Colors[i * 3 - 1].Number</div></div></td>
 }
-<td><div>2to1</div></td>
+<td><div class="push-item"><div>2to1</div></div></td>
 </tr>
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-2].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 2].Number</div></td>
+    <td class='@(Model.Colors[i*3-2].Color ? "red" : "black") number'><div class="push-item"><div class="round">@Model.Colors[i * 3 - 2].Number</div></div></td>
 }
-<td><div>2to1</div></td>
+<td><div class="push-item"><div>2to1</div></div></td>
 </tr>
 <tr class="reverse">
 @for (int i = 1; i <= Model.Colors.Length / 3; i++)
 {
-    <td class='@(Model.Colors[i*3-3].Color ? "red" : "black") number'><div class="round">@Model.Colors[i * 3 - 3].Number</div></td>
+    <td class='@(Model.Colors[i*3-3].Color ? "red" : "black") number'><div class="push-item "><div class="round">@Model.Colors[i * 3 - 3].Number</div></div></td>
 }
-<td><div>2to1</div></td>
+<td><div class="push-item"><div>2to1</div></div></td>
 </tr>
 <tr>
-<td colspan="4">1st 12</td>
-<td colspan="4">2nd 12</td>
-<td colspan="4">3rd 12</td>
+<td colspan="4"><div class="push-item">1st 12</div></td>
+<td colspan="4"><div class="push-item">2nd 12</div></td>
+<td colspan="4"><div class="push-item">3rd 12</div></td>
 </tr>
 <tr>
-<td colspan="2">1 to 18</td>
-<td colspan="2">Even</td>
-<td colspan="2" class="black-all"><div></div></td>
-<td colspan="2" class="red-all"><div></div></td>
-<td colspan="2">Odd</td>
-<td colspan="2">19 to 36</td>
+<td colspan="2"><div class="push-item">1 to 18</div></td>
+<td colspan="2"><div class="push-item">Even</div></td>
+<td colspan="2" class="black-all"><div class="push-item"><div class="black-iamge"></div></div></td>
+<td colspan="2" class="red-all"><div class="push-item"><div class="red-iamge"></div></div></td>
+<td colspan="2"><div class="push-item">Odd</div></td>
+<td colspan="2"><div class="push-item">19 to 36</div></td>
 </tr>
 </table>
