@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Roulette.Models;
 using System.Web.Helpers;
 using Domain.Helpers;
+using Domain;
 
 namespace Roulette.Controllers
 {
@@ -18,6 +19,19 @@ namespace Roulette.Controllers
                 Colors = InitializeColors()
             };
             return View(model);
+        }
+
+        public JsonResult GetCurrentState()
+        {
+            GameState state = Unit.RouletteSrvc.GetCurrentState();
+            if (state == null || state.State == 1)
+            {
+                BoardCurrentState = "";
+            }
+            if (state != null)
+                return Json(new { State = state.State, StartTime = state.StartTime.ToString() });
+            else
+                return null;
         }
     }
 }

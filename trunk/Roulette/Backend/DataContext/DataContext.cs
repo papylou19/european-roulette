@@ -10,7 +10,9 @@ namespace Backend.DataContext
     public class RouletteContext : DbContext
     {
         public DbSet<Stake> Stakes { get; set; }
+        public DbSet<Game> Games { get; set; }
         public DbSet<Identities> Identities { get; set; }
+        public DbSet<GameState> GameStates { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
