@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
-    [Table("Game")]
-    public class Game
+    public class GameState
     {
+        [Key]
         public int Id { get; set; }
-        public byte? Number { get; set; }
+        public short State { get; set; }
+        public DateTime StartTime { get; set; }
     }
 }

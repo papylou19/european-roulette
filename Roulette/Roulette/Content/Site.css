@@ -452,5 +452,128 @@ div.chip img
     margin:0 0 10px 500px;
 }
 
+#user-board #board 
+{
+    float:right;
+}
+
+#user-board #roulette
+{
+    float:left;
+}
+
+#main-table
+{
+    min-width:1150px;
+    margin-top:40px;
+}
 
 
+/* Roulette styles
+----------------------------------------------------------*/
+
+#roulette
+{
+    position:relative;
+    width:380px;
+    height:380px;
+}
+
+.roulette-wheel
+{
+    position:absolute;
+    top:72px;
+    left:75px;
+}
+
+#ball
+{
+    position:absolute;
+    top:0;
+    left:0;
+    width:10px;
+    height:10px;
+    display:none;
+}
+
+/* Progress bar
+----------------------------------------------------------*/
+
+.progress-bar
+{
+    text-align:right;
+}
+
+.progress-bar progress {
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	/* gets rid of default border in Firefox and Opera. */
+	border: solid #cccccc 4px;
+	border-radius: 10px;
+	/* Dimensions */
+	width: 145px;
+	height: 25px;
+}
+
+/* Polyfill */
+.progress-bar progress[role]:after {
+	background-image: none; /* removes default background from polyfill */
+}
+
+/*
+ * Background of the progress bar background
+ */
+
+/* Firefox and Polyfill */
+.progress-bar progress {
+	background: #cccccc; 
+}
+
+/* Chrome */
+.progress-bar progress::-webkit-progress-bar {
+	background: #cccccc;
+}
+
+/*
+ * Background of the progress bar value
+ */
+
+/* Firefox */
+.progress-bar progress::-moz-progress-bar {
+border-radius: 5px;
+	background-image: -moz-linear-gradient(
+		-45deg,
+		rgba(255, 255, 255, .2) 25%,
+		transparent 25%,
+		transparent 50%,
+		rgba(255, 255, 255, .2) 50%,
+		rgba(255, 255, 255, .2) 75%,
+		transparent 75%,
+		transparent
+	);
+}
+
+/* Chrome */
+.progress-bar progress::-webkit-progress-value {
+	border-radius: 5px;
+	background-image: -webkit-gradient(linear, 0 0, 100% 100%,
+		color-stop(.25, rgba(255, 255, 255, .2)),
+		color-stop(.25, transparent), color-stop(.5, transparent),
+		color-stop(.5, rgba(255, 255, 255, .2)),
+		color-stop(.75, rgba(255, 255, 255, .2)),
+		color-stop(.75, transparent), to(transparent)
+	);
+	background-image: -webkit-linear-gradient(
+		-45deg,
+		rgba(255, 255, 255, .2) 25%,
+		transparent 25%,
+		transparent 50%,
+		rgba(255, 255, 255, .2) 50%,
+		rgba(255, 255, 255, .2) 75%,
+		transparent 75%,
+		transparent
+	);
+}

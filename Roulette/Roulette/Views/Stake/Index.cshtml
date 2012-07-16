@@ -9,6 +9,24 @@
      <script type="text/javascript" src="/Scripts/highlighter.js"></script>
      <script type="text/javascript" src="/Scripts/stake.js"></script>
      <script type="text/javascript">
+         function getStakes() {
+             setTimeout(function () {
+                 $.ajax({
+                     type: "POST",
+                     url: '/Stake/GetStakes',
+                     dataType: 'html',
+                     success: function (stakesList) {
+                         if (stakesList == "") {
+                             $('.roulette-board div.chip').remove();
+                             $('#zero div.chip').remove();
+                             stakes = new Array();
+                         }
+                         getStakes();
+                     }
+                 });
+             }, 1000);
+         }
+
          $(function () {
 
              $.ajax({
@@ -31,15 +49,15 @@
              });
 
              $("#submit-button").click(function () {
-                 alert(stakes[0].Id + " " + stakes[0].Price + " " + stakes[0].Type);
                  $.ajax({
                      type: "POST",
                      url: '/Stake/CreateStake',
                      contentType: 'application/json',
                      data: JSON.stringify(stakes)
                  });
-                 
              });
+
+             getStakes();
          });
      </script>
 }
@@ -69,5 +87,4 @@
 <img src="/img/test-image.gif" alt="10"/>
 </div>
 </div>
-
 </div>

@@ -21,7 +21,7 @@ namespace Domain
         public DateTime? PaymentDate { get; set; }
         public int GameId { get; set; }
 
-        [ForeignKey("Id")]
-        public Game Game { get; set; }
+        [ForeignKey("GameId")]
+        public virtual Game Game { get; set; }
     }
 }

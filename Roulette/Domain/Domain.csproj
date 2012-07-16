@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game.cs" />
+    <Compile Include="GameState.cs" />
     <Compile Include="Helpers\Stakes.cs" />
     <Compile Include="Identities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
