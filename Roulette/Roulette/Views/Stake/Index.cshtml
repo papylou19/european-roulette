@@ -28,7 +28,6 @@
          }
 
          $(function () {
-
              $.ajax({
                  type: "POST",
                  url: '/Stake/RememberCurrentState',
@@ -49,12 +48,19 @@
              });
 
              $("#submit-button").click(function () {
+
                  $.ajax({
                      type: "POST",
                      url: '/Stake/CreateStake',
                      contentType: 'application/json',
-                     data: JSON.stringify(stakes)
+                     data: JSON.stringify(stakes),
+                     success: function () {
+                        
+
+                     }
                  });
+                 return true;
+
              });
 
              getStakes();
@@ -66,11 +72,12 @@
 
 <div id="buttons">
 <input type="button" value="Clear" id="cancel-button"/>
-<input type="button" value="Submit" id="submit-button"/>
+@*<input type="button" value="Submit" id="submit-button" />*@
+<a id="submit-button" href="/checkPage.htm" target=_blank>Submit</a>
 </div>
 
 <div id="centered-div">
-@Html.Partial("_Board",Model)
+@Html.Partial("_Board", Model)
 </div>
 
 <div class="roulette-chips">

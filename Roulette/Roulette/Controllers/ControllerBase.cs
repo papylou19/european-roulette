@@ -6,22 +6,30 @@ using System.Web.Mvc;
 using Backend;
 using Domain.Helpers;
 using Roulette.Models;
+using System.Web.Security;
 
 namespace Roulette.Controllers
 {
     public class ControllerBase : Controller
     {
         protected UnitOfWork Unit { get; private set; }
-        protected static string BoardCurrentState { get; set; }
-
+        protected static Dictionary<string, string> BoardCurrentStates { get; set; }
         static ControllerBase()
         {
-            BoardCurrentState = "";
+            BoardCurrentStates = new Dictionary<string, string>();
         }
 
         public ControllerBase()
         {
             Unit = new UnitOfWork();
+        }
+
+        public string CurrentUserName
+        {
+            get
+            {
+                return User.Identity.Name;
+            }
         }
 
         protected ColorField[] InitializeColors()

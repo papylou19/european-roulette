@@ -8,6 +8,7 @@ using Domain.Helpers;
 
 namespace Roulette.Controllers
 {
+    [Authorize]
     public class StakeController : ControllerBase
     {
         public ActionResult Index()
@@ -26,18 +27,36 @@ namespace Roulette.Controllers
             return Json(new { success = success });
         }
 
+        //[HttpPost]
+        //[ValidateInput(false)]
+        public ActionResult Check()
+        {
+            CheckModel model = new CheckModel();
+            model.CurrentStake = BoardCurrentStates[CurrentUserName];
+           return View(model);
+        }
+
         [HttpPost]
         [ValidateInput(false)]
         public JsonResult RememberCurrentState(string currentState)
         {
-            BoardCurrentState = currentState.Replace("highlighted","");
+            if (!BoardCurrentStates.ContainsKey(CurrentUserName))
+            {
+                BoardCurrentStates.Add(CurrentUserName, "");
+            }
+            BoardCurrentStates[CurrentUserName] = currentState.Replace("highlighted", "");
             return Json(new { success = true });
         }
 
         [HttpPost]
         public string GetStakes()
         {
-            return BoardCurrentState;
+            if (!BoardCurrentStates.Keys.Contains(CurrentUserName))
+            {
+                return "";
+            }
+
+            return BoardCurrentStates[CurrentUserName];
         }
 
     }

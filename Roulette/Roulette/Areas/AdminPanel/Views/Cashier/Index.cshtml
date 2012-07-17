@@ -1,0 +1,51 @@
+﻿@model List<Roulette.Models.CashierModel>
+@{
+    ViewBag.Title = "Cashier";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<script type="text/javascript">
+    var oldusername;
+    var oldpassword;
+    $(document).ready(function () {
+        $(".disable-cashier").click(function () {
+            var text = $(this).text();
+            if (confirm('Are you sure to '+ text + ' user')) {
+                var id = $(this).attr("id").substring(3);
+                $.get('@Url.Action("Disable","Cashier")?id=' + id, function (data) {
+                    if (data.sucess) {
+                        location.reload();
+                    }
+                    else {
+                        alert("Please try again!")
+                    }
+                });
+            }
+        });
+    });
+</script>
+<div class="cashier-container">
+<h1>Cashier List</h1>
+<div class="sub-asdmin-menu"><a href="@Url.Action("Add", "Cashier")" class="edit-link">Add new cashier</a></div>
+    <table class="cashires-table">
+        <tr>
+             <td>Id</td>
+             <td>UserName</td>
+             <td>Percent</td>
+             <td></td>
+             <td></td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.UserName</td>
+                <td>@item.NumberPercent</td>
+                <td><a href="@Url.Action("Edit", "Cashier", new { id=item.Id})"  class="edit-cashier edit-link">Edit</a></td>
+                <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved? "Disable" : "Enable")</a></td>
+                
+            </tr>
+        }
+    </table>
+}
+
+</div>

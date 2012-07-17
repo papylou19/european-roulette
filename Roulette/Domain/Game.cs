@@ -9,7 +9,13 @@ namespace Domain
     [Table("Game")]
     public class Game
     {
+        [Key]
         public int Id { get; set; }
         public byte? Number { get; set; }
+        public int CashierId { get; set; }
+
+        [ForeignKey("CashierId")]
+        public virtual Cashier Cashier{get;set;}
+
     }
 }
