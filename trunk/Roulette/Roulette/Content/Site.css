@@ -251,7 +251,7 @@ table th {
 
 .input-validation-error {
     border: 1px solid #ff0000;
-    background-color: #ffeeee;
+    background-color: #F9C7BF;
 }
 
 .validation-summary-errors {
@@ -451,6 +451,25 @@ div.chip img
 {
     margin:0 0 10px 500px;
 }
+#submit-button,#cancel-button
+{
+     -webkit-box-shadow: 0px 0px 4px 0px #666;
+    -moz-box-shadow: 0px 0px 4px 0px #666;
+    box-shadow: 0px 0px 4px 0px #666; 
+    -webkit-border-radius: 4px;
+   -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #CCCCCC;
+    width: 100px;
+    text-align: center;
+    border:0;
+    cursor: pointer;
+   font-family: Arial;
+    color: #000000;
+    text-align: center;
+    display:inline-block;
+    text-decoration: none;
 
 #user-board #board 
 {
@@ -577,3 +596,71 @@ border-radius: 5px;
 		transparent
 	);
 }
+}
+
+#submit-button:hover,#cancel-button:hover
+{
+     -webkit-box-shadow: 0px 0px 0px 0px #fff;
+    -moz-box-shadow: 0px 0px 0px 0px #fff;
+    box-shadow: 0px 0px 0px 0px #fff;  
+}
+/*
+check
+---------------------------------------------------------------------------------------*/
+
+#check-centered-div
+{
+
+     transform: translate(-240px, 90px) scale(0.7) rotate(90deg);
+    -ms-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* IE 9 */
+    -webkit-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Safari and Chrome */
+    -o-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Opera */
+    -moz-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Firefox */
+    display: inline-block;
+     margin-top:70px;
+   
+}
+
+
+#check-centered-div table
+{
+    border: none;
+    border-collapse: collapse;
+    
+}
+#check-centered-div .roulette-board tr, #check-centered-div #zero
+{
+    background-image: none;
+    background-color: #DCDCDC;
+}
+
+#check-centered-div td,#check-centered-div #zero
+{
+    border:1px solid  #cccccc;
+}
+
+#check-centered-div .red div.round ,#check-centered-div  .red-iamge
+{
+    background-color: #FFFFFF;
+}
+
+#check-centered-div .black div.round ,#check-centered-div  .black-iamge
+{
+    background-color: #cccccc;
+}
+#check-centered-div #zero
+{
+    text-align: center;
+}
+
+#check-centered-div
+{
+    color: #000000;
+}
+
+
+
+
+
+
+

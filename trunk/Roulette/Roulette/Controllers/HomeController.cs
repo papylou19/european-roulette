@@ -10,6 +10,7 @@ using Domain;
 
 namespace Roulette.Controllers
 {
+      [Authorize]
     public class HomeController : ControllerBase
     {
         public ActionResult Index()
@@ -26,7 +27,11 @@ namespace Roulette.Controllers
             GameState state = Unit.RouletteSrvc.GetCurrentState();
             if (state == null || state.State == 1)
             {
-                BoardCurrentState = "";
+                if (!BoardCurrentStates.ContainsKey(CurrentUserName))
+                {
+                    BoardCurrentStates.Add(CurrentUserName, "");
+                }
+                BoardCurrentStates[CurrentUserName] = "";
             }
             if (state != null)
                 return Json(new { State = state.State, StartTime = state.StartTime.ToString() });

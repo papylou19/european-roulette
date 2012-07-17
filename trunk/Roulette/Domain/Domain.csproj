@@ -44,10 +44,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cashier.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Helpers\Stakes.cs" />
     <Compile Include="Identities.cs" />
+    <Compile Include="MemberShip\ASP_Membership.cs" />
+    <Compile Include="MemberShip\Asp_User.cs" />
+    <Compile Include="MemberShip\Role.cs" />
+    <Compile Include="MemberShip\UsersInRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stake.cs" />
   </ItemGroup>

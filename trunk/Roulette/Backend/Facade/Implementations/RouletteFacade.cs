@@ -112,5 +112,79 @@ namespace Backend.Facade.Implementations
                 return false;
             }
         }
+
+
+        public bool AddCashier(int percent,Guid userId)
+        {
+            try
+            {
+                ctx.Cashiers.Add(new Cashier
+                {
+                    NumberPercent = percent,
+                    UserId =userId
+                });
+
+                ctx.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+
+        public List<Cashier> GetAllCashier()
+        {
+            return ctx.Cashiers.ToList();
+        }
+
+
+        public bool DeleteCashier(int id)
+        {
+            try
+            {
+                var item = ctx.Cashiers.FirstOrDefault(m => m.Id == id);
+                ctx.Cashiers.Remove(item);
+                ctx.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public bool EditCashier(int id, string oldUserName,string newUserName, string password,int percent)
+        {
+            try
+            {
+                var cashier = ctx.Cashiers.FirstOrDefault(m => m.Id == id);
+                cashier.NumberPercent = percent;
+                cashier.User.UserName = newUserName;
+                cashier.User.LoweredUserName = newUserName.ToLower();
+                ctx.SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+        public Cashier GetCashierByUserName(string userName)
+        {
+            return ctx.Cashiers.FirstOrDefault(m => m.User.UserName == userName);
+        }
+
+
+        public Cashier GetCahierById(int id)
+        {
+            return ctx.Cashiers.FirstOrDefault(m => m.Id == id);
+        }
     }
 }
