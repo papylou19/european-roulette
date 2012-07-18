@@ -23,7 +23,7 @@ namespace Roulette.Controllers
         [HttpPost]
         public JsonResult CreateStake(StakeDTO[] stakes)
         {
-            bool success = Unit.RouletteSrvc.CreateStake(stakes);
+            bool success = Unit.RouletteSrvc.CreateStake(stakes,CurrentUserId);
             return Json(new { success = success });
         }
 

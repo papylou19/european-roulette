@@ -44,7 +44,14 @@ namespace Backend.Facade.Implementations
 
             if (current == null || current.State == 1)
             {
-                ctx.Games.Add(new Game());
+                var cashiers =  ctx.Cashiers.ToList();
+                foreach (var cashier in cashiers)
+                {
+                    ctx.Games.Add(new Game
+                    {
+                        CashierId = cashier.Id
+                    });
+                }
             }
 
             if (current == null)
@@ -59,8 +66,13 @@ namespace Backend.Facade.Implementations
             {
                     if (current.State == 1)
                     {
-                        ctx.Games.OrderByDescending(p=>p.Id).Take(1).FirstOrDefault().Number = Convert.ToByte(new Random().Next(1,37)); // HARD CODE
+                        var cashiers = ctx.Cashiers.ToList();
+                        foreach (var cashier in cashiers)
+                        {
+                            ctx.Games.Where(p=>p.CashierId == cashier.Id).OrderByDescending(p => p.Id).Take(1).FirstOrDefault().Number = Convert.ToByte(new Random().Next(1, 37)); // HARD CODE
+                        }
                     }
+
                     current.StartTime = DateTime.Now;
                     current.State = current.State != 1 ? Convert.ToInt16(current.State + 1) : Convert.ToInt16(0);
                     state = current.State;
@@ -77,8 +89,9 @@ namespace Backend.Facade.Implementations
             }
         }
 
-        public bool CreateStake(StakeDTO[] stakes)
+        public bool CreateStake(StakeDTO[] stakes,Guid userId)
         {
+            var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
             try
             {
                 foreach(StakeDTO stake in stakes)
@@ -91,7 +104,7 @@ namespace Backend.Facade.Implementations
                         Number = stake.Id,
                         Sum = stake.Price,
                         Type = stake.Type.ToString(),
-                        GameId = 1// HARD CODE
+                        GameId = ctx.Games.Where(p => p.CashierId == cashierId).OrderByDescending(p => p.Id).FirstOrDefault().Id
                     });
                 }
                 ctx.SaveChanges();
@@ -103,9 +116,10 @@ namespace Backend.Facade.Implementations
             }
         }
 
-        public Game[] GetLastHistory()
+        public Game[] GetLastHistory(Guid userId)
         {
-            return ctx.Games.Where(p=>p.Number != null).OrderByDescending(p => p.Id).Take(10).OrderBy(p => p.Id).ToArray();
+            var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
+            return ctx.Games.Where(p=>p.Number != null && p.CashierId == cashierId).OrderByDescending(p => p.Id).Take(10).OrderBy(p => p.Id).ToArray();
         }
 
 
@@ -122,7 +136,7 @@ namespace Backend.Facade.Implementations
                 ctx.SaveChanges();
                 return true;
             }
-            catch(Exception ex)
+            catch
             {
 
                 return false;
@@ -182,5 +196,15 @@ namespace Backend.Facade.Implementations
             return ctx.Cashiers.FirstOrDefault(m => m.Id == id);
         }
 
+        public Guid GetUserId(string username)
+        {
+            return ctx.Users.FirstOrDefault(p => p.UserName == username).UserId;
+        }
+
+        public int GetCurrentRoundNumber(Guid userId)
+        {
+            var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
+            return ctx.Games.Where(p => p.CashierId == cashierId && p.Number!=null).Max(p => p.Id) + 1;
+        }
     }
 }

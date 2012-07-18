@@ -6,8 +6,8 @@
 
 @section Head
 {
-     <script type="text/javascript" src="/Scripts/highlighter.js"></script>
-     <script type="text/javascript" src="/Scripts/stake.js"></script>
+     <script type="text/javascript" src="/Scripts/Custom/highlighter.js"></script>
+     <script type="text/javascript" src="/Scripts/Custom/stake.js"></script>
      <script type="text/javascript">
          function getStakes() {
              setTimeout(function () {
@@ -25,6 +25,13 @@
                      }
                  });
              }, 400);
+         }
+
+         function setRoundNumber() {
+             setTimeout(function () {
+                 getRoundNumber();
+                 setRoundNumber();
+             }, 2000);
          }
 
          $(function () {
@@ -67,6 +74,8 @@
              });
 
              getStakes();
+             setRoundNumber();
+             setProgressBar();
          });
      </script>
 }

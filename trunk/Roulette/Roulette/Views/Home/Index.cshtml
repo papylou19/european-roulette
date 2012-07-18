@@ -5,9 +5,8 @@
 
 @section Head
 {
-    <script type="text/javascript" src="/Scripts/roulette.js"></script>
+    <script type="text/javascript" src="/Scripts/Custom/roulette.js"></script>
     <script type="text/javascript">
-        var currentState = 0;
         var rouletteStarted = false;
 
         function main() {
@@ -21,7 +20,7 @@
                         url: '/Home/UpdateHistory',
                         success: function (history) {
                             $("#history").html(history);
-                            $("#round-number").html(parseInt($("#history tr:last td:first").html()) + 1);
+                            getRoundNumber();
                         }
                     });
                 }
@@ -58,31 +57,11 @@
             }
         }
 
-        function setProgressBar()
-        {
-            setTimeout(function () {
-                $.ajax({
-                    type: "POST",
-                    url: '/Home/GetCurrentState',
-                    dataType: 'json',
-                    success: function (state) {
-                        var seconds;
-                        if (state == null) {
-                            seconds = 0;
-                        }
-                        else {
-                            seconds = Math.round((new Date() - Date.parse(state.StartTime)) / 1000);
-                            currentState = state.State;
-                        }
-                        $(".progress-bar progress").val(seconds);
-                    }
-                });
-                setProgressBar();
-            }, 1000);
-        }
+        
 
         $(function () {
             getStakes();
+            getRoundNumber();
             setProgressBar();
             main();
         });

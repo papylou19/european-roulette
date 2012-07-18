@@ -18,7 +18,7 @@ namespace Roulette.Controllers
             TableModel model = new TableModel
             {
                 Colors = InitializeColors(),
-                History = Unit.RouletteSrvc.GetLastHistory()
+                History = Unit.RouletteSrvc.GetLastHistory(CurrentUserId)
             };
             return View(model);
         }
@@ -42,8 +42,13 @@ namespace Roulette.Controllers
 
         public ActionResult UpdateHistory()
         {
-            var games = Unit.RouletteSrvc.GetLastHistory();
+            var games = Unit.RouletteSrvc.GetLastHistory(CurrentUserId);
             return PartialView("_History", games);
+        }
+
+        public int GetCurrentRound()
+        {
+            return Unit.RouletteSrvc.GetCurrentRoundNumber(CurrentUserId);
         }
     }
 }

@@ -311,10 +311,19 @@ table th {
 /* Roulette board styles
 ----------------------------------------------------------*/
 
+#user-board
+{
+    float:left;
+}
+
+#admin-board
+{
+    margin-top:30px;
+}
+
 #admin-board,#user-board
 {
     text-align:center;
-    float:left;
 }
 
 #centered-div
@@ -635,7 +644,7 @@ border-radius: 5px;
 
 #history
 {
-    margin:40px 0 0 75px;
+    margin:80px 0 0 75px;
 }
 
 #history table
