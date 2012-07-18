@@ -81,31 +81,21 @@ namespace Backend.Facade.Implementations
         {
             try
             {
-                var game = ctx.Games.OrderByDescending(p => p.Id).Take(1).FirstOrDefault();
-                var now = DateTime.Now;
-                if (game != null && game.Number == null)
+                foreach(StakeDTO stake in stakes)
                 {
-                    foreach (StakeDTO stake in stakes)
+                    ctx.Stakes.Add(new Stake
                     {
-                        ctx.Stakes.Add(new Stake
-                        {
-                            ContractNumber = ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value,
-                            CreateDate = now,
-                            Coefficient = 1.5, // HARD CODE
-                            Number = stake.Id,
-                            Sum = stake.Price,
-                            Type = stake.Type.ToString(),
-                            GameId = game.Id
-                        });
-                    }
-                    ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value++;
-                    ctx.SaveChanges();
-                    return true;
+                        ContractNumber = ctx.Identities.FirstOrDefault(p=>p.Name == "ContractNumber").Value,
+                        CreateDate = DateTime.Now,
+                        Coefficient = 1.5, // HARD CODE
+                        Number = stake.Id,
+                        Sum = stake.Price,
+                        Type = stake.Type.ToString(),
+                        GameId = 1// HARD CODE
+                    });
                 }
-                else
-                {
-                    return false;
-                }
+                ctx.SaveChanges();
+                return true;
             }
             catch
             {
@@ -191,5 +181,6 @@ namespace Backend.Facade.Implementations
         {
             return ctx.Cashiers.FirstOrDefault(m => m.Id == id);
         }
+
     }
 }

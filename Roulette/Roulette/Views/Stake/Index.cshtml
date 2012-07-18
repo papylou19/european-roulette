@@ -58,9 +58,11 @@
                          stakes = new Array();
                          $('.roulette-board div.chip').remove();
                          $('#zero div.chip').remove();
+
                      }
                  });
-                 return true;
+
+                 window.open("/checkPage.htm", "_blank");
 
              });
 
@@ -73,8 +75,7 @@
 
 <div id="buttons">
 <input type="button" value="Clear" id="cancel-button"/>
-@*<input type="button" value="Submit" id="submit-button" />*@
-<a id="submit-button" href="/checkPage.htm" target=_blank>Submit</a>
+<input type="button" value="Submit" id="submit-button" />
 </div>
 
 <div id="centered-div">

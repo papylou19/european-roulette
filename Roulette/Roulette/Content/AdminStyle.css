@@ -1,0 +1,141 @@
+﻿body
+{
+   background-color: #FFFFFF;
+   font-size: 16px;
+   font-family: "Century Gothic",Verdana,Helvetica,Sans-Serif;
+   margin: 0;
+   padding: 0;
+}
+h1
+{
+    font-size: 28px;
+    margin:28px 0 20px;
+    color: #A7A7A7;
+}
+.Admin-page a
+{
+     text-decoration: none;
+}
+
+.header-admin
+{
+  background-color: #555555;
+  height: 36px;
+}
+
+.cashires-table
+{
+    width: 100%;
+    border-collapse: collapse;
+    border: 0;
+}
+
+.cashires-table tr:first-child
+{
+    background-color: #999999;
+}
+
+.cashires-table tr{
+    background-color: #F7F7F7;
+}
+
+.cashires-table td
+{
+    border: 0;
+    border-bottom: 1px solid #CCCCCC;
+    padding:10px;
+    color: #000000;
+}
+
+.Admin-page input[type="submit"],.Admin-page input[type="button"]
+{
+    cursor: pointer;
+    font-size: 16px;
+    
+}
+
+.Admin-page .edit-link
+{
+    color: #333333;
+    background:url("/img/Admin/pencil.png") no-repeat 2px center transparent;
+    padding: 8px 5px 8px 22px;
+    border: 1px solid #F7F7F7;
+}
+
+.Admin-page .edit-link:hover
+{
+    background-color:#d6d6d6;
+    color:#fff;
+    border:1px solid #bbb;
+}
+
+.cashires-table input[type="text"]
+{
+    border: 1px solid #cccccc;
+    width: 160px;
+    height: 16px;
+    font-size: 16px;
+    color: #000000;
+}
+
+.cashier-container
+{
+    margin-left: 25px;
+}
+
+.centerContainer
+{
+    width: 700px;
+    margin: 0 auto;
+}
+.cashierForm
+{
+    margin-left: 30px;
+}
+
+.cashierForm .label
+{
+    margin: 10px 0;
+}
+
+
+.cashierForm label
+{
+    color: #999999;
+    font-size: 16px;
+}  
+.cashierForm a
+{
+    color: #000000;
+}
+.cashierForm input[type="submit"],.cashierForm input[type="button"],.cashierForm a
+{
+    -webkit-box-shadow: 0px 0px 4px 0px #666;
+    -moz-box-shadow: 0px 0px 4px 0px #666;
+    box-shadow: 0px 0px 4px 0px #666; 
+    -webkit-border-radius: 4px;
+   -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #CCCCCC;
+    width: 100px;
+    text-align: center;
+    margin: 20px 10px 20px 0;
+    border:0;
+}
+.cashierForm input[type="submit"]:hover,.cashierForm input[type="button"]:hover,.cashierForm a:hover
+{
+    
+    -webkit-box-shadow: 0px 0px 0px 0px #fff;
+    -moz-box-shadow: 0px 0px 0px 0px #fff;
+    box-shadow: 0px 0px 0px 0px #fff;  
+}
+
+
+.sub-asdmin-menu
+{
+    border: 1px solid #cccccc;
+    padding: 20px;
+    margin-bottom: 10px;
+    background-color: #F7F7F7;
+}
