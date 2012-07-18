@@ -107,6 +107,7 @@ namespace Backend.Facade.Implementations
                         GameId = ctx.Games.Where(p => p.CashierId == cashierId).OrderByDescending(p => p.Id).FirstOrDefault().Id
                     });
                 }
+                ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value++;
                 ctx.SaveChanges();
                 return true;
             }
