@@ -1,0 +1,23 @@
+﻿@model Roulette.Models.LogOnModel
+@{
+    ViewBag.Title = "LogIn";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="centerContainer">
+    <h1>Log in</h1>
+    <div class="login cashierForm">
+        @using (Html.BeginForm("LogIn", "Account", new { ReturnUrl = Request.QueryString["ReturnUrl"] }))
+        {
+            @Html.ValidationSummary(true)
+            <div>
+                <div class="label">@Html.LabelFor(m=>m.UserName)</div>
+                @Html.TextBoxFor(m=>m.UserName)
+            </div>
+            <div>
+              <div class="label">@Html.LabelFor(m => m.Password)</div>
+                @Html.PasswordFor(m => m.Password)
+            </div>
+            <input  type="submit" value="Log in" />
+        }
+    </div>
+</div>
