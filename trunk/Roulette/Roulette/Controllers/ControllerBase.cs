@@ -24,6 +24,14 @@ namespace Roulette.Controllers
             Unit = new UnitOfWork();
         }
 
+        public Guid CurrentUserId
+        {
+            get
+            {
+                return Unit.RouletteSrvc.GetUserId(User.Identity.Name);
+            }
+        }
+
         public string CurrentUserName
         {
             get
