@@ -11,12 +11,17 @@
 <body>
     <div class="page">
         <header>
+        <div style="float:left; padding-left:50px;"><img src="/img/roulette-logo.jpg"/></div>
+        <div id="round-number"></div>
+        <div class="progress-bar" style="float:right">
+        <progress max="30" value="0"></progress>
+        </div>
+        <div class="clear"></div>
         </header>
+        <section id="separator"></section>
         <section id="main">
             @RenderBody()
         </section>
-        <footer>
-        </footer>
     </div>
 </body>
 </html>

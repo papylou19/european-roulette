@@ -1,0 +1,11 @@
+﻿@model Domain.Game[]
+
+<table cellspacing=0>
+@foreach (var game in Model)
+{
+    <tr>
+    <td>@game.Id</td>
+    <td>@game.Number</td>
+    </tr>
+}
+</table>

@@ -59,7 +59,7 @@ namespace Backend.Facade.Implementations
             {
                     if (current.State == 1)
                     {
-                        ctx.Games.OrderByDescending(p=>p.Id).Take(1).FirstOrDefault().Number = 15; // HARD CODE
+                        ctx.Games.OrderByDescending(p=>p.Id).Take(1).FirstOrDefault().Number = Convert.ToByte(new Random().Next(1,37)); // HARD CODE
                     }
                     current.StartTime = DateTime.Now;
                     current.State = current.State != 1 ? Convert.ToInt16(current.State + 1) : Convert.ToInt16(0);
@@ -111,6 +111,11 @@ namespace Backend.Facade.Implementations
             {
                 return false;
             }
+        }
+
+        public Game[] GetLastHistory()
+        {
+            return ctx.Games.Where(p=>p.Number != null).OrderByDescending(p => p.Id).Take(10).OrderBy(p => p.Id).ToArray();
         }
 
 

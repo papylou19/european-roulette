@@ -14,6 +14,7 @@ namespace Backend.Facade.Interfaces
         List<Cashier> GetAllCashier();
         int? ChangeGameState();
         GameState GetCurrentState();
+        Game[] GetLastHistory();
         bool DeleteCashier(int id);
         bool EditCashier(int id, string oldUserName, string newUserName, string password, int percent);
         Cashier GetCashierByUserName(string userName);

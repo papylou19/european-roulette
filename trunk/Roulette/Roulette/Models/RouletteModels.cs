@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Domain;
 
 namespace Roulette.Models
 {
@@ -20,5 +21,6 @@ namespace Roulette.Models
     public class TableModel
     {
         public ColorField[] Colors { get; set; }
+        public Game[] History { get; set; }
     }
 }

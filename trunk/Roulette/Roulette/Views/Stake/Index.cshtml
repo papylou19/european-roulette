@@ -24,7 +24,7 @@
                          getStakes();
                      }
                  });
-             }, 1000);
+             }, 400);
          }
 
          $(function () {
@@ -35,12 +35,12 @@
              });
 
              $("#cancel-button").click(function () {
-                 stakes = new Array();
                  $.ajax({
                      type: "POST",
                      url: '/Stake/RememberCurrentState',
                      data: { currentState: "" },
                      success: function () {
+                         stakes = new Array();
                          $('.roulette-board div.chip').remove();
                          $('#zero div.chip').remove();
                      }
@@ -55,8 +55,9 @@
                      contentType: 'application/json',
                      data: JSON.stringify(stakes),
                      success: function () {
-                        
-
+                         stakes = new Array();
+                         $('.roulette-board div.chip').remove();
+                         $('#zero div.chip').remove();
                      }
                  });
                  return true;
@@ -82,16 +83,20 @@
 
 <div class="roulette-chips">
 <div class="chip" data-value="1">
-<img src="/img/test-image.gif" alt="1"/>
+<img src="/img/red-chip.png" alt="1"/>
+<div class="text">1</div>
 </div>
 <div class="chip" data-value="2">
-<img src="/img/test-image.gif" alt="2"/>
+<img src="/img/purple-chip.png" alt="2"/>
+<div class="text">2</div>
 </div>
 <div class="chip" data-value="5">
-<img src="/img/test-image.gif" alt="5"/>
+<img src="/img/blue-chip.png" alt="5"/>
+<div class="text">5</div>
 </div>
 <div class="chip" data-value="10">
-<img src="/img/test-image.gif" alt="10"/>
+<img src="/img/orange-chip.png" alt="10"/>
+<div class="text">10</div>
 </div>
 </div>
 </div>
