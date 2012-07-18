@@ -10,7 +10,7 @@ using Domain;
 
 namespace Roulette.Controllers
 {
-      [Authorize]
+    [Authorize]
     public class HomeController : ControllerBase
     {
         public ActionResult Index()

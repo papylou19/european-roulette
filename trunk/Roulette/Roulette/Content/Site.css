@@ -498,14 +498,9 @@ div.chip .text
     padding: 5px;
     background-color: #CCCCCC;
     width: 100px;
-    text-align: center;
     border:0;
     cursor: pointer;
-   font-family: Arial;
-    color: #000000;
-    text-align: center;
-    display:inline-block;
-    text-decoration: none;
+}
 
 #user-board #board 
 {
