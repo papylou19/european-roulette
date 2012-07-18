@@ -16,7 +16,17 @@ namespace Roulette.Controllers
         [HttpGet]
         public ActionResult LogIn()
         {
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
+        }
+
+        public ActionResult LogOut()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("LogIn");
         }
 
         [HttpPost]
