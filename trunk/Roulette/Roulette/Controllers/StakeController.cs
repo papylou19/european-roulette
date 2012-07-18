@@ -24,6 +24,11 @@ namespace Roulette.Controllers
         public JsonResult CreateStake(StakeDTO[] stakes)
         {
             bool success = Unit.RouletteSrvc.CreateStake(stakes,CurrentUserId);
+            if (!BoardCurrentStates.ContainsKey(CurrentUserName))
+            {
+                BoardCurrentStates.Add(CurrentUserName, "");
+            }
+            BoardCurrentStates[CurrentUserName] = "";
             return Json(new { success = success });
         }
 
