@@ -1,24 +1,39 @@
-﻿var ROULETTE_SPEED = 12.5;
+﻿var rouletteAngularSpeed = -0.35;
+var delta = 0.03;
+var s;
+var c;
+var ballAngularSpeed;
+
+var rouletteAngle = 0;
+var ballAngle;
+var ballRotateStarted = false;
+var number = 0;
+var cycleNumber = 10;
+
 var CENTERX = 190;
 var CENTERY = 190;
-var ACCELERATION = 0.00005;
+var ballheight;
+var ballWidth;
+var r = 140;
 var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
 var TRANSFORM;
 
-var contactForce = -0.00015;
-var angle = 0;
-var firstTimeCount = false;
-var v = 0.15 + 0.05 * Math.random();
-var r = 140;
+Array.prototype.findIndex = function(value){
+    var ctr = "";
+    for (var i=0; i < this.length; i++) {
+    if (this[i] === value) {
+        return i;
+    }
+    }
+    return ctr;
+};
 
+function CalculateRotateNumber(rouletteAngularSpeed, s, delta) {
+    return (delta + Math.sqrt(delta * delta + 8 * delta * s)) / 2 - delta;
+}
 
-function Start() {
-    contactForce = -0.00015;
-    angle = 0;
-    firstTimeCount = false;
-    v = 0.15 + 0.05 * Math.random();
-    r = 140;
-    $("#ball").move();
+function CalculatePath() {
+    return 360 * cycleNumber + 99 + NUMBERS.findIndex(number) * 360/37;
 }
 
 function getTransformProperty(element) {
@@ -42,87 +57,65 @@ function getRadian(degree) {
     return degree * Math.PI / 180;
 }
 
-function getDegree(radian) {
-    return radian * 180 /  Math.PI;
+function Sin(degree) {
+    return Math.sin(getRadian(degree));
 }
 
-function getDifference(rouletteAngle, ballAngle) {
-    //adding 90 degrees to make start point as roulette's start point(begining of second quarter(top...by default zero is left point))
-    var dif = (rouletteAngle % 360 - (getDegree(ballAngle) + 90) % 360);
-    dif = dif > 0 ? dif % 360 : (360 - dif) % 360;
-    return dif * 37 / 360;
+function Cos(degree) {
+    return Math.cos(getRadian(degree));
+}
+
+function Start() {
+    s = CalculatePath();
+    r = 140;
+    c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
+    console.log(c);
+    ballAngularSpeed = c + rouletteAngularSpeed;
+    ballAngle = rouletteAngle;
+    $("#ball").show();
+    ballRotateStarted = true;
 }
 
 function rotateWheel(d) {
     setTimeout(function () {
         $('.roulette-wheel')[0].style[TRANSFORM] = 'rotate(' + (d % 360) + 'deg)';
 
-        if (v <= 0) {
-            if (!firstTimeCount) {
-
-                var dif = getDifference(d, angle);
-                var decimalPart = dif - Math.floor(dif);
-
-                var winner;
-                if (decimalPart <= 0.5 && decimalPart > 0.1) {
-                    angle += (decimalPart - 0.1) * 37 / 360;
-                    winner = NUMBERS[Math.floor(dif + (decimalPart - 0.1) * 37 / 360) - 1];
-                }
-                else if (decimalPart > 0.5 && decimalPart < 0.9) {
-                    angle -= (0.9 - decimalPart) * 37 / 360;
-                    winner = NUMBERS[Math.floor(dif - (0.9 - decimalPart) * 37 / 360)];
-                }
-                else {
-                    winner = dif - Math.floor(dif) > 0.9 ? NUMBERS[Math.floor(dif)] : NUMBERS[Math.floor(dif) - 1];
-                }
-
-                $("#board .round").each(function () {
-                    if ($(this).text() == winner) {
-                        $(this).parents("td").addClass("highlighted");
-                    }
-                });
-
-                firstTimeCount = true;
+        if (ballAngularSpeed == rouletteAngularSpeed) {
+            ballRotateStarted = false;
+            if ($("#ball").is(":visible")) {
+                $("#ball").css("top", CENTERY + (r * Sin(ballAngle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Cos(ballAngle)) - $("#ball").width() / 2);
+                ballAngle = (ballAngle - rouletteAngularSpeed) % 360;
             }
-
-            $("#ball").css("top", CENTERY + (r * Math.sin(angle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Math.cos(angle)) - $("#ball").width() / 2);
         }
 
-        angle += getRadian(0.5);
-        rotateWheel(d + 0.5);
+        if (ballRotateStarted) {
+            if (ballAngularSpeed > rouletteAngularSpeed) {
 
-    }, ROULETTE_SPEED);
-}
+                ballAngle = (ballAngle - ballAngularSpeed) % 360;
+                if (c - delta > 0) c -= delta;
+                else c = 0;
+                ballAngularSpeed = c + rouletteAngularSpeed;
 
-$.fn.move = function () {
-    angle -= v;
+                //HARD CODE
+                if (c < 3.5)
+                    if (r > 80) r -= 1.5;
 
-    if (v > 0) {
-        $(this).animate({
-            top: CENTERY + (r * Math.sin(angle)) - $(this).height() / 2,
-            left: CENTERX + (r * Math.cos(angle)) - $(this).width() / 2
-        }, 10, function () {
-
-            v += contactForce;
-            if (v * v / ACCELERATION > 140) {
-                r = 140;
+                $("#ball").css({
+                    top: CENTERY + (r * Sin(ballAngle)) - ballHeight / 2,
+                    left: CENTERX + (r * Cos(ballAngle)) - ballWidth / 2
+                });
             }
-            else if (v * v / ACCELERATION < 100) {
-                r = 100;
-            }
-            else {
-                r = v * v / ACCELERATION;
-            }
-            if (r < 120) {
-                contactForce = -0.002;
-            }
-            $("#ball").show().move();
-        });
-    }
+        }
 
+        rouletteAngle = (d - rouletteAngularSpeed) % 360;
+        rotateWheel(rouletteAngle);
+
+    }, 8);
 }
 
 $(function () {
+    ballHeight = $("#ball").height();
+    ballWidth = $("#ball").width();
     TRANSFORM = getTransformProperty($('.roulette-wheel')[0]);
     if (TRANSFORM) {
         rotateWheel(0);

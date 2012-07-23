@@ -40,7 +40,7 @@ namespace Roulette
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            timer = new Timer(60000);
+            timer = new Timer(30000);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             timer.Enabled = true;
         }
