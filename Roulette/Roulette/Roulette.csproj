@@ -72,7 +72,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Constant.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\CashierModel.cs" />
     <Compile Include="Models\CheckModel.cs" />
@@ -112,7 +111,6 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Custom\highlighter.js" />
     <Content Include="Scripts\Custom\progressAndRound.js" />
-    <Content Include="Scripts\Custom\roulette.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.min.js" />
@@ -121,7 +119,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\modernizr-1.7.js" />
     <Content Include="Scripts\modernizr-1.7.min.js" />
-    <Content Include="Scripts\Custom\roulette2.js" />
+    <Content Include="Scripts\Custom\roulette.js" />
     <Content Include="Scripts\Custom\stake.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -214,7 +212,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>10506</DevelopmentServerPort>
+          <DevelopmentServerPort>53277</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
