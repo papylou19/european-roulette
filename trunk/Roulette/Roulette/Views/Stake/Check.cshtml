@@ -1,0 +1,49 @@
+﻿@model Roulette.Models.CheckModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Check</title>
+    <link href="/Content/Site.css") rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8">
+      
+    </script>
+</head>
+<body style="background-color: #FFFFFF;">
+ <div class="printCheck">
+  <div id="check-centered-div">
+   @Html.Raw(Model.CurrentStake)
+  </div>
+  <table class="checkTable">
+    <tr>
+        <td>Идентификатор</td>
+        <td>@Model.CashierId @Model.GameId</td>
+    </tr>
+    <tr>
+        <td>Номер контракта</td>
+        <td>@Model.ContractNumber</td>
+    </tr>
+    <tr>
+        <td>Дата и время</td>
+        <td>@Model.CreateDate.ToString("dd.MM.yy HH:mm:ss")</td>
+    </tr>
+     <tr>
+        <td>Возможная маржа</td>
+        <td>@Model.WinningString = @Model.Winning </td>
+    </tr>
+    <tr>
+        <td>Сумма контракта</td>
+        <td>@Model.Sum</td>
+    </tr>
+    <tr><td colspan="2"><img src='@Url.Action("Barcode", new { code = Model.ContractNumber })'></td></tr>
+  
+  </table>
+ </div>
+</body>
+</html>
