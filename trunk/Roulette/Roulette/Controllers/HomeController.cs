@@ -20,6 +20,7 @@ namespace Roulette.Controllers
                 Colors = InitializeColors(),
                 History = Unit.RouletteSrvc.GetLastHistory(CurrentUserId)
             };
+
             return View(model);
         }
 
@@ -34,6 +35,7 @@ namespace Roulette.Controllers
                 }
                 BoardCurrentStates[CurrentUserName] = "";
             }
+
             if (state != null)
                 return Json(new { State = state.State, StartTime = state.StartTime.ToString() });
             else

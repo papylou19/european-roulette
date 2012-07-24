@@ -20,7 +20,7 @@ namespace Domain
         public bool IsPayed { get; set; }
         public DateTime? PaymentDate { get; set; }
         public int GameId { get; set; }
-
+        public double PossibleWinning { get; set; }
         [ForeignKey("GameId")]
         public virtual Game Game { get; set; }
     }

@@ -14,7 +14,7 @@ namespace Roulette.Areas.AdminPanel.Models
         public string OldUserName { get; set; }
 
         [Required]
-        [Remote("UserNameCheck", "Cashier", AdditionalFields="OldUserName" ,ErrorMessage = "This username is alredy taken!")]
+        [Remote("UserNameCheck", "Cashier", AdditionalFields = "OldUserName", ErrorMessage = "This username is already taken!")]
         public string UserName { get; set; }
 
         [DataType(DataType.Password)]

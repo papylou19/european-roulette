@@ -12,6 +12,7 @@ namespace Domain.Helpers
         public string Type { get; set; }
     }
 
+
     public enum TypesEnum
     {
         SingleElement = 1,

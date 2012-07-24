@@ -19,6 +19,7 @@ namespace Backend.DataContext
         public DbSet<UsersInRole> UsersInRoles { get; set; }
         public DbSet<Asp_User> Users { get; set; }
         public DbSet<GameState> GameStates { get; set; }
+        public DbSet<Check> Checks { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

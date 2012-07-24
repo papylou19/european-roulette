@@ -494,9 +494,10 @@ div.chip .text
 
 #buttons
 {
-    margin:0 0 10px 500px;
+    margin:0 0 10px 458px;
 }
-#submit-button,#cancel-button
+
+.admin-button
 {
      -webkit-box-shadow: 0px 0px 4px 0px #666;
     -moz-box-shadow: 0px 0px 4px 0px #666;
@@ -509,6 +510,13 @@ div.chip .text
     width: 100px;
     border:0;
     cursor: pointer;
+}
+
+.admin-button:hover
+{
+    -webkit-box-shadow: 0px 0px 0px 0px #FFFFFF;
+    -moz-box-shadow: 0px 0px 0px 0px #FFFFFF;
+    box-shadow: 0px 0px 0px 0px #FFFFFF; 
 }
 
 #user-board #board 
@@ -682,7 +690,7 @@ border-radius: 5px;
 }
 }
 
-#submit-button:hover,#cancel-button:hover
+#submit-button:hover,#cancel-button:hover,
 {
      -webkit-box-shadow: 0px 0px 0px 0px #fff;
     -moz-box-shadow: 0px 0px 0px 0px #fff;
@@ -730,7 +738,7 @@ check
 
 #check-centered-div .black div.round ,#check-centered-div  .black-iamge
 {
-    background-color: #cccccc;
+    background-color: #999999;
 }
 #check-centered-div #zero
 {
@@ -742,7 +750,41 @@ check
     color: #000000;
 }
 
+.checkTable
+{
+    border: 0;
+    color: #000000;
+    margin: 250px 0 40px 48px;
+    font-family: Arial;
+}
 
+.checkTable tr td:last-child
+{
+    font-weight: bold;
+}
+
+.checkTable td
+{
+    border: 0;
+    padding-right: 10px;
+}
+
+
+/*styles for dialog
+--------------------------------------------------------------------------------------------------------------------------------------*/
+.ui-dialog-titlebar
+{
+    background:#768B22 !important;
+}
+
+.code-textbox
+{
+    margin-top: 25px;
+}
+.check-dialog-buttons
+{
+    margin-top: 15px;
+}
 
 
 
