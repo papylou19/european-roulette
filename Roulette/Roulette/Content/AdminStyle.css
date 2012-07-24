@@ -104,11 +104,8 @@ h1
     color: #999999;
     font-size: 16px;
 }  
-.cashierForm a
-{
-    color: #000000;
-}
-.cashierForm input[type="submit"],.cashierForm input[type="button"],.cashierForm a
+
+.cashierForm input[type="submit"],.cashierForm input[type="button"]
 {
     -webkit-box-shadow: 0px 0px 4px 0px #666;
     -moz-box-shadow: 0px 0px 4px 0px #666;
@@ -119,11 +116,10 @@ h1
     padding: 5px;
     background-color: #CCCCCC;
     width: 100px;
-    text-align: center;
     margin: 20px 10px 20px 0;
     border:0;
 }
-.cashierForm input[type="submit"]:hover,.cashierForm input[type="button"]:hover,.cashierForm a:hover
+.cashierForm input[type="submit"]:hover,.cashierForm input[type="button"]:hover
 {
     
     -webkit-box-shadow: 0px 0px 0px 0px #fff;

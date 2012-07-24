@@ -14,6 +14,7 @@ function setProgressBar() {
                 else {
                     seconds = Math.round((new Date() - Date.parse(state.StartTime)) / 1000);
                     currentState = state.State;
+                   
                 }
                 $(".progress-bar progress").val(seconds);
             }
