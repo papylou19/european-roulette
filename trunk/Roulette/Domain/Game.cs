@@ -13,6 +13,7 @@ namespace Domain
         public int Id { get; set; }
         public byte? Number { get; set; }
         public int CashierId { get; set; }
+        public int GameNumber { get; set; }
 
         [ForeignKey("CashierId")]
         public virtual Cashier Cashier{get;set;}

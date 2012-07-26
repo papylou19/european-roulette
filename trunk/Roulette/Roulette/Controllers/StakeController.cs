@@ -54,7 +54,7 @@ namespace Roulette.Controllers
                     GameId = check.GameID,
                     CashierId = check.UserId,
                     ContractNumber = "978" + check.ContractNumber,
-                    Sum = check.stake,
+                    Sum = check.Stake,
                     Winning = check.PossibleWinning,
                     WinningString = check.PossibleWinningString,
                     CreateDate = check.CreateDate
@@ -67,43 +67,16 @@ namespace Roulette.Controllers
 
                 BoardCurrentStates[CurrentUserName] = "";
 
-                NextNumber(check.GameID);
                 return View(model);
             }
             return Content("");
         }
 
-        public void NextNumber(int gameId)
+        public JsonResult NextNumber()
         {
-            var percent = Unit.RouletteSrvc.GetCashierByUserName(CurrentUserName).NumberPercent;
-            var currentPercent = Unit.RouletteSrvc.CountPercent(CurrentUserName);
-            var numberDic = new Dictionary<int, double>();
-            var stakeDict = new Dictionary<int, List<int>>();
-
-            for (int i = 0; i < 37;i++ )
-            {
-                var count = Unit.RouletteSrvc.CountWinningNumber(gameId, i);
-                numberDic.Add(i, count.Key);
-                stakeDict.Add(i, count.Value);
-            }
-
-            if (percent > currentPercent)
-            {
-                numberDic = (from pair in numberDic
-                             orderby pair.Value descending
-                             select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
-            }
-            else
-            {
-                numberDic = (from pair in numberDic
-                             orderby pair.Value descending
-                             select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
-            }
-
-
-            int winNumber = numberDic.ElementAt(new Random().Next(0, 9)).Key;
-            Unit.RouletteSrvc.MakeWinner(stakeDict[winNumber]);
-           // return Json(new { nextNumber = winNumber });
+            int gameId = GetCurrentGameId();
+            byte? winNumber = Unit.RouletteSrvc.GetWinner(gameId);
+            return Json(new { nextNumber = winNumber });
         }
 
         [HttpPost]
@@ -179,6 +152,11 @@ namespace Roulette.Controllers
             }
 
             return BoardCurrentStates[CurrentUserName];
+        }
+
+        public int GetCurrentGameId()
+        {
+            return Unit.RouletteSrvc.GetCurrentGameId(CurrentUserId);
         }
 
     }

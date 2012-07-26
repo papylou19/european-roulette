@@ -7,6 +7,7 @@ var ballAngularSpeed;
 var rouletteAngle = 0;
 var ballAngle;
 var ballRotateStarted = false;
+var winnerHighlighted = false;
 var number = 0;
 var cycleNumber = 10;
 
@@ -66,14 +67,25 @@ function Cos(degree) {
 }
 
 function Start() {
-    s = CalculatePath();
-    r = 140;
-    c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
-    console.log(c);
-    ballAngularSpeed = c + rouletteAngularSpeed;
-    ballAngle = rouletteAngle;
-    $("#ball").show();
-    ballRotateStarted = true;
+    $.ajax({
+        type: "POST",
+        url: '/Stake/NextNumber',
+        datatype: 'json',
+        success: function (json) {
+            if (json.nextNumber === null) Start();
+            else {
+                number = json.nextNumber;
+                s = CalculatePath();
+                r = 140;
+                c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
+                ballAngularSpeed = c + rouletteAngularSpeed;
+                ballAngle = rouletteAngle;
+                $("#ball").show();
+                winnerHighlighted = false;
+                ballRotateStarted = true;
+            }
+        }
+    });
 }
 
 function rotateWheel(d) {
@@ -82,6 +94,31 @@ function rotateWheel(d) {
 
         if (ballAngularSpeed == rouletteAngularSpeed) {
             ballRotateStarted = false;
+            if (!winnerHighlighted) {
+                $("#board .round").each(function () {
+                    if ($(this).html() === number.toString()) {
+
+                        var td;
+
+                        if (number == 0) {
+                            td = $(this).parents("#zero").clone().removeClass("reverse");
+                            $(this).parents("#zero").addClass("highlighted");
+                        }
+                        else {
+                            td = $(this).parents("td");
+                            td.addClass("highlighted");
+                        }
+
+                        var classes = td.attr("class");
+
+                        $("#history").animate({ "margin-top": 150 }, 500, function () {
+                            $(".right").prepend($('<div class="selected-number" style="display:none">' + td.html() + '</div>').addClass(classes));
+                            $(".right .selected-number").fadeIn(1000);
+                        });
+                    }
+                    winnerHighlighted = true;
+                });
+            }
             if ($("#ball").is(":visible")) {
                 $("#ball").css("top", CENTERY + (r * Sin(ballAngle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Cos(ballAngle)) - $("#ball").width() / 2);
                 ballAngle = (ballAngle - rouletteAngularSpeed) % 360;

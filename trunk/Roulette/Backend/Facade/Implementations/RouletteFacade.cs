@@ -50,7 +50,8 @@ namespace Backend.Facade.Implementations
                 {
                     ctx.Games.Add(new Game
                     {
-                        CashierId = cashier.Id
+                        CashierId = cashier.Id,
+                        GameNumber = ctx.Games.Where(p => p.CashierId == cashier.Id).FirstOrDefault() != null ? ctx.Games.Where(p => p.CashierId == cashier.Id).Max(p => p.GameNumber) + 1 : Constants.GAME_FIRST_NUMBER
                     });
                 }
             }
@@ -65,15 +66,6 @@ namespace Backend.Facade.Implementations
             }
             else
             {
-                    if (current.State == 1)
-                    {
-                        var cashiers = ctx.Cashiers.ToList();
-                        foreach (var cashier in cashiers)
-                        {
-                            ctx.Games.Where(p=>p.CashierId == cashier.Id).OrderByDescending(p => p.Id).Take(1).FirstOrDefault().Number = Convert.ToByte(new Random().Next(1, 37)); // HARD CODE
-                        }
-                    }
-
                     current.StartTime = DateTime.Now;
                     current.State = current.State != 1 ? Convert.ToInt16(current.State + 1) : Convert.ToInt16(0);
                     state = current.State;
@@ -88,6 +80,11 @@ namespace Backend.Facade.Implementations
             {
                 return null;
             }
+        }
+
+        public Cashier GetCashierByUserId(Guid userId)
+        {
+            return ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId);
         }
 
         public bool CreateStake(StakeDTO[] stakes,long contractNumber,Guid userId)
@@ -122,9 +119,10 @@ namespace Backend.Facade.Implementations
         public Game[] GetLastHistory(Guid userId)
         {
             var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
-            return ctx.Games.Where(p=>p.Number != null && p.CashierId == cashierId).OrderByDescending(p => p.Id).Take(10).OrderBy(p => p.Id).ToArray();
-        }
 
+            //skipping current game
+            return ctx.Games.Where(p=>p.CashierId == cashierId).OrderByDescending(p => p.Id).Skip(1).Take(10).OrderBy(p => p.Id).ToArray();
+        }
 
         public bool AddCashier(int percent,Guid userId)
         {
@@ -207,7 +205,7 @@ namespace Backend.Facade.Implementations
         public int GetCurrentRoundNumber(Guid userId)
         {
             var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
-            return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId && p.Number!=null) == null ? 0 :ctx.Games.Where(p => p.CashierId == cashierId && p.Number!=null).Max(p => p.Id) + 1;
+            return ctx.Games.Count(p => p.CashierId == cashierId) >= 2 ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.GameNumber) : Constants.GAME_FIRST_NUMBER;
         }
 
 
@@ -231,7 +229,7 @@ namespace Backend.Facade.Implementations
                 {
                     check.PossibleWinningString += Constant.Coeffecent[item.Type].ToString() + '*' + item.Price.ToString() + "+";
                     check.PossibleWinning += Constant.Coeffecent[item.Type] * item.Price;
-                    check.stake += item.Price;
+                    check.Stake += item.Price;
                 }
 
                 check.GameID = ctx.Games.Where(p => p.CashierId == cashierId).OrderByDescending(p => p.Id).FirstOrDefault().Id;
@@ -243,7 +241,7 @@ namespace Backend.Facade.Implementations
                 ctx.SaveChanges();
                 return check.ContractNumber;
             }
-            catch (Exception ex)
+            catch
             {
                 return 0;
             }
@@ -256,20 +254,24 @@ namespace Backend.Facade.Implementations
         }
 
 
-        public double CountPercent(string currentUserName)
+        public double CountPercent(Guid userId)
         {
-            
-            var sum =  (from cashier in ctx.Cashiers
-                       join game in ctx.Games on cashier.Id equals game.CashierId
-                       join stake in ctx.Stakes on game.Id equals stake.GameId
-                       where cashier.User.UserName == currentUserName
-                       select stake.Sum).Sum();
 
-            var winnerSum = (from cashier in ctx.Cashiers
+            var sumQuery = (from cashier in ctx.Cashiers
+                            join game in ctx.Games on cashier.Id equals game.CashierId
+                            join stake in ctx.Stakes on game.Id equals stake.GameId
+                            where cashier.UserId == userId
+                            select stake.Sum);
+
+            var sum = sumQuery.Count() != 0 ? sumQuery.Sum() : 0;
+
+            var winnerQuery = (from cashier in ctx.Cashiers
                              join game in ctx.Games on cashier.Id equals game.CashierId
                              join stake in ctx.Stakes on game.Id equals stake.GameId
-                             where cashier.User.UserName == currentUserName && stake.IsWinningTicket==true
-                             select stake.PossibleWinning).Sum();
+                            where cashier.UserId == userId && stake.IsWinningTicket == true
+                             select stake.PossibleWinning);
+
+            var winnerSum = winnerQuery.Count() != 0 ? winnerQuery.Sum() : 0;
 
             return winnerSum*100/sum;
         }
@@ -467,12 +469,17 @@ namespace Backend.Facade.Implementations
                 ctx.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
         }
 
+        public void WriteWinnerNumber(int gameId, int winNumber)
+        {
+            ctx.Games.FirstOrDefault(p => p.Id == gameId).Number = Convert.ToByte(winNumber);
+            ctx.SaveChanges();
+        }
 
         public List<Stake> CheckWinner(long contractNumber)
         {
@@ -480,6 +487,10 @@ namespace Backend.Facade.Implementations
            
         }
 
+        public byte? GetWinner(int gameId) 
+        {
+            return ctx.Games.FirstOrDefault(p=>p.Id == gameId).Number;
+        }
 
         public bool Pay(long contractNumber)
         {
@@ -489,12 +500,16 @@ namespace Backend.Facade.Implementations
                 ctx.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
+        }
 
-
+        public int GetCurrentGameId(Guid userId)
+        {
+            var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
+            return ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id);
         }
     }
 }

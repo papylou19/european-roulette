@@ -16,6 +16,7 @@ namespace Backend.Facade.Interfaces
         GameState GetCurrentState();
         Game[] GetLastHistory(Guid userId);
         bool DeleteCashier(int id);
+        Cashier GetCashierByUserId(Guid userId);
         bool EditCashier(int id, string oldUserName, string newUserName, string password, int percent);
         Cashier GetCashierByUserName(string userName);
         Cashier GetCahierById(int id);
@@ -25,10 +26,13 @@ namespace Backend.Facade.Interfaces
         List<Stake> GetStakes(long contractNumber);
         long CreateCheck(StakeDTO[] stakes, string board, Guid userId);
         Check GetCheck(long contracNumber);
-        double CountPercent(string currentUserName);
+        double CountPercent(Guid userId);
         bool CheckNumber(int number, int winNumber,string type);
         bool MakeWinner(List<int> stakes);
         List<Stake> CheckWinner(long contractNumber);
         bool Pay(long contractNumber);
+        int GetCurrentGameId(Guid userId);
+        void WriteWinnerNumber(int gameId,int winNumber);
+        byte? GetWinner(int gameId);
     }
 }
