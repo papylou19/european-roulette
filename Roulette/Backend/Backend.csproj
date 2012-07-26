@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="DataContext\DataContext.cs" />
     <Compile Include="Facade\Implementations\RouletteFacade.cs" />
     <Compile Include="Facade\Interfaces\IRouletteFacade.cs" />

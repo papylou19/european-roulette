@@ -13,14 +13,20 @@
             setTimeout(function () {
                 if (rouletteStarted && currentState == 0) {
                     rouletteStarted = false;
-                    $("#user-board td.highlighted").removeClass("highlighted");
+                    $("#board .highlighted").removeClass("highlighted");
                     $("#ball").css({ top: 0, left: 0, display: 'none' });
                     $.ajax({
                         type: "POST",
                         url: '/Home/UpdateHistory',
                         success: function (history) {
-                            $("#history").html(history);
-                            getRoundNumber();
+                            $(".right .selected-number").fadeOut(1000, function () {
+                                $(this).remove();
+                                $("#history").animate({ "margin-top": 80 }, 500, function () {
+                                    $("#history").html(history);
+                                    getRoundNumber();
+                                });
+                            });
+
                         }
                     });
                 }

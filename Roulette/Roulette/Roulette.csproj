@@ -111,6 +111,7 @@
     <Content Include="Global.asax" />
     <Content Include="Scripts\Custom\highlighter.js" />
     <Content Include="Scripts\Custom\progressAndRound.js" />
+    <Content Include="Scripts\Custom\roulette2.js" />
     <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.js" />
     <Content Include="Scripts\jquery-ui-1.8.11.min.js" />

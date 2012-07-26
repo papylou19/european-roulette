@@ -16,7 +16,7 @@ namespace Domain
         public int GameID { get; set; }
         public Guid UserId { get; set; }
         public string BoardCurrentStates { get; set; }
-        public int stake { get; set; }
+        public int Stake { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }
