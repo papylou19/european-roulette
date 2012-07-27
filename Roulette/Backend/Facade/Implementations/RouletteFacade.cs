@@ -509,7 +509,7 @@ namespace Backend.Facade.Implementations
         public int GetCurrentGameId(Guid userId)
         {
             var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
-            return ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id);
+            return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId) != null ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id) : Constants.GAME_FIRST_NUMBER;
         }
     }
 }

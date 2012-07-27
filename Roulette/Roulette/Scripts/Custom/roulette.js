@@ -11,8 +11,8 @@ var winnerHighlighted = false;
 var number = 0;
 var cycleNumber = 10;
 
-var CENTERX = 190;
-var CENTERY = 190;
+var CENTERX = 190; //center X of roulette
+var CENTERY = 190; //center Y of roulette
 var ballheight;
 var ballWidth;
 var r = 140;
@@ -30,6 +30,7 @@ Array.prototype.findIndex = function(value){
 };
 
 function CalculateRotateNumber(rouletteAngularSpeed, s, delta) {
+    //Assuming that n=c/delta, we must return the solution of s = n*c - delta * (n * (n+1) /2)
     return (delta + Math.sqrt(delta * delta + 8 * delta * s)) / 2 - delta;
 }
 
