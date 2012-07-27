@@ -81,9 +81,7 @@ namespace Roulette
                                      select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
-
                     int winNumber = numberDic.ElementAt(new Random().Next(0, 9)).Key;
-
 
                     Unit.RouletteSrvc.WriteWinnerNumber(gameId,winNumber);
                     Unit.RouletteSrvc.MakeWinner(stakeDict[winNumber]);

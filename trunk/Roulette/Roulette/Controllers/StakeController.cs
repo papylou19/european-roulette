@@ -96,13 +96,13 @@ namespace Roulette.Controllers
                          }
                          else
                          {
-                             return Json(new { isWinner = false, winning = "It is alredy payed" });
+                             return Json(new { isWinner = false, winning = "The ticket has already payed!" });
                          }
                      }
                  }
                  else
                  {
-                     return Json(new { isWinner = false, winning = "It is not winning ticket" });
+                     return Json(new { isWinner = false, winning = "The ticket didn't win!" });
                  }
                
             }
