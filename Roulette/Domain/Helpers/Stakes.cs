@@ -12,6 +12,14 @@ namespace Domain.Helpers
         public string Type { get; set; }
     }
 
+    public class Report
+    {
+        public int Stake { get; set; }
+        public int CountStake { get; set; }
+        public double WinSum { get; set; }
+        public double WaitingSum { get; set;}
+        public List<Stake> Stakes {get;set;}
+    }
 
     public enum TypesEnum
     {

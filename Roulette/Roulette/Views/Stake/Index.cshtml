@@ -39,6 +39,7 @@
          }
 
          $(function () {
+             $(".datetext").datepicker();
              $('#check-dialog, #pay-dialog').dialog({
                  modal: true,
                  autoOpen: false,
@@ -51,7 +52,23 @@
                  close: function (event, ui) {
                  }
              });
+
+             $('#report-dialog').dialog({
+                 modal: true,
+                 autoOpen: false,
+                 width: 950,
+                 title: "Report",
+                 open: function (event, ui) {
+
+                 },
+                 close: function (event, ui) {
+                 }
+             });
+
              $("#pay-dialog").dialog({ title: "Pay Winners" });
+             $("#show").click(function () {
+                 $("#reports").load('@Url.Action("Report","Stake")', { startDate: $(this).siblings("#startDate").eq(0).val(), endDate: $(this).siblings("#endDate").eq(0).val() }, function () { alert(""); });
+             });
              $("#check-button").click(function () {
                  $("#check-dialog").dialog("open");
              });
@@ -90,6 +107,7 @@
                  $(this).parent().parent().dialog("close");
              });
 
+             $("#report-button").click(function () { $("#report-dialog").dialog("open"); });
              $.ajax({
                  type: "POST",
                  url: '/Stake/RememberCurrentState',
@@ -125,7 +143,10 @@
                      }
                  });
              });
-
+             $("#showCheck").live("click", function () {
+                 var contractNumber = $(this).siblings("input").eq(0).val();
+                 PrintCheck(contractNumber);
+             });
 
              getStakes();
              setRoundNumber();
@@ -146,6 +167,7 @@
         <input type="button" value="Clear" id="cancel-button" class="admin-button"/>
         <input type="button" value="Submit" id="submit-button" class="admin-button" />
         <input type="button" value="Check" id="check-button" class="admin-button" />
+        <input type="button" value="Report" id="report-button" class="admin-button" />
     </div>
     <div id="centered-div">
         @Html.Partial("_Board", Model)
@@ -184,4 +206,13 @@
      <input type="button" value="Pay" class="admin-button" id="pay"/>
      <input type="button"value="Cancel" class="admin-button cancel-botton-dialog" />
  </div>
+</div>
+
+<div id="report-dialog">
+ <label class="date">Дата начала отчета:</label>
+ <input type="text" id = "startDate" class="datetext" />
+ <label class="date"> Дата окончания отчета:</label>
+ <input type="text" id="endDate" class="datetext" />
+ <input type="button" value="Показать" class="admin-button" id="show"/>
+ <div id="reports"></div>
 </div>
