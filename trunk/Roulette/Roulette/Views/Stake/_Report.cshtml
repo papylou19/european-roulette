@@ -1,0 +1,48 @@
+﻿@model Roulette.Models.ReportModel
+ 
+ 
+ <table class="totalReport">
+    <tr>
+         <td>Ставок принято</td>
+        <td>@Model.Reports.CountStake</td>
+    </tr>
+    <tr>
+        <td>На общую сумму</td>
+        <td>@Model.Reports.Stake</td>
+    </tr>
+     <tr>
+        <td>Сумма совершенных выплат</td>
+        <td>@Model.Reports.WinSum</td>
+    </tr>
+    <tr>
+        <td>Сумма к выплате</td>
+        <td>@Model.Reports.WaitingSum</td>
+    </tr>
+ </table>          
+<table class="reportsTable">
+    <tr>
+        <td>Дата</td>
+        <td>Ставка</td>
+        <td>Возможная выигрыш</td>
+        <td>Выигрыш</td>
+        <td>Дата выплаты</td>
+        <td>Сумма выплаты</td>
+        <td></td>
+    </tr>
+@foreach (var item in Model.Reports.Stakes)
+{
+    <tr>
+        <td>@item.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")</td>
+        <td>@item.Sum</td>
+        <td>@item.PossibleWinning</td>
+        <td>@(item.IsWinningTicket==true? "Выгрыш":"проигрыш")</td>
+        <td>@(item.PaymentDate!=null? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss"): "")</td>
+        <td>@item.PossibleWinning</td>
+        <td>
+            <input type="hidden" value="@item.ContractNumber" />
+            <input type="button" value="Показать чек" id="showCheck"  class="admin-button" style="width: 112px;" />
+        </td>
+    </tr>
+}
+   
+</table>

@@ -499,7 +499,7 @@ div.chip .text
 
 #buttons
 {
-    margin:0 0 10px 458px;
+    margin:0 0 10px 346px;
 }
 
 .admin-button
@@ -813,6 +813,36 @@ check
     margin-top: 15px;
 }
 
+.reportsTable
+{
+    width: 100%;
+    border-width: 0;
+ 
+}
+.reportsTable tr:first-child td
+{
+    font-weight: bold;
+}
+
+.totalReport
+{
+    border-width: 0;
+    margin: 20px 0;
+}
+
+.totalReport td
+{
+    border-width: 0;
+}
+
+.reportsTable td
+{
+    border-width: 0;
+    border-bottom: 1px solid #cccccc;
+    padding: 5px;
+    border-collapse: collapse;
+    text-align: center;
+}
 
 
 

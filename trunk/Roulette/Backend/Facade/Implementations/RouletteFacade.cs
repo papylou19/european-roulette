@@ -253,25 +253,26 @@ namespace Backend.Facade.Implementations
             return ctx.Checks.FirstOrDefault(m => m.ContractNumber == contracNumber);
         }
 
-
         public double CountPercent(Guid userId)
         {
-
-            var sumQuery = (from cashier in ctx.Cashiers
-                            join game in ctx.Games on cashier.Id equals game.CashierId
-                            join stake in ctx.Stakes on game.Id equals stake.GameId
-                            where cashier.UserId == userId
-                            select stake.Sum);
-
-            var sum = sumQuery.Count() != 0 ? sumQuery.Sum() : 0;
-
-            var winnerQuery = (from cashier in ctx.Cashiers
-                             join game in ctx.Games on cashier.Id equals game.CashierId
-                             join stake in ctx.Stakes on game.Id equals stake.GameId
+          
+            double winnerSum = 0;
+            var winStake = (from cashier in ctx.Cashiers
+                           join game in ctx.Games on cashier.Id equals game.CashierId
+                           join stake in ctx.Stakes on game.Id equals stake.GameId
                             where cashier.UserId == userId && stake.IsWinningTicket == true
-                             select stake.PossibleWinning);
+                           select new { PossibleWinning = stake.PossibleWinning }).ToList();
+         
+            var sum =  (from cashier in ctx.Cashiers
+                       join game in ctx.Games on cashier.Id equals game.CashierId
+                       join stake in ctx.Stakes on game.Id equals stake.GameId
+                       where cashier.UserId == userId 
+                       select stake.Sum).Sum();
 
-            var winnerSum = winnerQuery.Count() != 0 ? winnerQuery.Sum() : 0;
+            if (winStake.Count!=0)
+            {
+                winnerSum = winStake.Sum(m => m.PossibleWinning);
+            }
 
             return winnerSum*100/sum;
         }
@@ -510,6 +511,21 @@ namespace Backend.Facade.Implementations
         {
             var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
             return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId) != null ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id) : Constants.GAME_FIRST_NUMBER;
+        }
+
+
+        public Report GetReportsByDate(DateTime startDate, DateTime endDate)
+        {
+            var stake = ctx.Stakes.Where(m => (m.CreateDate >= startDate && m.CreateDate <= endDate)).ToList();
+
+            var reports = new Report();
+            reports.Stakes = stake;
+            reports.Stake = stake.Sum(m => m.Sum);
+            reports.CountStake = stake.Count;
+            reports.WinSum = stake.Where(m => (m.IsWinningTicket == true && m.IsPayed==true)).Sum(m => m.PossibleWinning);
+            reports.WaitingSum = stake.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
+
+            return reports;
         }
     }
 }

@@ -43,7 +43,15 @@ namespace Roulette.Controllers
             return Json(new { success = success, contractNumber = contractNumber });
         }
 
-       
+        public ActionResult Report(DateTime startDate,DateTime endDate)
+        {
+            var model = new ReportModel();
+            model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate);
+            return PartialView("_Report",model);
+        
+        }
+
+    
         public ActionResult Check(long contractNumber)
         {
             var check = Unit.RouletteSrvc.GetCheck(contractNumber);
