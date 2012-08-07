@@ -34,14 +34,13 @@ namespace Roulette.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(membership.ValidateUser(model.UserName,model.Password))
+               if (membership.ValidateUser(model.UserName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, false);
                     if (returnUrl != null)
                         return Redirect(returnUrl);
                     return RedirectToAction("Index", "Stake");
                 }
-         
             }
             return View();
         }

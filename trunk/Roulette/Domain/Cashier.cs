@@ -14,6 +14,7 @@ namespace Domain
         public int Id { get; set; }
         public Guid UserId { get; set; }
         public int NumberPercent { get; set; }
+        public DateTime LastChangeDate { get; set; }
 
         [ForeignKey("UserId")]
         public virtual Asp_User User { get; set; }

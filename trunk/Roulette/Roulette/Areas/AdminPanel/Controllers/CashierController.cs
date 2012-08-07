@@ -25,6 +25,9 @@ namespace Roulette.Areas.AdminPanel.Controllers
             {
                 cashierListmodel.Add(new CashierModel
                 {
+                    Bet = Unit.RouletteSrvc.GetAmountOfBet(item.UserId),
+                    PayOut = Unit.RouletteSrvc.GetAmountOfPayOut(item.UserId),
+                    CurrentPercent = Math.Round(Unit.RouletteSrvc.CountPercent(item.UserId), 4),
                     NumberPercent = item.NumberPercent,
                     UserName = item.User.UserName,
                     IsApproved = membership.GetUser(item.User.UserId,true).IsApproved,
