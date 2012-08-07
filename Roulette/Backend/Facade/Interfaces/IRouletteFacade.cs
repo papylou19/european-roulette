@@ -35,5 +35,7 @@ namespace Backend.Facade.Interfaces
         void WriteWinnerNumber(int gameId,int winNumber);
         byte? GetWinner(int gameId);
         Report GetReportsByDate(DateTime startDate, DateTime endDate);
+        int GetAmountOfBet(Guid userId);
+        double GetAmountOfPayOut(Guid userId);
     }
 }

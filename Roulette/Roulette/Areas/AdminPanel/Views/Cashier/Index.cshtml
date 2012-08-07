@@ -31,6 +31,9 @@
              <td>Id</td>
              <td>UserName</td>
              <td>Percent</td>
+             <td>Current Percent</td>
+             <td>Bet</td>
+             <td>Pay out</td>
              <td></td>
              <td></td>
         </tr>
@@ -39,9 +42,22 @@
             <tr>
                 <td>@item.Id</td>
                 <td>@item.UserName</td>
-                <td>@item.NumberPercent</td>
-                <td><a href="@Url.Action("Edit", "Cashier", new { id=item.Id})"  class="edit-cashier edit-link">Edit</a></td>
-                <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved? "Disable" : "Enable")</a></td>
+
+                
+                <td>@item.NumberPercent</td> 
+                    
+                @if (!double.IsNaN(@item.CurrentPercent))  
+                {
+                    <td>@item.CurrentPercent</td>   
+                }
+                else
+                {
+                    <td>---</td>
+                } 
+                <td>@item.Bet</td>
+                <td>@item.PayOut</td>
+                <td><a href="@Url.Action("Edit", "Cashier", new { id = item.Id })"  class="edit-cashier edit-link">Edit</a></td>
+                <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved ? "Disable" : "Enable")</a></td>
                 
             </tr>
         }

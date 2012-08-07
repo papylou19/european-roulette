@@ -14,6 +14,11 @@ namespace Roulette.Models
         [Range(1, 300, ErrorMessage = "The Percent must be between 1 and 300.")]
         public int NumberPercent { get; set; }
 
+        public double CurrentPercent { get; set; }
+        public int Bet { get; set; }
+        public double PayOut { get; set; }
+
+
         [Required]
         [Remote("UserNameCheck","Cashier",ErrorMessage="This username is alredy taken!")]
         public string UserName { get; set; }

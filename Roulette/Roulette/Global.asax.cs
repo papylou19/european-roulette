@@ -77,7 +77,7 @@ namespace Roulette
                     else
                     {
                         numberDic = (from pair in numberDic
-                                     orderby pair.Value descending
+                                     orderby pair.Value ascending
                                      select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
