@@ -23,11 +23,12 @@ namespace Roulette.Controllers
             return View();
         }
 
+        // GET: /Account/LogOut
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
             return RedirectToAction("LogIn");
-        }
+        } 
 
         [HttpPost]
         public ActionResult LogIn(LogOnModel model, string returnUrl)

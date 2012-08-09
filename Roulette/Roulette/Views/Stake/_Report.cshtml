@@ -1,5 +1,20 @@
 ﻿@model Roulette.Models.ReportModel
  
+ <script type="text/javascript">
+     $(function () {
+         $(".showCheck").click(function () {
+             var contractNumber = $(this).siblings("input").eq(0).val();
+             PrintCheck(contractNumber);
+         });
+     })
+
+
+     function PrintCheck(contractNumber) {
+         if (contractNumber != 0) {
+             window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+         }
+     }
+ </script>
  
  <table class="totalReport">
     <tr>
@@ -40,7 +55,7 @@
         <td>@item.PossibleWinning</td>
         <td>
             <input type="hidden" value="@item.ContractNumber" />
-            <input type="button" value="Показать чек" id="showCheck"  class="admin-button" style="width: 112px;" />
+            <input type="button" value="Показать чек" class="showCheck admin-button" style="width: 140px;" />
         </td>
     </tr>
 }

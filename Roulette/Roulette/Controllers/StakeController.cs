@@ -10,6 +10,8 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using Roulette.Utilits;
+using Domain.MemberShip;
+using System.Web.Security;
 
 namespace Roulette.Controllers
 {
@@ -43,13 +45,23 @@ namespace Roulette.Controllers
             return Json(new { success = success, contractNumber = contractNumber });
         }
 
-        public ActionResult Report(DateTime startDate,DateTime endDate)
+
+        public ActionResult Report(DateTime startDate, DateTime endDate, int? cashierId)
         {
-            var model = new ReportModel();
-            model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate);
-            return PartialView("_Report",model);
-        
-        }
+            if (endDate > DateTime.Now) return new EmptyResult();
+            if (cashierId.HasValue && Roles.IsUserInRole("SystemAdmin"))
+            {
+                var model = new ReportModel();
+                model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate, cashierId.Value);
+                return PartialView("_Report", model);
+            }
+            else 
+            {
+                var model = new ReportModel();
+                model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate, CurrentUserId);
+                return PartialView("_Report", model);
+            } 
+        } 
 
     
         public ActionResult Check(long contractNumber)
@@ -57,7 +69,8 @@ namespace Roulette.Controllers
             var check = Unit.RouletteSrvc.GetCheck(contractNumber);
             if (check != null)
             {
-                var model = new CheckModel{
+                var model = new CheckModel
+                {
                     CurrentStake = check.BoardCurrentStates,
                     GameId = check.GameID,
                     CashierId = check.UserId,

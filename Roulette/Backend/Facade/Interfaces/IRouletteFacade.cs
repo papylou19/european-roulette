@@ -9,7 +9,7 @@ namespace Backend.Facade.Interfaces
 {
     public interface IRouletteFacade
     {
-        bool CreateStake(StakeDTO[] stakes,long contractNumber,Guid userId);
+        bool CreateStake(StakeDTO[] stakes, long contractNumber, Guid CashierId);
         bool AddCashier(int percent,Guid userId);
         List<Cashier> GetAllCashier();
         int? ChangeGameState();
@@ -34,7 +34,8 @@ namespace Backend.Facade.Interfaces
         int GetCurrentGameId(Guid userId);
         void WriteWinnerNumber(int gameId,int winNumber);
         byte? GetWinner(int gameId);
-        Report GetReportsByDate(DateTime startDate, DateTime endDate);
+        Report GetReportsByDate(DateTime startDate, DateTime endDate, Guid cashierId);
+        Report GetReportsByDate(DateTime startDate, DateTime endDate, int cashierId);
         int GetAmountOfBet(Guid userId);
         double GetAmountOfPayOut(Guid userId);
     }

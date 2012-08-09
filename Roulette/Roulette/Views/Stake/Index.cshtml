@@ -6,13 +6,13 @@
 
 @section Head
 {
-    <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
+     <script src="@Url.Content("~/Scripts/jquery-1.7.2.min.js")" type="text/javascript"></script>
      <script type="text/javascript" src="/Scripts/jquery-ui-1.8.11.js"></script>
      <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
      <script type="text/javascript" src="/Scripts/Custom/highlighter.js"></script>
      <script type="text/javascript" src="/Scripts/Custom/stake.js"></script>
      <script type="text/javascript">
-       var contractNumber= 0;
+         var contractNumber = 0;
          function getStakes() {
              setTimeout(function () {
                  $.ajax({
@@ -57,17 +57,22 @@
                  modal: true,
                  autoOpen: false,
                  width: 950,
+                 height: 600,
                  title: "Report",
                  open: function (event, ui) {
-
+                     $('#report-dialog #endDate').val(getDateString(new Date())); 
+                     var lastWeek = new Date();
+                     lastWeek.setDate(lastWeek.getDate() - 1);
+                     $('#report-dialog #startDate').val(getDateString(lastWeek));
                  },
                  close: function (event, ui) {
+                     $("#reports").empty();
                  }
              });
 
              $("#pay-dialog").dialog({ title: "Pay Winners" });
              $("#show").click(function () {
-                 $("#reports").load('@Url.Action("Report","Stake")', { startDate: $(this).siblings("#startDate").eq(0).val(), endDate: $(this).siblings("#endDate").eq(0).val() }, function () { alert(""); });
+                 $("#reports").load('@Url.Action("Report","Stake")', { startDate: $(this).siblings("#startDate").eq(0).val(), endDate: $(this).siblings("#endDate").eq(0).val() }, function () { });
              });
              $("#check-button").click(function () {
                  $("#check-dialog").dialog("open");
@@ -143,21 +148,26 @@
                      }
                  });
              });
-             $("#showCheck").live("click", function () {
-                 var contractNumber = $(this).siblings("input").eq(0).val();
-                 PrintCheck(contractNumber);
-             });
 
              getStakes();
              setRoundNumber();
              setProgressBar();
          });
-         function PrintCheck(contractNumber) {
-             if (contractNumber != 0) {
-                 window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
-             }
 
+         function getDateString(date) {
+             var dd = date.getDate();
+             var mm = date.getMonth() + 1; //January is 0!
+             var yyyy = date.getFullYear();
+             if (dd < 10) { dd = '0' + dd }
+             if (mm < 10) { mm = '0' + mm }
+             return mm + '/' + dd + '/' + yyyy;
          }
+
+        function PrintCheck(contractNumber) {
+         if (contractNumber != 0) {
+             window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+         }
+        }
      </script>
 }
 
@@ -201,19 +211,19 @@
 </div>
 
 <div id="pay-dialog">
- <label id="paySum"></label>
- <input type="hidden" id="hiddenTextBox" />
- <div class="check-dialog-buttons">
-     <input type="button" value="Pay" class="admin-button" id="pay"/>
-     <input type="button"value="Cancel" class="admin-button cancel-botton-dialog" />
- </div>
+    <label id="paySum"></label>
+    <input type="hidden" id="hiddenTextBox" />
+    <div class="check-dialog-buttons">
+        <input type="button" value="Pay" class="admin-button" id="pay"/>
+        <input type="button"value="Cancel" class="admin-button cancel-botton-dialog" />
+    </div>
 </div>
 
 <div id="report-dialog">
- <label class="date">Дата начала отчета:</label>
- <input type="text" id = "startDate" class="datetext" />
- <label class="date"> Дата окончания отчета:</label>
- <input type="text" id="endDate" class="datetext" />
- <input type="button" value="Показать" class="admin-button" id="show"/>
- <div id="reports"></div>
+    <label class="date">Дата начала отчета:</label>
+    <input type="text" id = "startDate" class="datetext" />
+    <label class="date"> Дата окончания отчета:</label>
+    <input type="text" id="endDate" class="datetext" />
+    <input type="button" value="Показать" class="admin-button" id="show"/>
+    <div id="reports"></div>
 </div>

@@ -20,7 +20,6 @@ var bouncingAcceleration;
 var stack288 = new Array();
 var bollStopSteps = 0;
 
-var switchToNextStep = true;
 var bounsingType = false;
 var bounsingState = 0;
 
@@ -102,7 +101,7 @@ function Start() {
                 bollStopSteps = 0;
                 bounsingState = 0;
 
-                bounsingType = Math.random() > 0.3;
+                bounsingType = true; //Math.floor((Math.random() * 2)) == 0;
             }
         }
     });
@@ -154,20 +153,19 @@ function rotateWheel(d) {
                 ballAngularSpeed = c + rouletteAngularSpeed;
 
                 //ANOTHER HARD CODE for boll bounsingmnm,
-                if (r == 134 && bounsingState == 0 && !bounsingType && switchToNextStep) {
+                if (r == 134 && !bounsingType) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 25 + Math.floor((Math.random() * 20) + 1);
-                    bouncingSteps = 30 + Math.floor((Math.random() * 10) + 1);
+                    bouncingSteps = 20 + Math.floor((Math.random() * 20) + 1);
 
                     bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
                     bouncingRadius = -bouncingSteps * bouncingAcceleration;
-
-                    switchToNextStep == false;
                 }
 
+
                 // ANOTHER BOUNSING
-                if (r == 92 && bounsingState == 0 && bounsingType && switchToNextStep) {
+                if (r == 92 && bounsingState == 0 && bounsingType) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 20;
@@ -178,40 +176,36 @@ function rotateWheel(d) {
 
                     bouncingCurrentStep = 0;
 
-                    switchToNextStep = false;
+                    bounsingType = false;
                 }
 
-                if (bounsingState == 1 && switchToNextStep) {
+                if (bounsingState == 1 && bounsingType) {
                     isRadiusGrowing = false;
 
-                    bouncingAmplitude = bounsingType ? 20 : 6;
-                    bouncingSteps = Math.floor((c / 0.02) / 2) - (bounsingType ? 16 : 0);
+                    bouncingAmplitude = 20;
+                    bouncingSteps = Math.floor((c / 0.02) / 2) - 16;
 
                     bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
-                    bouncingRadius = bouncingSteps * bouncingAcceleration * (bounsingType ? -1 : 1);
+                    bouncingRadius = -bouncingSteps * bouncingAcceleration;
 
                     bouncingCurrentStep = 0;
 
-                    switchToNextStep = false;
+                    bounsingType = false;
                 }
 
-                if (bounsingState == 2 && switchToNextStep && bounsingType) {
+                if (bounsingState == 2 && bounsingType) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 4;
                     bouncingSteps = 16;
 
                     bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
-                    bouncingRadius = bouncingSteps * bouncingAcceleration * (bounsingType ? 1 : -1);
+                    bouncingRadius = bouncingSteps * bouncingAcceleration;
 
                     bouncingCurrentStep = 0;
 
-                    switchToNextStep = false;
+                    bounsingType = false;
                 }
-
-
-
-
 
                 bounseBall();
 
@@ -257,7 +251,7 @@ function bounseBall() {
             bouncingRadius = 0;
             bouncingCurrentStep = 0;
 
-            switchToNextStep = true;
+            bounsingType = true;
             bounsingState += 1;
         }
     }
