@@ -10,7 +10,13 @@ function ContainStakesId(id, type) {
 }
 
 $(function () {
+    $('.bet').change(function () {
+        $('.selected').find('.text').text($(this).val());
+        $('.selected').data("value", $(this).val());
+    });
+
     $('div.chip').click(function () {
+        $('.bet').val($(this).find('.text').text());
         $(this).siblings().removeClass("selected");
         if ($(this).hasClass("selected"))
             $(this).removeClass("selected");
