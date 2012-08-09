@@ -42,6 +42,7 @@ namespace Roulette
             RegisterRoutes(RouteTable.Routes);
             Unit = new UnitOfWork();
             timer = new Timer(30000);
+            //timer_Elapsed(null, null);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             timer.Enabled = true;
         }

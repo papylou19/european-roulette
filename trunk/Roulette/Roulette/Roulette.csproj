@@ -110,6 +110,8 @@
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\Custom\roulette ready without randoms.js" />
+    <Content Include="Scripts\Custom\Copy of roulette.js" />
     <Content Include="Scripts\Custom\highlighter.js" />
     <Content Include="Scripts\Custom\progressAndRound.js" />
     <Content Include="Scripts\Custom\roulette2.js" />

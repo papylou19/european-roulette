@@ -730,14 +730,15 @@ check
 #check-centered-div
 {
 
-     transform: translate(-240px, 90px) scale(0.7) rotate(90deg);
-    -ms-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* IE 9 */
-    -webkit-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Safari and Chrome */
-    -o-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Opera */
-    -moz-transform: translate(-240px, 90px) scale(0.7) rotate(90deg); /* Firefox */
+    transform: translate(-265px, 113px) scale(0.7) rotate(90deg);
+    -ms-transform: translate(-265px, 113px) scale(0.7) rotate(90deg); /* IE 9 */
+    -webkit-transform: translate(-265px, 113px) scale(0.7) rotate(90deg); /* Safari and Chrome */
+    -o-transform: translate(-265px, 113px) scale(0.7) rotate(90deg); /* Opera */
+    -moz-transform: translate(-265px, 113px) scale(0.7) rotate(90deg); /* Firefox */
     display: inline-block;
-     margin-top:70px;
-   
+    margin-top:70px;
+    
+    width: 820px;   
 }
 
 
@@ -781,7 +782,7 @@ check
 {
     border: 0;
     color: #000000;
-    margin: 250px 0 40px 48px;
+    margin: 250px 0 40px 0px;
     font-family: Arial;
 }
 

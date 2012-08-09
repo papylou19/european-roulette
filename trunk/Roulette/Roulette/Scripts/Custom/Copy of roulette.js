@@ -20,10 +20,6 @@ var bouncingAcceleration;
 var stack288 = new Array();
 var bollStopSteps = 0;
 
-var switchToNextStep = true;
-var bounsingType = false;
-var bounsingState = 0;
-
 
 var CENTERX = 190; //center X of roulette
 var CENTERY = 190; //center Y of roulette
@@ -98,11 +94,7 @@ function Start() {
                 $("#ball").show();
                 winnerHighlighted = false;
                 ballRotateStarted = true;
-
                 bollStopSteps = 0;
-                bounsingState = 0;
-
-                bounsingType = Math.random() > 0.3;
             }
         }
     });
@@ -153,65 +145,16 @@ function rotateWheel(d) {
                 else c = 0;
                 ballAngularSpeed = c + rouletteAngularSpeed;
 
-                //ANOTHER HARD CODE for boll bounsingmnm,
-                if (r == 134 && bounsingState == 0 && !bounsingType && switchToNextStep) {
+                //ANOTHER HARD CODE for boll bounsing
+                if (r == 134) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 25 + Math.floor((Math.random() * 20) + 1);
-                    bouncingSteps = 30 + Math.floor((Math.random() * 10) + 1);
+                    bouncingSteps = 20 + Math.floor((Math.random() * 20) + 1);
 
                     bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
                     bouncingRadius = -bouncingSteps * bouncingAcceleration;
-
-                    switchToNextStep == false;
                 }
-
-                // ANOTHER BOUNSING
-                if (r == 92 && bounsingState == 0 && bounsingType && switchToNextStep) {
-                    isRadiusGrowing = false;
-
-                    bouncingAmplitude = 20;
-                    bouncingSteps = 40;
-
-                    bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
-                    bouncingRadius = bouncingSteps * bouncingAcceleration;
-
-                    bouncingCurrentStep = 0;
-
-                    switchToNextStep = false;
-                }
-
-                if (bounsingState == 1 && switchToNextStep) {
-                    isRadiusGrowing = false;
-
-                    bouncingAmplitude = bounsingType ? 20 : 6;
-                    bouncingSteps = Math.floor((c / 0.02) / 2) - (bounsingType ? 16 : 0);
-
-                    bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
-                    bouncingRadius = bouncingSteps * bouncingAcceleration * (bounsingType ? -1 : 1);
-
-                    bouncingCurrentStep = 0;
-
-                    switchToNextStep = false;
-                }
-
-                if (bounsingState == 2 && switchToNextStep && bounsingType) {
-                    isRadiusGrowing = false;
-
-                    bouncingAmplitude = 4;
-                    bouncingSteps = 16;
-
-                    bouncingAcceleration = bouncingAmplitude / ((1 + bouncingSteps) * bouncingSteps / 2);
-                    bouncingRadius = bouncingSteps * bouncingAcceleration * (bounsingType ? 1 : -1);
-
-                    bouncingCurrentStep = 0;
-
-                    switchToNextStep = false;
-                }
-
-
-
-
 
                 bounseBall();
 
@@ -256,9 +199,6 @@ function bounseBall() {
             isRadiusGrowing = undefined;
             bouncingRadius = 0;
             bouncingCurrentStep = 0;
-
-            switchToNextStep = true;
-            bounsingState += 1;
         }
     }
 }

@@ -3,29 +3,76 @@
     ViewBag.Title = "Cashier";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
 }
-<script type="text/javascript">
-    var oldusername;
-    var oldpassword;
-    $(document).ready(function () {
-        $(".disable-cashier").click(function () {
-            var text = $(this).text();
-            if (confirm('Are you sure to '+ text + ' user')) {
-                var id = $(this).attr("id").substring(3);
-                $.get('@Url.Action("Disable","Cashier")?id=' + id, function (data) {
-                    if (data.sucess) {
-                        location.reload();
-                    }
-                    else {
-                        alert("Please try again!")
-                    }
-                });
-            }
+
+@section Head
+{
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
+
+    <script type="text/javascript" src="/Scripts/jquery-ui-1.8.11.js"></script>
+    <script type="text/javascript">
+        var oldusername;
+        var oldpassword;
+        $(document).ready(function () {
+            $(".disable-cashier").click(function () {
+                var text = $(this).text();
+                if (confirm('Are you sure to ' + text + ' user')) {
+                    var id = $(this).attr("id").substring(3);
+                    $.get('@Url.Action("Disable","Cashier")?id=' + id, function (data) {
+                        if (data.sucess) {
+                            location.reload();
+                        }
+                        else {
+                            alert("Please try again!")
+                        }
+                    });
+                }
+            });
+
+
+            $(".datetext").datepicker();
+            $('#report-dialog').dialog({
+                modal: true,
+                autoOpen: false,
+                width: 950,
+                height: 600,
+                title: "Report",
+                open: function (event, ui) {
+                    $('#report-dialog #endDate').val(getDateString(new Date()));
+                    var lastWeek = new Date();
+                    lastWeek.setDate(lastWeek.getDate() - 1);
+                    $('#report-dialog #startDate').val(getDateString(lastWeek));
+                },
+                close: function (event, ui) {
+                    $("#reports").empty();
+                }
+            });
+
+            $("#show").click(function () {
+                var cashier = $('#show').attr("data-cashierId");
+                $("#reports").load('/Stake/Report', { startDate: $(this).siblings("#startDate").eq(0).val(), endDate: $(this).siblings("#endDate").eq(0).val(), cashierId: cashier });
+            });
         });
-    });
-</script>
+
+        function showReport(cashierId) {
+            $("#report-dialog").dialog("open");
+        }
+
+        function getDateString(date) {
+            var dd = date.getDate();
+            var mm = date.getMonth() + 1; //January is 0!
+            var yyyy = date.getFullYear();
+            if (dd < 10) { dd = '0' + dd }
+            if (mm < 10) { mm = '0' + mm }
+            return mm + '/' + dd + '/' + yyyy;
+        }
+    </script>
+}
+
+    
+
 <div class="cashier-container">
-<h1>Cashier List</h1>
-<div class="sub-asdmin-menu"><a href="@Url.Action("Add", "Cashier")" class="edit-link">Add new cashier</a></div>
+    <h1>Cashier List</h1>
+    <div class="sub-asdmin-menu"><a href="@Url.Action("Add", "Cashier")" class="edit-link">Add new cashier</a></div>
     <table class="cashires-table">
         <tr>
              <td>Id</td>
@@ -34,6 +81,7 @@
              <td>Current Percent</td>
              <td>Bet</td>
              <td>Pay out</td>
+             <td></td>
              <td></td>
              <td></td>
         </tr>
@@ -58,10 +106,18 @@
                 <td>@item.PayOut</td>
                 <td><a href="@Url.Action("Edit", "Cashier", new { id = item.Id })"  class="edit-cashier edit-link">Edit</a></td>
                 <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved ? "Disable" : "Enable")</a></td>
-                
+                <td><a href="javascript:showReport(@item.Id)" class="show-cashier-report edit-link">Show Report</a></td>
             </tr>
         }
     </table>
 }
+</div>
 
+<div id="report-dialog">
+    <label class="date">Дата начала отчета:</label>
+    <input type="text" id = "startDate" class="datetext" />
+    <label class="date"> Дата окончания отчета:</label>
+    <input type="text" id="endDate" class="datetext" />
+    <input type="button" value="Показать" class="admin-button" id="show"/>
+    <div id="reports"></div>
 </div>

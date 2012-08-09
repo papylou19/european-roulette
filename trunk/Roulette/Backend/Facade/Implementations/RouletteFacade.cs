@@ -67,7 +67,7 @@ namespace Backend.Facade.Implementations
             else
             {
                     current.StartTime = DateTime.Now;
-                    current.State = current.State != 1 ? Convert.ToInt16(current.State + 1) : Convert.ToInt16(0);
+                    current.State = current.State != 1 ? (short)(current.State + 1) : (short)0;
                     state = current.State;
             }
 
@@ -87,6 +87,8 @@ namespace Backend.Facade.Implementations
             return ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId);
         }
 
+
+
         public bool CreateStake(StakeDTO[] stakes,long contractNumber,Guid userId)
         {
             var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
@@ -96,7 +98,7 @@ namespace Backend.Facade.Implementations
                 {
                     var coefficient = Constant.Coeffecent[stake.Type];
                     ctx.Stakes.Add(new Stake
-                    {
+                    {                        
                         ContractNumber = contractNumber,
                         CreateDate = DateTime.Now,
                         Coefficient = coefficient,
@@ -130,7 +132,6 @@ namespace Backend.Facade.Implementations
             {
                 ctx.Cashiers.Add(new Cashier
                 {
-                    LastChangeDate = DateTime.Now,
                     NumberPercent = percent,
                     UserId =userId
                 });
@@ -168,13 +169,11 @@ namespace Backend.Facade.Implementations
         }
 
 
-        public bool EditCashier(int id, string oldUserName,string newUserName, string password, int percent)
+        public bool EditCashier(int id, string oldUserName,string newUserName, string password,int percent)
         {
             try
             {
                 var cashier = ctx.Cashiers.FirstOrDefault(m => m.Id == id);
-                if (cashier.NumberPercent != percent)
-                    cashier.LastChangeDate = DateTime.Now;
                 cashier.NumberPercent = percent;
                 cashier.User.UserName = newUserName;
                 cashier.User.LoweredUserName = newUserName.ToLower();
@@ -258,24 +257,21 @@ namespace Backend.Facade.Implementations
 
         public double CountPercent(Guid userId)
         {
-
-            var sumQuery = (from cashier in ctx.Cashiers
-                            join game in ctx.Games on cashier.Id equals game.CashierId
-                            join stake in ctx.Stakes on game.Id equals stake.GameId
-                            where cashier.UserId == userId && cashier.LastChangeDate < stake.CreateDate
-                            select stake.Sum).ToList();
-
-            var sum = sumQuery.Count() != 0 ? sumQuery.Sum() : 0;
-
           
             double winnerSum = 0;
-
             var winStake = (from cashier in ctx.Cashiers
                            join game in ctx.Games on cashier.Id equals game.CashierId
                            join stake in ctx.Stakes on game.Id equals stake.GameId
-                            where cashier.UserId == userId && stake.IsWinningTicket == true && cashier.LastChangeDate < stake.CreateDate
+                            where cashier.UserId == userId && stake.IsWinningTicket == true
                            select new { PossibleWinning = stake.PossibleWinning }).ToList();
          
+
+            var test = (from cashier in ctx.Cashiers // TODO check why this not wotking without 
+                       join game in ctx.Games on cashier.Id equals game.CashierId
+                       join stake in ctx.Stakes on game.Id equals stake.GameId
+                       where cashier.UserId == userId
+                       select stake.Sum).ToList();
+            var sum = test.Sum();
 
             if (winStake.Count!=0)
             {
@@ -521,6 +517,34 @@ namespace Backend.Facade.Implementations
             return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId) != null ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id) : Constants.GAME_FIRST_NUMBER;
         }
 
+        public Report GetReportsByDate(DateTime startDate, DateTime endDate, int cashierId)
+        {
+            var cashier = ctx.Cashiers.Find(cashierId);
+            if (cashier != null)
+            {
+                return GetReportsByDate(startDate, endDate, cashier.UserId);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public Report GetReportsByDate(DateTime startDate, DateTime endDate, Guid UserId)
+        {
+            var stake = ctx.Stakes.Where(m => m.CreateDate >= startDate && m.CreateDate <= endDate && m.Game.Cashier.UserId == UserId).ToList();
+
+            var reports = new Report();
+            reports.Stakes = stake;
+            reports.Stake = stake.Sum(m => m.Sum);
+            reports.CountStake = stake.Count;
+            reports.WinSum = stake.Where(m => (m.IsWinningTicket == true && m.IsPayed==true)).Sum(m => m.PossibleWinning);
+            reports.WaitingSum = stake.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
+
+            return reports;
+        }
+
+
         public int GetAmountOfBet(Guid userId)
         {
 
@@ -546,21 +570,6 @@ namespace Backend.Facade.Implementations
             var winnerSum = winnerQuery.Count() != 0 ? winnerQuery.Sum() : 0;
 
             return winnerSum;
-        }
-
-
-        public Report GetReportsByDate(DateTime startDate, DateTime endDate)
-        {
-            var stake = ctx.Stakes.Where(m => (m.CreateDate >= startDate && m.CreateDate <= endDate)).ToList();
-
-            var reports = new Report();
-            reports.Stakes = stake;
-            reports.Stake = stake.Sum(m => m.Sum);
-            reports.CountStake = stake.Count;
-            reports.WinSum = stake.Where(m => (m.IsWinningTicket == true && m.IsPayed==true)).Sum(m => m.PossibleWinning);
-            reports.WaitingSum = stake.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
-
-            return reports;
         }
     }
 }
