@@ -532,6 +532,7 @@ namespace Backend.Facade.Implementations
 
         public Report GetReportsByDate(DateTime startDate, DateTime endDate, Guid UserId)
         {
+            endDate = endDate.AddDays(1);
             var stake = ctx.Stakes.Where(m => m.CreateDate >= startDate && m.CreateDate <= endDate && m.Game.Cashier.UserId == UserId).ToList();
 
             var reports = new Report();
