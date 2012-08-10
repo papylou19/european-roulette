@@ -48,7 +48,6 @@ namespace Roulette.Controllers
 
         public ActionResult Report(DateTime startDate, DateTime endDate, int? cashierId)
         {
-            if (endDate > DateTime.Now) return new EmptyResult();
             if (cashierId.HasValue && Roles.IsUserInRole("SystemAdmin"))
             {
                 var model = new ReportModel();

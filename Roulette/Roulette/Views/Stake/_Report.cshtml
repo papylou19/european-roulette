@@ -38,8 +38,8 @@
     <tr>
         <td>Дата</td>
         <td>Ставка</td>
-        <td>Возможная выигрыш</td>
-        <td>Выигрыш</td>
+        <td>Возможный выигрыш</td>
+        <td>Результат</td>
         <td>Дата выплаты</td>
         <td>Сумма выплаты</td>
         <td></td>
@@ -50,9 +50,9 @@
         <td>@item.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")</td>
         <td>@item.Sum</td>
         <td>@item.PossibleWinning</td>
-        <td>@(item.IsWinningTicket==true? "Выгрыш":"проигрыш")</td>
+        <td>@(item.IsWinningTicket==true? "выигрыш":"проигрыш")</td>
         <td>@(item.PaymentDate!=null? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss"): "")</td>
-        <td>@item.PossibleWinning</td>
+        <td>@(item.IsWinningTicket==true? item.PossibleWinning.ToString() : "")</td>
         <td>
             <input type="hidden" value="@item.ContractNumber" />
             <input type="button" value="Показать чек" class="showCheck admin-button" style="width: 140px;" />
