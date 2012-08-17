@@ -84,7 +84,7 @@ function BetComplect(number) {
 //    }
 
     // streets
-    alert(number - number % 3);
+    //alert(number - number % 3);
     //StraightUp([9, 8, 7], "Street", bet);
 }
 
@@ -167,7 +167,7 @@ function StraightUp(numbers, type, bet) {
     }
 
 
-    var element = $(".selected").clone().removeClass("selected");
+    var element = $(".selected").clone().removeClass("selected").addClass("onboard");
     element.find("div.text").html(bet);
     var absHeight;
     var absWidth;
@@ -289,21 +289,38 @@ $(function () {
         }
     });
 
-    $('div.chip').click(function () {
-        $('.bet').val($(this).find('.text').text());
-        $(this).siblings().removeClass("selected");
-        if ($(this).hasClass("selected"))
-            $(this).removeClass("selected");
-        else
-            $(this).addClass("selected");
+    $('div.chip').live("click", function () {
+        if ($("#cancel-any-button").hasClass("clicked")) {
+            if ($(this).hasClass("onboard")) {
+                $(this).removeStake();
+                $(this).remove();
+                $.ajax({
+                    type: "POST",
+                    url: '/Stake/RememberCurrentState',
+                    data: { currentState: $("#centered-div").html() }
+                });
+            }
+        }
+        else {
+            $('.bet').val($(this).find('.text').text());
+            $(this).siblings().removeClass("selected");
+            if ($(this).hasClass("selected"))
+                $(this).removeClass("selected");
+            else
+                $(this).addClass("selected");
+        }
     });
 
     $("#zero").click(function () {
-        $(this).setStake();
+        if (!$("#cancel-any-button").hasClass("clicked")) {
+            $(this).setStake();
+        }
     });
 
     $(".roulette-board td").click(function () {
-        $(this).setStake();
+        if (!$("#cancel-any-button").hasClass("clicked")) {
+            $(this).setStake();
+        }
     });
 
 
@@ -312,7 +329,7 @@ $(function () {
             return false;
         }
 
-        var element = $(".selected").clone().removeClass("selected");
+        var element = $(".selected").clone().removeClass("selected").addClass("onboard");
         var absHeight;
         var absWidth;
 
@@ -380,7 +397,7 @@ $(function () {
             else {
                 if (!ContainStakesId(id, "VerticalTrips")) {
 
-                    absTop = $(".highlighted").eq(0).outerHeight() * 2 - $(".selected").outerHeight() / 2;
+                    absTop = $(".highlighted").eq(0).outerHeight() - $(".selected").outerHeight() / 2;
                     absLeft = ($(".highlighted").eq(0).outerWidth() - $(".selected").outerWidth()) / 2;
                     type = "VerticalTrips";
 
@@ -459,7 +476,7 @@ $(function () {
             }
             else if ($(this).hasClass("number") && $(".highlighted").length == 3) {
                 if ($(".highlighted").eq(0).attr("id") != "zero") {
-                    $(".highlighted").eq(1).children(".push-item").eq(0).append(element);
+                    $(".highlighted").eq(2).children(".push-item").eq(0).append(element);
                 }
                 else {
                     $(".highlighted").eq(2).children(".push-item").eq(0).append(element);
@@ -478,6 +495,116 @@ $(function () {
                 data: { currentState: $("#centered-div").html() }
             });
         }
+    }
+
+    $.fn.removeStake = function () {
+
+        var id = parseInt($(".highlighted").eq(0).find(".round").html());
+        var type;
+
+        if ($(".highlighted").length == 1) {
+            if (ContainStakesId(id, "SingleElement")) {
+                type = "SingleElement";
+            }
+        }
+        else if ($(".highlighted").length == 2) {
+
+            if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(1).find(".round").html()) == 1 && $(".highlighted").eq(0).attr("id") != "zero") {
+                if (ContainStakesId(id, "VerticalPair")) {
+                    type = "VerticalPair";
+
+                }
+            }
+            else if ($(".highlighted").eq(0).attr("id") == "zero") {
+
+                id = parseInt($(".highlighted").eq(1).find(".round").html());
+                if (ContainStakesId(id, "HorizontalWithZeroPair")) {
+                    type = "HorizontalWithZeroPair";
+                }
+            }
+            else {
+                if (ContainStakesId(id, "HorizontalPair")) {
+                    type = "HorizontalPair";
+
+                }
+            }
+        }
+        else if ($(".highlighted").length == 3) {
+            if ($(".highlighted").eq(0).attr("id") == "zero") {
+                id = parseInt($(".highlighted").eq(1).find(".round").html());
+                if (ContainStakesId(id, "HorizontalWithZeroTrips")) {
+                    type = "HorizontalWithZeroTrips";
+
+                }
+
+            }
+            else {
+                if (ContainStakesId(id, "VerticalTrips")) {
+                    type = "VerticalTrips";
+
+                }
+            }
+        }
+        else if ($(".highlighted").length == 4) {
+            if (ContainStakesId(id, "Quads")) {
+                type = "Quads";
+
+            }
+        }
+        else if ($(".highlighted").length == 6) {
+            if (ContainStakesId(id, "TwoVerticalTrips")) {
+                type = "TwoVerticalTrips";
+
+            }
+        }
+        else {
+            if ($(".highlighted").length == 12) {
+                if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(4).find(".round").html()) == 12) {
+                    if (ContainStakesId(id, "HorizontalLine")) {
+                        type = "HorizontalLine";
+                    }
+                }
+                else {
+                    if (ContainStakesId(id, "TwelveElements")) {
+                        type = "TwelveElements";
+
+                    }
+                }
+            }
+            else if ($(".highlighted").length == 18) {
+                if (!$(".highlighted.black").length || !$(".highlighted.red").length) {
+                    if (ContainStakesId(id, "BlackOrRed")) {
+                        type = "BlackOrRed";
+
+                    }
+                }
+                else if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(1).find(".round").html()) == 3) {
+                    if (ContainStakesId(id, "EighteenElements")) {
+                        type = "EighteenElements";
+
+                    }
+                }
+                else {
+                    if (ContainStakesId(id, "EvenOrOdd")) {
+                        type = "EvenOrOdd";
+
+                    }
+                }
+            }
+        }
+
+        if (type !== undefined) {
+
+            var index = -1;
+            for (var i = 0; i < stakes.length; i++) {
+                if (stakes[i].Id == id && stakes[i].Type == type) {
+                    index = i;
+                }
+            }
+
+            stakes.splice(index, 1);
+        }
+
     }
 
 
