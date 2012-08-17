@@ -1,11 +1,19 @@
-﻿@model Domain.Game[]
+﻿@model Roulette.Models.TableModel
 
-<table cellspacing=0>
-@foreach (var game in Model)
+<table class="roulette-board" cellspacing="0">
+@foreach (var game in Model.History)
 {
     <tr>
     <td>@game.GameNumber</td>
-    <td>@game.Number</td>
+    @if((int)game.Number != 0) {
+        <td class='@(Model.Colors[(int)game.Number-1].Color ? "red" : "black") number'><div class="push-item"><div class="round">@game.Number</div></div></td>
+    }
+    else {
+        <td>
+            <div class="push-item"><div class="round">0</div></div>
+
+        </td>
+    }
     </tr>
 }
 </table>
