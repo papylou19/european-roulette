@@ -123,7 +123,7 @@ namespace Backend.Facade.Implementations
             var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
 
             //skipping current game
-            return ctx.Games.Where(p=>p.CashierId == cashierId).OrderByDescending(p => p.Id).Skip(1).Take(10).OrderBy(p => p.Id).ToArray();
+            return ctx.Games.Where(p=>p.CashierId == cashierId).OrderByDescending(p => p.Id).Skip(1).Take(10).OrderBy(p => p.Id).OrderByDescending(p => p.Id).ToArray();
         }
 
         public bool AddCashier(int percent,Guid userId)

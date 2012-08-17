@@ -44,8 +44,11 @@ namespace Roulette.Controllers
 
         public ActionResult UpdateHistory()
         {
-            var games = Unit.RouletteSrvc.GetLastHistory(CurrentUserId);
-            return PartialView("_History", games);
+            var model = new TableModel() {
+                History = Unit.RouletteSrvc.GetLastHistory(CurrentUserId),
+                Colors = InitializeColors()
+            };
+            return PartialView("_History", model);
         }
 
         public int GetCurrentRound()
