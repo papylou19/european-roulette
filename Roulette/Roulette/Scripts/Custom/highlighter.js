@@ -1,17 +1,81 @@
-﻿$(function () {
+﻿var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0]
 
+function Highlight(index) {
+    index = (37 + index) % 37;  
+    var number = NUMBERS[index];
+    $(".round:contains('" + number + "')").each(function (idx, val) {
+        if ($(val).html() == number) {
+            $(val).parents().eq(1).highlight();
+            cells[index][0].attr("fill-opacity", 0.3);
+            cells[index][1].attr("fill", "#FFFF00");
+        }
+    })
+}
+
+function HighlightNeighbors(element) {
+    ClearHighlight();
+    var index = element.data("index");
+    var betFrom = index - 2;
+    var batTo = index + 2;
+    for (var i = betFrom; i <= batTo; i++) {              
+        Highlight(i);
+    }
+}
+
+function HighlightJeuZero() {
+    ClearHighlight();
+    for (var i = 34; i <= 36; i++) {
+        Highlight(i);
+    }
+    for (var i = 0; i <= 3; i++) {
+        Highlight(i);
+    }
+}
+
+function HighlightVoisinsduZero() {
+    ClearHighlight();
+    for (var i = 29; i <= 36; i++) {
+        Highlight(i);
+    } 
+    for (var i = 0; i <= 8; i++) {
+        Highlight(i);
+    }
+}
+
+function HighlightOrphelins() {
+    ClearHighlight();
+    for (var i = 26; i <= 28; i++) {
+        Highlight(i);
+    }
+    for (var i = 9; i <= 13; i++) {
+        Highlight(i);
+    }
+}
+
+function HighlightTiersduCylindre() {
+    ClearHighlight();
+    for (var i = 14; i <= 25; i++) {
+        Highlight(i);
+    }
+}
+
+function ClearHighlight() {
+    $(".highlighted").removeClass("highlighted");
+
+    for (var i = 0; i < cells.length; i++) {
+        cells[i][0].attr("fill-opacity", 1);
+        cells[i][1].attr("fill", "#FFF");
+    }
+}
+
+
+$(function () {
     var cellWidth = $(".roulette-board tr:first").find("td").outerWidth();
     var cellHeight = $(".roulette-board tr:first").find("td").outerHeight();
-
 
     $.fn.highlight = function () {
         $(this).addClass("highlighted");
     };
-
-
-    function ClearHighlight() {
-        $(".highlighted").removeClass("highlighted");
-    }
 
     function HighlightCellsWithColor(color) {
         color == "red" ? $(".roulette-board td.red").highlight() : $(".roulette-board td.black").highlight();
@@ -45,6 +109,10 @@
     });
 
     $("#zero").mouseleave(function (e) {
+        ClearHighlight();
+    });
+    
+    $("#sectors-container").mouseleave(function (e) {
         ClearHighlight();
     });
 

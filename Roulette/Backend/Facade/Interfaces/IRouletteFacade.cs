@@ -38,5 +38,7 @@ namespace Backend.Facade.Interfaces
         Report GetReportsByDate(DateTime startDate, DateTime endDate, int cashierId);
         int GetAmountOfBet(Guid userId);
         double GetAmountOfPayOut(Guid userId);
+
+        bool RemoveCheck(long contractNumber);
     }
 }

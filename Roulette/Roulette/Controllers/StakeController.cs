@@ -30,20 +30,24 @@ namespace Roulette.Controllers
         [HttpPost]
         public JsonResult CreateStake(StakeDTO[] stakes)
         {
-            bool success = false;
-            long contractNumber = 0;
-            var state = Unit.RouletteSrvc.GetCurrentState();
-            if ( state!=null && state.State!=1)
+            if (stakes != null && stakes.FirstOrDefault(m => m.Price <= 0) == null)
             {
-                contractNumber = Unit.RouletteSrvc.CreateCheck(stakes, BoardCurrentStates[CurrentUserName], CurrentUserId);
-                if (contractNumber != 0)
+                bool success = false;
+                long contractNumber = 0;
+                var state = Unit.RouletteSrvc.GetCurrentState();
+                if (state != null && state.State != 1)
                 {
-                    success = Unit.RouletteSrvc.CreateStake(stakes, contractNumber, CurrentUserId);
+                    contractNumber = Unit.RouletteSrvc.CreateCheck(stakes, BoardCurrentStates[CurrentUserName], CurrentUserId);
+                    if (contractNumber != 0)
+                    {
+                        success = Unit.RouletteSrvc.CreateStake(stakes, contractNumber, CurrentUserId);
+                    }
                 }
-            }
 
-            return Json(new { success = success, contractNumber = contractNumber });
-        }
+                return Json(new { success = success, contractNumber = contractNumber });
+            }
+            return Json(new { success = false});
+        } 
 
 
         public ActionResult Report(DateTime startDate, DateTime endDate, int? cashierId)

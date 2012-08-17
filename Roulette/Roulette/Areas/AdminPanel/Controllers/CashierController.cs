@@ -11,7 +11,7 @@ using System.Web.Security;
 
 namespace Roulette.Areas.AdminPanel.Controllers
 {
-    [Authorize(Roles="admin")]
+    [Authorize(Roles = "SystemAdmin")]
     public class CashierController : Roulette.Controllers.ControllerBase
     {
         //
@@ -21,6 +21,7 @@ namespace Roulette.Areas.AdminPanel.Controllers
         {
             var cashierListmodel = new List<CashierModel>();
             var cashierList = Unit.RouletteSrvc.GetAllCashier();
+
             foreach (var item in cashierList)
             {
                 cashierListmodel.Add(new CashierModel
@@ -30,7 +31,7 @@ namespace Roulette.Areas.AdminPanel.Controllers
                     CurrentPercent = Math.Round(Unit.RouletteSrvc.CountPercent(item.UserId), 4),
                     NumberPercent = item.NumberPercent,
                     UserName = item.User.UserName,
-                    IsApproved = membership.GetUser(item.User.UserId,true).IsApproved,
+                    IsApproved = membership.GetUser(item.User.UserId, true).IsApproved,
                     Id = item.Id
                 });
             }
@@ -40,8 +41,8 @@ namespace Roulette.Areas.AdminPanel.Controllers
         [HttpGet]
         public ActionResult Add()
         {
-
-            return View();
+            var model = new CashierModel();
+            return View(model);
         }
 
         [HttpPost]
@@ -54,6 +55,13 @@ namespace Roulette.Areas.AdminPanel.Controllers
                 Unit.RouletteSrvc.AddCashier(model.NumberPercent,(Guid)user.ProviderUserKey);
             }
             return RedirectToAction("Index");
+        }
+
+        // GET: /AdminPanel/Cashier/RemoveCheck
+        public ActionResult RemoveCheck(long contractNumber)
+        {
+            var success = Unit.RouletteSrvc.RemoveCheck(contractNumber);
+            return Json(new { success = success, contractNumber = contractNumber }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Disable(int id)

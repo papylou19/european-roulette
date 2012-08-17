@@ -10,9 +10,10 @@
      <script type="text/javascript" src="/Scripts/jquery-ui-1.8.11.js"></script>
      <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
      <script type="text/javascript" src="/Scripts/Custom/highlighter.js"></script>
-     <script type="text/javascript" src="/Scripts/Custom/stake.js"></script>
+     <script type="text/javascript" src="/Scripts/Custom/stake.js?wd=15"></script>
      <script type="text/javascript">
          var contractNumber = 0;
+         var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
          function getStakes() {
              setTimeout(function () {
                  $.ajax({
@@ -43,7 +44,7 @@
              $('#check-dialog, #pay-dialog').dialog({
                  modal: true,
                  autoOpen: false,
-                 width: 300,
+                 width: 235,
                  height: 200,
                  title: "Check code",
                  open: function (event, ui) {
@@ -60,7 +61,7 @@
                  height: 600,
                  title: "Report",
                  open: function (event, ui) {
-                     $('#report-dialog #endDate').val(getDateString(new Date())); 
+                     $('#report-dialog #endDate').val(getDateString(new Date()));
                      var lastWeek = new Date();
                      lastWeek.setDate(lastWeek.getDate() - 1);
                      $('#report-dialog #startDate').val(getDateString(lastWeek));
@@ -133,6 +134,10 @@
              });
 
              $("#submit-button").click(function () {
+                 if (!isFormValid) {
+                     alert("Cтавка может состоять только из положительных чисел");
+                     return;
+                 }
                  $.ajax({
                      type: "POST",
                      url: '/Stake/CreateStake',
@@ -140,14 +145,28 @@
                      data: JSON.stringify(stakes),
                      async: false,
                      success: function (data) {
-                         stakes = new Array();
-                         $('.roulette-board div.chip').remove();
-                         $('#zero div.chip').remove();
-                         contractNumber = data.contractNumber;
-                         PrintCheck(contractNumber);
+                         if (data.success) {
+                             stakes = new Array();
+                             $('.roulette-board div.chip').remove();
+                             $('#zero div.chip').remove();
+                             contractNumber = data.contractNumber;
+                             PrintCheck(contractNumber);
+                         } else {
+                             alert("Произошла ошибка, повторите ставку");
+                         }
                      }
                  });
              });
+
+
+             $("#complect-button").click(function () {
+                 if ($(this).hasClass("clicked")) {
+                     $(this).removeClass("clicked");
+                 } else {
+                     $(this).addClass("clicked");
+                 }
+             });
+
 
              getStakes();
              setRoundNumber();
@@ -178,10 +197,15 @@
         <input type="button" value="Submit" id="submit-button" class="admin-button" />
         <input type="button" value="Check" id="check-button" class="admin-button" />
         <input type="button" value="Report" id="report-button" class="admin-button" />
+        <input type="button" value="Complect" id="complect-button" class="admin-button clicked" />
     </div>
     <div id="centered-div">
         @Html.Partial("_Board", Model)
     </div>
+    <div id="sectors-div" style="margin-top: 40px;">
+        @Html.Partial("_Sectors", Model)
+    </div>
+
     <div class="roulette-chips">
         <div class="chip" data-value="1">
             <img src="/img/red-chip.png" alt="1"/>

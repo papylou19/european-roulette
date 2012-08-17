@@ -48,12 +48,13 @@
             });
 
             $("#show").click(function () {
-                var cashier = $('#show').attr("data-cashierId");
+                var cashier = $("#report-dialog #show").data("cashierId");
                 $("#reports").load('/Stake/Report', { startDate: $(this).siblings("#startDate").eq(0).val(), endDate: $(this).siblings("#endDate").eq(0).val(), cashierId: cashier });
             });
         });
 
         function showReport(cashierId) {
+            $("#report-dialog #show").data("cashierId", cashierId);
             $("#report-dialog").dialog("open");
         }
 

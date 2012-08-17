@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Timers;
 using Backend;
+using Backend.DataContext;
+using Backend.Facade.Interfaces;
+using Backend.Facade.Implementations;
 
 namespace Roulette
 {
@@ -16,6 +19,7 @@ namespace Roulette
     {
         Timer timer;
         protected static UnitOfWork Unit { get; private set; }
+        protected static RouletteFacade RouletteFcd { get; private set; }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -31,7 +35,6 @@ namespace Roulette
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Account", action = "LogIn", id = UrlParameter.Optional } // Parameter defaults
             );
-
         }
 
         protected void Application_Start()
@@ -40,7 +43,7 @@ namespace Roulette
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            Unit = new UnitOfWork();
+            RouletteFcd = new RouletteFacade();
             timer = new Timer(30000);
             //timer_Elapsed(null, null);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
@@ -49,22 +52,22 @@ namespace Roulette
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            int? state = new UnitOfWork().RouletteSrvc.ChangeGameState();
-            var cashierUserIds = Unit.RouletteSrvc.GetAllCashier().Select(p => p.UserId);
+            int? state = RouletteFcd.ChangeGameState();
+            var cashierUserIds = RouletteFcd.GetAllCashier().Select(p => p.UserId);
 
             if (state == 1)
             {
                 foreach (var userId in cashierUserIds)
                 {
-                    var percent = Unit.RouletteSrvc.GetCashierByUserId(userId).NumberPercent;
-                    var currentPercent = Unit.RouletteSrvc.CountPercent(userId);
+                    var percent = RouletteFcd.GetCashierByUserId(userId).NumberPercent;
+                    var currentPercent = RouletteFcd.CountPercent(userId);
                     var numberDic = new Dictionary<int, double>();
                     var stakeDict = new Dictionary<int, List<int>>();
-                    var gameId = Unit.RouletteSrvc.GetCurrentGameId(userId);
+                    var gameId = RouletteFcd.GetCurrentGameId(userId);
 
                     for (int i = 0; i < 37; i++)
                     {
-                        var count = Unit.RouletteSrvc.CountWinningNumber(gameId, i);
+                        var count = RouletteFcd.CountWinningNumber(gameId, i);
                         numberDic.Add(i, count.Key);
                         stakeDict.Add(i, count.Value);
                     }
@@ -84,8 +87,8 @@ namespace Roulette
 
                     int winNumber = numberDic.ElementAt(new Random().Next(0, 9)).Key;
 
-                    Unit.RouletteSrvc.WriteWinnerNumber(gameId,winNumber);
-                    Unit.RouletteSrvc.MakeWinner(stakeDict[winNumber]);
+                    RouletteFcd.WriteWinnerNumber(gameId, winNumber);
+                    RouletteFcd.MakeWinner(stakeDict[winNumber]);
                 }
             }
         }

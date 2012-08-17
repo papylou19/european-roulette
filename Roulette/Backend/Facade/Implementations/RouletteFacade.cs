@@ -7,12 +7,17 @@ using Backend.DataContext;
 using Domain;
 using Domain.Helpers;
 using Backend.Helper;
+using System.Data.Entity;
 
 namespace Backend.Facade.Implementations
 {
     public class RouletteFacade : IRouletteFacade
     {
         private RouletteContext ctx;
+
+        public RouletteFacade()
+        {
+        }
 
         public RouletteFacade(RouletteContext context)
         {
@@ -40,51 +45,57 @@ namespace Backend.Facade.Implementations
 
         public int? ChangeGameState()
         {
-            var current = ctx.GameStates.FirstOrDefault();
-            int state = 0;
-
-            if (current == null || current.State == 1)
+            using (var ctx = new RouletteContext())
             {
-                var cashiers =  ctx.Cashiers.ToList();
-                foreach (var cashier in cashiers)
+                var current = ctx.GameStates.FirstOrDefault();
+                int state = 0;
+
+                if (current == null || current.State == 1)
                 {
-                    ctx.Games.Add(new Game
+                    var cashiers = ctx.Cashiers.ToList();
+                    foreach (var cashier in cashiers)
                     {
-                        CashierId = cashier.Id,
-                        GameNumber = ctx.Games.Where(p => p.CashierId == cashier.Id).FirstOrDefault() != null ? ctx.Games.Where(p => p.CashierId == cashier.Id).Max(p => p.GameNumber) + 1 : Constants.GAME_FIRST_NUMBER
+                        ctx.Games.Add(new Game
+                        {
+                            CashierId = cashier.Id,
+                            GameNumber = ctx.Games.Where(p => p.CashierId == cashier.Id).FirstOrDefault() != null ? ctx.Games.Where(p => p.CashierId == cashier.Id).Max(p => p.GameNumber) + 1 : Constants.GAME_FIRST_NUMBER
+                        });
+                    }
+                }
+
+                if (current == null)
+                {
+                    SetState(new GameState()
+                    {
+                        State = 0,
+                        StartTime = DateTime.Now
                     });
                 }
-            }
-
-            if (current == null)
-            {
-                SetState(new GameState()
+                else
                 {
-                    State = 0,
-                    StartTime = DateTime.Now
-                });
-            }
-            else
-            {
                     current.StartTime = DateTime.Now;
                     current.State = current.State != 1 ? (short)(current.State + 1) : (short)0;
                     state = current.State;
-            }
+                }
 
-            try
-            {
-                ctx.SaveChanges();
-                return state;
-            }
-            catch
-            {
-                return null;
+                try
+                {
+                    ctx.SaveChanges();
+                    return state;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 
         public Cashier GetCashierByUserId(Guid userId)
         {
-            return ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId);
+            using (var ctx = new RouletteContext())
+            {
+                return ctx.Cashiers.FirstOrDefault(p => p.UserId == userId);
+            }
         }
 
 
@@ -133,7 +144,8 @@ namespace Backend.Facade.Implementations
                 ctx.Cashiers.Add(new Cashier
                 {
                     NumberPercent = percent,
-                    UserId =userId
+                    UserId = userId,
+                    LastChangeDate = DateTime.Now,
                 });
 
                 ctx.SaveChanges();
@@ -149,7 +161,10 @@ namespace Backend.Facade.Implementations
 
         public List<Cashier> GetAllCashier()
         {
-            return ctx.Cashiers.ToList();
+            using (var ctx = new RouletteContext())
+            {
+                return ctx.Cashiers.Include(m => m.User).ToList();
+            }
         }
 
 
@@ -257,45 +272,50 @@ namespace Backend.Facade.Implementations
 
         public double CountPercent(Guid userId)
         {
-          
-            double winnerSum = 0;
-            var winStake = (from cashier in ctx.Cashiers
-                           join game in ctx.Games on cashier.Id equals game.CashierId
-                           join stake in ctx.Stakes on game.Id equals stake.GameId
-                            where cashier.UserId == userId && stake.IsWinningTicket == true
-                           select new { PossibleWinning = stake.PossibleWinning }).ToList();
-         
-
-            var test = (from cashier in ctx.Cashiers // TODO check why this not wotking without 
-                       join game in ctx.Games on cashier.Id equals game.CashierId
-                       join stake in ctx.Stakes on game.Id equals stake.GameId
-                       where cashier.UserId == userId
-                       select stake.Sum).ToList();
-            var sum = test.Sum();
-
-            if (winStake.Count!=0)
+            using (var ctx = new RouletteContext())
             {
-                winnerSum = winStake.Sum(m => m.PossibleWinning);
-            }
+                double winnerSum = 0;
+                var winStake = (from cashier in ctx.Cashiers
+                                join game in ctx.Games on cashier.Id equals game.CashierId
+                                join stake in ctx.Stakes on game.Id equals stake.GameId
+                                where cashier.UserId == userId && stake.IsWinningTicket == true
+                                select new { PossibleWinning = stake.PossibleWinning }).ToList();
 
-            return winnerSum*100/sum;
+
+                var test = (from cashier in ctx.Cashiers // TODO check why this not wotking without 
+                            join game in ctx.Games on cashier.Id equals game.CashierId
+                            join stake in ctx.Stakes on game.Id equals stake.GameId
+                            where cashier.UserId == userId
+                            select stake.Sum).ToList();
+                var sum = test.Sum();
+
+                if (winStake.Count != 0)
+                {
+                    winnerSum = winStake.Sum(m => m.PossibleWinning);
+                }
+
+                return winnerSum * 100 / sum;
+            }
         }
 
 
         public KeyValuePair<double, List<int>> CountWinningNumber(int gameId, int number)
         {
-            var stakes = ctx.Stakes.Where(m => m.GameId == gameId).ToList();
-            double count = 0;
-            List<int> winStakes = new List<int>();
-            foreach (var item in stakes)
+            using (var ctx = new RouletteContext())
             {
-                if (CheckNumber(item.Number, number, item.Type))
+                var stakes = ctx.Stakes.Where(m => m.GameId == gameId).ToList();
+                double count = 0;
+                List<int> winStakes = new List<int>();
+                foreach (var item in stakes)
                 {
-                    count += item.PossibleWinning;
-                    winStakes.Add(item.Id);
+                    if (CheckNumber(item.Number, number, item.Type))
+                    {
+                        count += item.PossibleWinning;
+                        winStakes.Add(item.Id);
+                    }
                 }
+                return new KeyValuePair<double, List<int>>(count, winStakes);
             }
-            return new KeyValuePair<double, List<int>>(count, winStakes);
         }
 
        public bool CheckNumber(int number, int winNumber,string type)
@@ -458,32 +478,37 @@ namespace Backend.Facade.Implementations
                         }
                         break;
                     }
-
             }
             return false;
         }
 
-       public bool MakeWinner(List<int> stakes)
+        public bool MakeWinner(List<int> stakes)
         {
-            try
+            using (var ctx = new RouletteContext())
             {
-                foreach (var item in stakes)
+                try
                 {
-                    ctx.Stakes.FirstOrDefault(m => m.Id == item).IsWinningTicket = true;
+                    foreach (var item in stakes)
+                    {
+                        ctx.Stakes.FirstOrDefault(m => m.Id == item).IsWinningTicket = true;
+                    }
+                    ctx.SaveChanges();
+                    return true;
                 }
-                ctx.SaveChanges();
-                return true;
-            }
-            catch
-            {
-                return false;
+                catch
+                {
+                    return false;
+                }
             }
         }
 
         public void WriteWinnerNumber(int gameId, int winNumber)
         {
-            ctx.Games.FirstOrDefault(p => p.Id == gameId).Number = Convert.ToByte(winNumber);
-            ctx.SaveChanges();
+            using (var ctx = new RouletteContext())
+            {
+                ctx.Games.FirstOrDefault(p => p.Id == gameId).Number = Convert.ToByte(winNumber);
+                ctx.SaveChanges();
+            }
         }
 
         public List<Stake> CheckWinner(long contractNumber)
@@ -494,7 +519,7 @@ namespace Backend.Facade.Implementations
 
         public byte? GetWinner(int gameId) 
         {
-            return ctx.Games.FirstOrDefault(p=>p.Id == gameId).Number;
+            return ctx.Games.FirstOrDefault(p => p.Id == gameId).Number;
         }
 
         public bool Pay(long contractNumber)
@@ -513,8 +538,11 @@ namespace Backend.Facade.Implementations
 
         public int GetCurrentGameId(Guid userId)
         {
-            var cashierId = ctx.Cashiers.FirstOrDefault(p=>p.UserId == userId).Id;
-            return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId) != null ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id) : Constants.GAME_FIRST_NUMBER;
+            using (var ctx = new RouletteContext())
+            {
+                var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
+                return ctx.Games.FirstOrDefault(p => p.CashierId == cashierId) != null ? ctx.Games.Where(p => p.CashierId == cashierId).Max(p => p.Id) : Constants.GAME_FIRST_NUMBER;
+            }
         }
 
         public Report GetReportsByDate(DateTime startDate, DateTime endDate, int cashierId)
@@ -548,7 +576,6 @@ namespace Backend.Facade.Implementations
 
         public int GetAmountOfBet(Guid userId)
         {
-
             var sumQuery = (from cashier in ctx.Cashiers
                             join game in ctx.Games on cashier.Id equals game.CashierId
                             join stake in ctx.Stakes on game.Id equals stake.GameId
@@ -571,6 +598,23 @@ namespace Backend.Facade.Implementations
             var winnerSum = winnerQuery.Count() != 0 ? winnerQuery.Sum() : 0;
 
             return winnerSum;
+        }
+
+
+        public bool RemoveCheck(long contractNumber)
+        {
+            var entry = ctx.Checks.Find(contractNumber);
+            ctx.Entry(entry).State = System.Data.EntityState.Deleted;
+            try
+            {
+                ctx.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+                throw;
+            }
         }
     }
 }

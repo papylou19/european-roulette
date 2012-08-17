@@ -24,6 +24,7 @@ namespace Roulette.Controllers
         }
 
         // GET: /Account/LogOut
+        [Authorize]
         public ActionResult LogOut()
         {
             FormsAuthentication.SignOut();
