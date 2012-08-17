@@ -1,63 +1,78 @@
 ﻿@model Roulette.Models.ReportModel
  
- <script type="text/javascript">
-     $(function () {
-         $(".showCheck").click(function () {
-             var contractNumber = $(this).siblings("input").eq(0).val();
-             PrintCheck(contractNumber);
-         });
-     })
+     <script type="text/javascript">
+         $(function () {
+             $(".showCheck").click(function () {
+                 var contractNumber = $(this).siblings("input").eq(0).val();
+                 PrintCheck(contractNumber);
+             });
 
+             $(".removeCheck").click(function () {
+                 if (confirm("Удалить чек?")) {
+                     var button = $(this);
+                     $.get("/AdminPanel/Cashier/RemoveCheck?contractNumber=" + $(this).siblings("input").eq(0).val(), function (data) {
+                         if (data.success) {
+                             button.parents("tr").remove();
+                         }
+                     });
+                 }
+             });
+         })
 
-     function PrintCheck(contractNumber) {
-         if (contractNumber != 0) {
-             window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+         function PrintCheck(contractNumber) {
+             if (contractNumber != 0) {
+                 window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+             }
          }
-     }
- </script>
+     </script>
  
- <table class="totalReport">
-    <tr>
-         <td>Ставок принято</td>
-        <td>@Model.Reports.CountStake</td>
-    </tr>
-    <tr>
-        <td>На общую сумму</td>
-        <td>@Model.Reports.Stake</td>
-    </tr>
-     <tr>
-        <td>Сумма совершенных выплат</td>
-        <td>@Model.Reports.WinSum</td>
-    </tr>
-    <tr>
-        <td>Сумма к выплате</td>
-        <td>@Model.Reports.WaitingSum</td>
-    </tr>
- </table>          
-<table class="reportsTable">
-    <tr>
-        <td>Дата</td>
-        <td>Ставка</td>
-        <td>Возможный выигрыш</td>
-        <td>Результат</td>
-        <td>Дата выплаты</td>
-        <td>Сумма выплаты</td>
-        <td></td>
-    </tr>
-@foreach (var item in Model.Reports.Stakes)
-{
-    <tr>
-        <td>@item.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")</td>
-        <td>@item.Sum</td>
-        <td>@item.PossibleWinning</td>
-        <td>@(item.IsWinningTicket==true? "выигрыш":"проигрыш")</td>
-        <td>@(item.PaymentDate!=null? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss"): "")</td>
-        <td>@(item.IsWinningTicket==true? item.PossibleWinning.ToString() : "")</td>
-        <td>
-            <input type="hidden" value="@item.ContractNumber" />
-            <input type="button" value="Показать чек" class="showCheck admin-button" style="width: 140px;" />
-        </td>
-    </tr>
-}
-   
-</table>
+     <table class="totalReport">
+        <tr>
+             <td>Ставок принято</td>
+            <td>@Model.Reports.CountStake</td>
+        </tr>
+        <tr>
+            <td>На общую сумму</td>
+            <td>@Model.Reports.Stake</td>
+        </tr>
+         <tr>
+            <td>Сумма совершенных выплат</td>
+            <td>@Model.Reports.WinSum</td>
+        </tr>
+        <tr>
+            <td>Сумма к выплате</td>
+            <td>@Model.Reports.WaitingSum</td>
+        </tr>
+    </table>      
+    
+    <table class="reportsTable">
+        <tr>
+            <td>Дата</td>
+            <td>Ставка</td>
+            <td>Возможная выигрыш</td>
+            <td>Выигрыш</td>
+            <td>Дата выплаты</td>
+            <td>Сумма выплаты</td>
+            <td></td>
+        </tr>
+    @foreach (var item in Model.Reports.Stakes)
+    {
+        <tr>
+            <td>@item.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")</td>
+            <td>@item.Sum</td>
+            <td>@item.PossibleWinning</td>
+            <td>@(item.IsWinningTicket==true? "Выгрыш":"проигрыш")</td>
+            <td>@(item.PaymentDate!=null? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss"): "")</td>
+            <td>@item.PossibleWinning</td>
+            <td>
+                <input type="hidden" value="@item.ContractNumber" />
+                <input type="button" value="Показать чек" class="showCheck admin-button" style="width: 140px;" />
+
+                @if (Roles.IsUserInRole("SystemAdmin"))
+                {
+                    <input type="button" value="Удалить чек" class="removeCheck admin-button" style="width: 140px;" />
+                }
+            </td>  
+        </tr>
+    }   
+    </table>

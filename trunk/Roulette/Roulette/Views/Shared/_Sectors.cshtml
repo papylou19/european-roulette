@@ -1,0 +1,299 @@
+﻿@model Roulette.Models.TableModel
+           
+@*<script src="https://raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js" type="text/javascript"></script>*@
+<script src="../../Scripts/raphael.js" type="text/javascript"></script>
+<script type="text/javascript">
+    if (!Array.prototype.indexOf) {
+        Array.prototype.indexOf = function (elt /*, from*/) {
+            var len = this.length;
+
+            var from = Number(arguments[1]) || 0;
+            from = (from < 0)
+         ? Math.ceil(from)
+         : Math.floor(from);
+            if (from < 0)
+                from += len;
+
+            for (; from < len; from++) {
+                if (from in this &&
+          this[from] === elt)
+                    return from;
+            }
+            return -1;
+        };
+    }
+    
+    var cells = new Array();
+
+    $(function () {
+        var paper = Raphael("sectors-container", 769, 152);
+        var board = paper.rect(1, 1, 767, 150, 75);
+        board.attr("fill", "url(/img/green-texture.jpg)");
+        board.attr("stroke", "#FFE399");
+        board.attr("stroke-width", "1");
+
+        var pi = Math.PI;
+        var cos = Math.cos;
+        var sin = Math.sin;
+        var r = 75;
+        var rsmall = 20;
+        var leftPaths = new Array();
+        var cellsCurrentIndex = 35;
+
+        var initialShapeX1 = 98;
+        var shapeY1 = 1;
+        var shapeWidth = 43;
+        var shapeHeight = 55;
+        var shapeX1;
+        var shapeCX = initialShapeX1 - shapeWidth / 2;
+        var shapeCY = shapeY1 + shapeHeight / 2;
+
+        var redColor = "#DF1111";
+        var blackColor = "#000000";
+        var textAttr = { fill: "#FFF", "font-size": 24, "font-family": "Andalus, 'Trebuchet MS', Verdana, Helvetica, sans-serif" };
+        var shapeAttr = { stroke: "#FFE399" };
+
+
+        //////////////////////
+        var initialAngle = pi / 8;
+        var sectorsAngle = pi / 4;
+        var x1 = 76 - rsmall * sin(initialAngle);
+        var y1 = 56 + rsmall * (1 - cos(initialAngle));
+        var x2 = 76 - r * sin(initialAngle);
+        var y2 = 1 + r * (1 - cos(initialAngle));
+
+        var tempPath = "M" + 98 + " " + 56 + "L" + (r + 1) + " 56" + "A" + rsmall + " " + rsmall + " 0 0 0 " + x1 + " " + y1 +
+        "L" + x2 + " " + y2 + "A" + r + " " + r + " 0 0 1 " + (r + 1) + " 1L98 1Z";
+        cells[cellsCurrentIndex] = paper.set(); // { shape: paper.path(tempPath).attr(shapeAttr) };
+        cells[cellsCurrentIndex].push(
+            paper.path(tempPath).attr(shapeAttr),
+            paper.text(shapeCX, shapeCY, NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+
+        for (var i = 1; i <= 3; i++) {
+            var newX1 = 76 - rsmall * sin(initialAngle + (i * sectorsAngle));
+            var newY1 = 56 + rsmall * (1 - cos(initialAngle + (i * sectorsAngle)));
+
+            var newX2 = 76 - r * sin(initialAngle + (i * sectorsAngle));
+            var newY2 = 1 + r * (1 - cos(initialAngle + (i * sectorsAngle)));
+
+            var tempPath = "M" + x1 + " " + y1 + "A" + rsmall + " " + rsmall + " 0 0 0 " + newX1 + " " + newY1 +
+            "L" + newX2 + " " + newY2 + "A" + r + " " + r + " 0 0 1 " + x2 + " " + y2 + "Z";
+
+            x1 = newX1;
+            y1 = newY1;
+            x2 = newX2;
+            y2 = newY2;
+
+            cellsCurrentIndex = (cellsCurrentIndex + 1) % 37;
+
+            //cells[cellsCurrentIndex] = { shape: paper.path(tempPath).attr(shapeAttr) };
+            cells[cellsCurrentIndex] = paper.set();
+            cells[cellsCurrentIndex].push(
+                paper.path(tempPath).attr(shapeAttr),
+                paper.text(76 - 47.5 * sin(i * sectorsAngle), shapeCY + 47.5 * (1 - cos(i * sectorsAngle)), NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+            //paper.text(76 - 47.5 * sin(i * sectorsAngle), shapeCY + 47.5 * (1 - cos(i * sectorsAngle)), NUMBERS[cellsCurrentIndex]).attr(textAttr);
+        }
+
+        var tempPath = "M" + 98 + " " + 96 + "L" + (r + 1) + " 96" + "A" + rsmall + " " + rsmall + " 0 0 1 " + x1 + " " + y1 +
+        "L" + x2 + " " + y2 + "A" + r + " " + r + " 0 0 0 " + (r + 1) + " 151L98 151Z";
+        //cells[++cellsCurrentIndex] = { shape: paper.path(tempPath).attr(shapeAttr) }
+        //paper.text(76 - 47.5 * sin(4 * sectorsAngle), shapeCY + 47.5 * (1 - cos(4 * sectorsAngle)), NUMBERS[cellsCurrentIndex]).attr(textAttr);
+
+        cells[++cellsCurrentIndex] = paper.set();
+        cells[cellsCurrentIndex].push(
+            paper.path(tempPath).attr(shapeAttr),
+            paper.text(76 - 47.5 * sin(4 * sectorsAngle), shapeCY + 47.5 * (1 - cos(4 * sectorsAngle)), NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+        /////////////////////////////////
+
+        shapeY1 = 96;
+        for (var i = 0; i <= 12; i++) {
+            shapeX1 = initialShapeX1 + i * shapeWidth;
+            //cells[++cellsCurrentIndex] = { shape: paper.rect(shapeX1, shapeY1, shapeWidth, shapeHeight).attr(shapeAttr) }
+
+            cells[++cellsCurrentIndex] = paper.set();
+            cells[cellsCurrentIndex].push(
+                    paper.rect(shapeX1, shapeY1, shapeWidth, shapeHeight).attr(shapeAttr),
+                    paper.text(shapeX1 + shapeWidth / 2, shapeY1 + shapeHeight / 2, NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+
+            //paper.text(shapeX1 + shapeWidth / 2, shapeY1 + shapeHeight / 2, NUMBERS[cellsCurrentIndex]).attr(textAttr);
+        }
+
+        cellsCurrentIndex = 35;
+        shapeY1 = 1;
+        for (var i = 0; i <= 12; i++) {
+            shapeX1 = initialShapeX1 + i * shapeWidth;
+            //cells[++cellsCurrentIndex] = { shape: paper.rect(shapeX1, shapeY1, shapeWidth, shapeHeight).attr(shapeAttr).attr("fill", ((i % 2 == 0) ? blackColor : redColor)) }
+            //cells[--cellsCurrentIndex] = { shape: paper.rect(shapeX1, shapeY1, shapeWidth, shapeHeight).attr(shapeAttr) }
+
+
+
+            cells[--cellsCurrentIndex] = paper.set();
+            cells[cellsCurrentIndex].push(
+                    paper.rect(shapeX1, shapeY1, shapeWidth, shapeHeight).attr(shapeAttr),
+                    paper.text(shapeX1 + shapeWidth / 2, shapeY1 + shapeHeight / 2, NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+            //paper.text(shapeX1 + shapeWidth / 2, shapeY1 + shapeHeight / 2, NUMBERS[cellsCurrentIndex]).attr(textAttr);
+        }
+
+        ///////////////////////////////////
+        //////////////////////
+        var initialAngle = pi / 18;
+        var sectorsAngle = 40 * pi / 180;
+        var x1 = 692 + rsmall * sin(initialAngle);
+        var y1 = 56 + rsmall * (1 - cos(initialAngle));
+        var x2 = 692 + r * sin(initialAngle);
+        var y2 = 1 + r * (1 - cos(initialAngle));
+
+        var shapeCX = (98 + 43 * 13) + shapeWidth / 2;
+        var shapeCY = shapeY1 + shapeHeight / 2;
+
+
+        var tempPath = "M" + (98 + 43 * 13) + " " + 56 + "L692 56A" + rsmall + " " + rsmall + " 0 0 1 " + x1 + " " + y1 +
+            "L" + x2 + " " + y2 + "A" + r + " " + r + " 0 0 0 " + 692 + " 1L" + (98 + 43 * 13) + " 1Z";
+        //cells[--cellsCurrentIndex] = { shape: paper.path(tempPath).attr(shapeAttr) }
+        //paper.text(shapeCX, shapeCY, NUMBERS[cellsCurrentIndex]).attr(textAttr);
+
+        cells[--cellsCurrentIndex] = paper.set();
+        cells[cellsCurrentIndex].push(
+                paper.path(tempPath).attr(shapeAttr),
+                paper.text(shapeCX, shapeCY, NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+
+
+        for (var i = 1; i <= 4; i++) {
+            var newX1 = 692 + rsmall * sin(initialAngle + (i * sectorsAngle));
+            var newY1 = 56 + rsmall * (1 - cos(initialAngle + (i * sectorsAngle)));
+
+            var newX2 = 692 + r * sin(initialAngle + (i * sectorsAngle));
+            var newY2 = 1 + r * (1 - cos(initialAngle + (i * sectorsAngle)));
+
+            var tempPath = "M" + x1 + " " + y1 + "A" + rsmall + " " + rsmall + " 0 0 1 " + newX1 + " " + newY1 +
+                "L" + newX2 + " " + newY2 + "A" + r + " " + r + " 0 0 0 " + x2 + " " + y2 + "Z";
+
+            x1 = newX1;
+            y1 = newY1;
+            x2 = newX2;
+            y2 = newY2;
+            //cells[--cellsCurrentIndex] = { shape: paper.path(tempPath).attr(shapeAttr) }
+
+            if (i > 1) {
+                var anglee = i * sectorsAngle + initialAngle - sectorsAngle / 2;
+            } else {
+                var anglee = (i * sectorsAngle / 2 + initialAngle);
+            }
+            //paper.text(692 + 47.5 * sin(anglee), shapeCY + 47.5 * (1 - cos(anglee)), NUMBERS[cellsCurrentIndex]).attr(textAttr);
+
+
+            cells[--cellsCurrentIndex] = paper.set();
+            cells[cellsCurrentIndex].push(
+                    paper.path(tempPath).attr(shapeAttr),
+                    paper.text(692 + 47.5 * sin(anglee), shapeCY + 47.5 * (1 - cos(anglee)), NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+        }
+
+        var tempPath = "M" + (98 + 43 * 13) + " " + 96 + "L692 96A" + rsmall + " " + rsmall + " 0 0 0 " + x1 + " " + y1 +
+            "L" + x2 + " " + y2 + "A" + r + " " + r + " 0 0 1 " + 692 + " 151L" + (98 + 43 * 13) + " 151Z";
+        //cells[--cellsCurrentIndex] = { shape: paper.path(tempPath).attr(shapeAttr) }
+
+        var shapeCX = (98 + 43 * 13) + shapeWidth / 2;
+        var shapeCY = 96 + shapeHeight / 2;
+        //            paper.text(shapeCX, shapeCY, NUMBERS[cellsCurrentIndex]).attr(textAttr).click(function () {
+        //                $(cells[cellsCurrentIndex].shape).click();
+        //            })
+
+        cells[--cellsCurrentIndex] = paper.set();
+        cells[cellsCurrentIndex].push(
+                    paper.path(tempPath).attr(shapeAttr),
+                    paper.text(shapeCX, shapeCY, NUMBERS[cellsCurrentIndex]).attr(textAttr));
+
+
+        for (var i = 0; i < cells.length; i++) {
+            if (cells[i]) {
+                if (NUMBERS[i] != 0) {
+                    cells[i][0].attr("fill", ((i % 2 == 0) ? blackColor : redColor));
+                } else {
+                    cells[i][0].attr("fill", "url(/img/green-texture.jpg)");
+                }
+
+                cells[i].data("index", i);
+                cells[i].mouseover(function () {
+                    HighlightNeighbors(this);
+                }).click(function () {
+                    BetNeighbors(this);
+                    //StraightUp(NUMBERS[this.data("index")], "SingleElement", 10);
+                });
+            }
+        }
+
+
+        /// Jeu Zero
+        var cell15 = cells[NUMBERS.indexOf(15)][0].getBBox(true);
+        var tempPath = "M" + cell15.x2 + " " + cell15.y2 + "L" + (r + 1) + " " + cell15.y2 + "A" + rsmall + " " + rsmall + " 0 0 0 " + (r + 1) + " " + (cell15.y2 + 2 * rsmall) +
+        "L" + cell15.x2 + " " + (cell15.y2 + 2 * rsmall) + "Z";
+
+        var sectorBox = paper.path(tempPath).attr(shapeAttr).attr("fill", "url(/img/green-texture.jpg)");
+        var sectorText = paper.text(sectorBox.getBBox(true).x + sectorBox.getBBox(true).width / 2, sectorBox.getBBox(true).y + sectorBox.getBBox(true).height / 2, "Jeu 0").attr(textAttr);
+
+        paper.set().push(sectorBox, sectorText).click(function () {
+            BetJeuZero();
+        }).mouseover(function () {
+            HighlightJeuZero();
+        });
+
+
+        // Voisins du Zero
+        var cell25 = cells[NUMBERS.indexOf(25)][0].getBBox(true);
+        var tempPath = "M" + cell15.x2 + " " + cell15.y2 + "L" + cell25.x2 + " " + cell25.y2 + "L" + cell25.x2 + " " + (cell25.y2 + 2 * rsmall) +
+        "L" + cell15.x2 + " " + (cell15.y2 + 2 * rsmall) + "Z";
+
+        sectorBox = paper.path(tempPath).attr(shapeAttr).attr("fill", "url(/img/green-texture.jpg)");
+        var voisins = sectorBox.getBBox(true);
+        sectorText = paper.text(voisins.x + voisins.width / 2, voisins.y + voisins.height / 2, "Voisins").attr(textAttr);
+
+        paper.set().push(sectorBox, sectorText).click(function () {
+            BetVoisinsduZero();
+        }).mouseover(function () {
+            HighlightVoisinsduZero();
+        });
+
+
+        // Orphelins
+        var cell6 = cells[NUMBERS.indexOf(6)][0].getBBox(true);
+        var cell1 = cells[NUMBERS.indexOf(1)][0].getBBox(true);
+        var tempPath = "M" + cell25.x2 + " " + cell25.y2 + "L" + cell6.x2 + " " + cell6.y2 + "L" + cell1.x2 + " " + cell1.y +
+        "L" + cell25.x2 + " " + (cell25.y2 + 2 * rsmall) + "Z";
+
+        sectorBox = paper.path(tempPath).attr(shapeAttr).attr("fill", "url(/img/green-texture.jpg)");
+        var orphelins = sectorBox.getBBox(true);
+        sectorText = paper.text(orphelins.x - 21.5 + orphelins.width / 2, orphelins.y + orphelins.height / 2, "Orphelins").attr(textAttr);
+
+        paper.set().push(sectorBox, sectorText).click(function () {
+            BetOrphelins();
+        }).mouseover(function () {
+            HighlightOrphelins();
+        });
+
+
+        // Tiers du Cylindre
+        var cell6 = cells[NUMBERS.indexOf(6)][0].getBBox(true);
+        var cell1 = cells[NUMBERS.indexOf(1)][0].getBBox(true);
+        var tempPath = "M" + cell6.x2 + " " + cell6.y2 + "L692 56A" + rsmall + " " + rsmall + " 0 0 1 " + 692 + " " + (56 + 2 * rsmall) +
+        "L" + cell1.x2 + " " + cell1.y + "Z";
+
+        sectorBox = paper.path(tempPath).attr(shapeAttr).attr("fill", "url(/img/green-texture.jpg)");
+        var tiers = sectorBox.getBBox(true);
+        sectorText = paper.text(tiers.x + 21.5 + tiers.width / 2, tiers.y + tiers.height / 2, "Tiers").attr(textAttr);
+
+        paper.set().push(sectorBox, sectorText).click(function () {
+            BetTiersduCylindre();
+        }).mouseover(function () {
+            HighlightTiersduCylindre();
+        });
+    });
+</script>
+
+<div id="sectors-container"></div>

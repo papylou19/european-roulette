@@ -1,5 +1,5 @@
 ﻿var rouletteAngularSpeed = -0.4;
-var delta = 0.02;
+var delta = 0.015;
 var s;
 var c;
 var ballAngularSpeed;
@@ -9,7 +9,7 @@ var ballAngle;
 var ballRotateStarted = false;
 var winnerHighlighted = false;
 var number = 0;
-var cycleNumber = 9;
+var cycleNumber = 11;
 
 var bouncingRadius = 0;
 var isRadiusGrowing = undefined;

@@ -16,7 +16,7 @@ body {
     color: White;
     height:100%;
     background: #393534;
-    overflow-y:hidden;
+    /*overflow-y:hidden;*/
 }
 
 a:link {
@@ -845,6 +845,23 @@ check
     text-align: center;
 }
 
+.clicked 
+{
+    background-color: #777;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none; 
+}
 
+
+/* sectors-container
+--------------------------------------------------------------*/
+#sectors-container
+{
+    margin: 20px auto;
+    width: 769px;
+    height: 152px;    
+    border-radius: 75px;
+}
 
 

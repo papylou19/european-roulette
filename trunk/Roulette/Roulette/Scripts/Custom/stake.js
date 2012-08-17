@@ -1,4 +1,5 @@
 ﻿var stakes = new Array();
+var isFormValid = true;
 
 function ContainStakesId(id, type) {
     for (var i = 0; i < stakes.length; i++) {
@@ -9,10 +10,283 @@ function ContainStakesId(id, type) {
     return false;
 }
 
+function BetComplect(number) {
+    var bet = 10;
+    number = parseInt(number);
+
+//    // Straight Up	
+//    StraightUp(number, "SingleElement", bet)
+
+//    // Corners and 0 streets
+//    if (number - 3 >= 1) {
+//        if (number % 3 != 0) {
+//            StraightUp(number - 2, "Corner", bet)
+//        }
+//        if (number % 3 != 1) {
+//            StraightUp(number - 3, "Corner", bet)
+//        }
+//    } else {
+//        switch (number) {
+//            case 0:
+//                StraightUp([0, 3, 2], "Street", bet);
+//                StraightUp([0, 2, 1], "Street", bet);
+//                break;
+//            case 1:
+//                StraightUp([0, 2, 1], "Street", bet);
+//                break;
+//            case 2:
+//                StraightUp([0, 3, 2], "Street", bet);
+//                StraightUp([0, 2, 1], "Street", bet);
+//                break;
+//            case 3:
+//                StraightUp([0, 3, 2], "Street", bet);
+//                break;
+//        }
+//    }
+//    if (number + 3 <= 36 && number > 0) {
+//        if (number % 3 != 0) {
+//            StraightUp(number + 1, "Corner", bet)
+//        }
+//        if (number % 3 != 1) {
+//            StraightUp(number, "Corner", bet)
+//        }
+//    }
+
+//    // splits
+//    if (number % 3 > 0) {
+//        StraightUp([number + 1, number], "Split", bet);
+//    }
+//    if (number % 3 != 1) {
+//        StraightUp([number, number - 1], "Split", bet);
+//    }
+//    if (number - 3 > 0) {
+//        StraightUp([number - 3, number], "Split", bet);
+//    } else {
+//        switch (number) {
+//        case 0:
+//            StraightUp([0, 1], "Split", bet);
+//            StraightUp([0, 2], "Split", bet);
+//            StraightUp([0, 3], "Split", bet);
+//            break;
+//        case 1:
+//            StraightUp([0, 1], "Split", bet);
+//            break;
+//        case 2:
+//            StraightUp([0, 2], "Split", bet);
+//            break;
+//        case 3:
+//            StraightUp([0, 3], "Split", bet);
+//            break;
+//    }
+//    }
+//    if (number + 3 <= 36 && number > 0) {
+//        StraightUp([number, number + 3], "Split", bet);
+//    }
+
+    // streets
+    alert(number - number % 3);
+    //StraightUp([9, 8, 7], "Street", bet);
+}
+
+function BetNeighbors(element) {
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    bet = Math.round(bet / 5 - 0.49);
+    var index = element.data("index");
+    var betFrom = index - 2;
+    var batTo = index + 2;
+    for (var i = betFrom; i <= batTo; i++) {
+        index = (37 + i) % 37;
+        StraightUp([NUMBERS[index]], "SingleElement", bet);
+    }
+}
+
+function BetJeuZero() {
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    bet = Math.round(bet / 4 - 0.49);
+    StraightUp([12, 15], "Split", bet);
+    StraightUp([32, 35], "Split", bet);
+    StraightUp([0, 3], "Split", bet);
+    StraightUp([26], "SingleElement", bet);
+}
+
+function BetVoisinsduZero() {
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    bet = Math.round(bet / 9 - 0.49);
+    StraightUp([4,7], "Split", bet);
+    StraightUp([12,15], "Split", bet);
+    StraightUp([18,21], "Split", bet);
+    StraightUp([19,22], "Split", bet);
+    StraightUp([32,35], "Split", bet);
+    StraightUp([26, 25, 28, 29], "Corner", 2 * bet);
+    StraightUp([0,3,2], "Street", 2*bet);
+}
+
+function BetOrphelins() {
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    bet = Math.round(bet / 5 - 0.49);
+    StraightUp([6, 9], "Split", bet);
+    StraightUp([14, 17], "Split", bet);
+    StraightUp([17, 20], "Split", bet);
+    StraightUp([31, 34], "Split", bet);
+    StraightUp([1], "SingleElement", bet);
+}
+
+function BetTiersduCylindre() {
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    bet = Math.round(bet / 6 - 0.49);
+    StraightUp([5, 8], "Split", bet);
+    StraightUp([11, 10], "Split", bet);
+    StraightUp([13, 16], "Split", bet);
+    StraightUp([24, 23], "Split", bet);
+    StraightUp([27, 30], "Split", bet);
+    StraightUp([33, 36], "Split", bet);
+}
+
+function StraightUp(numbers, type, bet) {
+    if (numbers.length == undefined) {
+        numbers = [numbers];
+    }
+
+    if ($(".selected").length === 0) {
+        return false;
+    }
+
+    var cell = new Array();
+
+    for (var i = 0; i < numbers.length; i++) {
+        $(".round:contains('" + numbers[i] + "')").each(function (idx, val) {
+            if ($(val).html() == numbers[i]) {
+                cell.push($(val).parents().eq(1));
+            }
+        })
+    }
+
+
+    var element = $(".selected").clone().removeClass("selected");
+    element.find("div.text").html(bet);
+    var absHeight;
+    var absWidth;
+    var type;
+
+
+    if (type == "SingleElement" && cell.length == 1) {
+        if (!ContainStakesId(numbers[0], "SingleElement")) {
+            absTop = (cell[0].outerHeight() - $(".selected").outerHeight()) / 2;
+            absLeft = (cell[0].outerWidth() - $(".selected").outerWidth()) / 2;
+        }
+    } else if (type == "Split" && cell.length == 2) {
+        if (Math.abs(numbers[0] - numbers[1]) == 1 && numbers[0] != 0) {
+            if (!ContainStakesId(numbers[0], "VerticalPair")) {
+                absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2;
+                absLeft = (cell[0].outerWidth() - $(".selected").outerWidth()) / 2;
+                type = "VerticalPair";
+            }
+        }
+        else if (numbers[0] == 0) {
+            numbers[0] = numbers[1];
+            if (!ContainStakesId(numbers[0], "HorizontalWithZeroPair")) {
+                if (numbers[1] == 3) {
+                    absTop = -$(".selected").outerHeight() / 2;
+                }
+                else if (numbers[1] == 2) {
+                    absTop = (cell[0].outerHeight() - $(".selected").outerHeight()) / 2;
+                }
+                else {
+                    absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2; ;
+                }
+                absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+                type = "HorizontalWithZeroPair";
+            }
+        }
+        else {
+            if (!ContainStakesId(numbers[0], "HorizontalPair")) {
+                absTop = (cell[0].outerHeight() - $(".selected").outerHeight()) / 2;
+                absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+                type = "HorizontalPair";
+            }
+        }
+    } else if (type == "Street" && cell.length == 3) {
+        if (numbers[0] == 0) {
+            numbers[0] = numbers[1];
+            if (!ContainStakesId(numbers[0], "HorizontalWithZeroTrips")) {
+                absTop = -$(".selected").outerHeight() / 2;
+                absLeft = -$(".selected").outerWidth() / 2;
+                type = "HorizontalWithZeroTrips";
+            }
+        }
+        else {
+            if (!ContainStakesId(numbers[0], "VerticalTrips")) {
+                absTop = cell[0].outerHeight() * 2 - $(".selected").outerHeight() / 2;
+                absLeft = (cell[0].outerWidth() - $(".selected").outerWidth()) / 2;
+                type = "VerticalTrips";
+            }
+        }
+    } else if (type == "Corner"/* && cell.length == 4*/) {
+        if (!ContainStakesId(numbers[0], "Quads")) {
+            absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2;
+            absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+            type = "Quads";
+        }
+    }
+
+    if (type !== undefined) {
+        element.css({
+            "position": "absolute",
+            "z-index": 1,
+            "top": absTop,
+            "left": absLeft
+        });
+
+        stakes.push({ Id: numbers[0], Price: bet, Type: type });
+
+        if (type == "SingleElement" || type == "HorizontalPair" || type == "VerticalPair" || type == "HorizontalWithZeroPair" || type == "Quads") {
+            cell[0].children(".push-item").eq(0).append(element);
+        } else if (type == "HorizontalWithZeroTrips" || type == "VerticalTrips") {
+            if (numbers[0] != 0) {
+                cell[1].children(".push-item").eq(0).append(element);
+            }
+            else {
+                cell[2].children(".push-item").eq(0).append(element);
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/Stake/RememberCurrentState',
+            data: { currentState: $("#centered-div").html() }
+        });
+    }
+}
+
 $(function () {
+    $("td.number").click(function () {
+        if ($("#complect-button").hasClass("clicked")) {
+            var number = $(this).find("div.round").html();
+            BetComplect(number);
+        }
+    });
+
+    $("#zero").click(function () {
+        if ($("#complect-button").hasClass("clicked")) {
+            BetComplect(0);
+        }
+    })
+
     $('.bet').change(function () {
-        $('.selected').find('.text').text($(this).val());
-        $('.selected').data("value", $(this).val());
+        if ($(this).val() > 0) {
+            $('.selected').find('.text').text($(this).val());
+            $('.selected').data("value", $(this).val());
+            $(this).css("border-color", "#000000");
+            isFormValid = true;
+        } else {
+            $(this).css("border-color", "#FF0000");
+            isFormValid = false;
+        }
     });
 
     $('div.chip').click(function () {
@@ -32,8 +306,9 @@ $(function () {
         $(this).setStake();
     });
 
+
     $.fn.setStake = function () {
-        if ($(".selected").length === 0) {
+        if ($(".selected").length === 0 || $("#complect-button").hasClass("clicked")) {
             return false;
         }
 
@@ -78,7 +353,6 @@ $(function () {
                     }
                     absLeft = $(".highlighted").eq(0).outerWidth() - $(".selected").outerWidth() / 2;
                     type = "HorizontalWithZeroPair";
-
                 }
             }
             else {
@@ -203,8 +477,6 @@ $(function () {
                 url: '/Stake/RememberCurrentState',
                 data: { currentState: $("#centered-div").html() }
             });
-
-
         }
     }
 
