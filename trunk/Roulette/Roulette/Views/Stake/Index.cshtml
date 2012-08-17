@@ -133,6 +133,15 @@
                  });
              });
 
+             $("#cancel-any-button").click(function () {
+                 if ($(this).hasClass("clicked"))
+                     $(this).removeClass("clicked");
+                 else
+                     $(this).addClass("clicked");
+             });
+
+
+
              $("#submit-button").click(function () {
                  if (!isFormValid) {
                      alert("Cтавка может состоять только из положительных чисел");
@@ -193,6 +202,7 @@
 <div id="admin-board">
 
     <div id="buttons">
+        <input type="button" value="Clear Any" id="cancel-any-button" class="admin-button"/>
         <input type="button" value="Clear" id="cancel-button" class="admin-button"/>
         <input type="button" value="Submit" id="submit-button" class="admin-button" />
         <input type="button" value="Check" id="check-button" class="admin-button" />
