@@ -45,10 +45,24 @@ namespace Roulette
             RegisterRoutes(RouteTable.Routes);
             RouletteFcd = new RouletteFacade();
             timer = new Timer(30000);
-            //timer_Elapsed(null, null);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             timer.Enabled = true;
+
+            var refuseTimer = new Timer(12 * 3600 * 1000); // elapsed once in day
+            refuseTimer.Elapsed += new ElapsedEventHandler(refuseTimer_Elapsed);
+            refuseTimer.Start();
+            refuseTimer_Elapsed(null, null);
         }
+
+        void refuseTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!RouletteFcd.RemoveGameRefuse(DateTime.Now.AddMonths(-6)))
+            {
+                refuseTimer_Elapsed(null, null);
+            }
+        }
+
+
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {

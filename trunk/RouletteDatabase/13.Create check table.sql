@@ -2,7 +2,7 @@ create table [Check]
 (
 	ContractNumber bigint Primary key not null,
 	PossibleWinning float not null,
-	PossibleWinningString varchar(50) not null,
+	PossibleWinningString varchar(MAX) not null,
 	GameID int not null,
     UserID uniqueidentifier not null,
     BoardCurrentStates  nvarchar(MAX) ,

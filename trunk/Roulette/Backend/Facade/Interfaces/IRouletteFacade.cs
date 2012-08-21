@@ -40,5 +40,7 @@ namespace Backend.Facade.Interfaces
         double GetAmountOfPayOut(Guid userId);
 
         bool RemoveCheck(long contractNumber);
+
+        bool RemoveGameRefuse(DateTime removeUntil);
     }
 }

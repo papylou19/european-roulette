@@ -1,4 +1,4 @@
-﻿@model Roulette.Models.TableModel
+﻿@model Boolean
            
 @*<script src="https://raw.github.com/DmitryBaranovskiy/raphael/master/raphael-min.js" type="text/javascript"></script>*@
 <script src="../../Scripts/raphael.js" type="text/javascript"></script>
@@ -22,12 +22,14 @@
             return -1;
         };
     }
-    
-    var cells = new Array();
 
+    var cells = new Array();
+    var enableEvents = @(Model ? "true" : "false");
     $(function () {
         var paper = Raphael("sectors-container", 769, 152);
+
         var board = paper.rect(1, 1, 767, 150, 75);
+
         board.attr("fill", "url(/img/green-texture.jpg)");
         board.attr("stroke", "#FFE399");
         board.attr("stroke-width", "1");
@@ -220,12 +222,14 @@
                 }
 
                 cells[i].data("index", i);
-                cells[i].mouseover(function () {
-                    HighlightNeighbors(this);
-                }).click(function () {
-                    BetNeighbors(this);
-                    //StraightUp(NUMBERS[this.data("index")], "SingleElement", 10);
-                });
+
+                if (enableEvents) {
+                    cells[i].mouseover(function () {
+                        HighlightNeighbors(this);
+                    }).click(function () {
+                        BetNeighbors(this);
+                    });
+                }
             }
         }
 
@@ -238,11 +242,13 @@
         var sectorBox = paper.path(tempPath).attr(shapeAttr).attr("fill", "url(/img/green-texture.jpg)");
         var sectorText = paper.text(sectorBox.getBBox(true).x + sectorBox.getBBox(true).width / 2, sectorBox.getBBox(true).y + sectorBox.getBBox(true).height / 2, "Jeu 0").attr(textAttr);
 
-        paper.set().push(sectorBox, sectorText).click(function () {
-            BetJeuZero();
-        }).mouseover(function () {
-            HighlightJeuZero();
-        });
+        if (enableEvents) {
+            paper.set().push(sectorBox, sectorText).click(function () {
+                BetJeuZero();
+            }).mouseover(function () {
+                HighlightJeuZero();
+            });
+        }
 
 
         // Voisins du Zero
@@ -254,11 +260,13 @@
         var voisins = sectorBox.getBBox(true);
         sectorText = paper.text(voisins.x + voisins.width / 2, voisins.y + voisins.height / 2, "Voisins").attr(textAttr);
 
-        paper.set().push(sectorBox, sectorText).click(function () {
-            BetVoisinsduZero();
-        }).mouseover(function () {
-            HighlightVoisinsduZero();
-        });
+        if (enableEvents) {
+            paper.set().push(sectorBox, sectorText).click(function () {
+                BetVoisinsduZero();
+            }).mouseover(function () {
+                HighlightVoisinsduZero();
+            });
+        }
 
 
         // Orphelins
@@ -271,12 +279,14 @@
         var orphelins = sectorBox.getBBox(true);
         sectorText = paper.text(orphelins.x - 21.5 + orphelins.width / 2, orphelins.y + orphelins.height / 2, "Orphelins").attr(textAttr);
 
-        paper.set().push(sectorBox, sectorText).click(function () {
-            BetOrphelins();
-        }).mouseover(function () {
-            HighlightOrphelins();
-        });
 
+        if (enableEvents) {
+            paper.set().push(sectorBox, sectorText).click(function () {
+                BetOrphelins();
+            }).mouseover(function () {
+                HighlightOrphelins();
+            });
+        }
 
         // Tiers du Cylindre
         var cell6 = cells[NUMBERS.indexOf(6)][0].getBBox(true);
@@ -288,12 +298,16 @@
         var tiers = sectorBox.getBBox(true);
         sectorText = paper.text(tiers.x + 21.5 + tiers.width / 2, tiers.y + tiers.height / 2, "Tiers").attr(textAttr);
 
-        paper.set().push(sectorBox, sectorText).click(function () {
-            BetTiersduCylindre();
-        }).mouseover(function () {
-            HighlightTiersduCylindre();
-        });
+
+        if (enableEvents) {
+            paper.set().push(sectorBox, sectorText).click(function () {
+                BetTiersduCylindre();
+            }).mouseover(function () {
+                HighlightTiersduCylindre();
+            });
+        }
     });
 </script>
 
 <div id="sectors-container"></div>
+<h1></h1>

@@ -11,81 +11,100 @@ function ContainStakesId(id, type) {
 }
 
 function BetComplect(number) {
-    var bet = 10;
+    if ($(".selected").length === 0) return false;
+    var bet = $(".selected").data("value");
+    var Pieces = 0;
     number = parseInt(number);
 
-//    // Straight Up	
-//    StraightUp(number, "SingleElement", bet)
+    // Straight Up	
+    StraightUp(number, "SingleElement", bet); Pieces += 1;
 
-//    // Corners and 0 streets
-//    if (number - 3 >= 1) {
-//        if (number % 3 != 0) {
-//            StraightUp(number - 2, "Corner", bet)
-//        }
-//        if (number % 3 != 1) {
-//            StraightUp(number - 3, "Corner", bet)
-//        }
-//    } else {
-//        switch (number) {
-//            case 0:
-//                StraightUp([0, 3, 2], "Street", bet);
-//                StraightUp([0, 2, 1], "Street", bet);
-//                break;
-//            case 1:
-//                StraightUp([0, 2, 1], "Street", bet);
-//                break;
-//            case 2:
-//                StraightUp([0, 3, 2], "Street", bet);
-//                StraightUp([0, 2, 1], "Street", bet);
-//                break;
-//            case 3:
-//                StraightUp([0, 3, 2], "Street", bet);
-//                break;
-//        }
-//    }
-//    if (number + 3 <= 36 && number > 0) {
-//        if (number % 3 != 0) {
-//            StraightUp(number + 1, "Corner", bet)
-//        }
-//        if (number % 3 != 1) {
-//            StraightUp(number, "Corner", bet)
-//        }
-//    }
+    // Corners and 0 streets
+    if (number - 3 >= 1) {
+        if (number % 3 != 0) {
+            StraightUp(number - 2, "Corner", 4 * bet); Pieces += 4;
+        }
+        if (number % 3 != 1) {
+            StraightUp(number - 3, "Corner", 4 * bet); Pieces += 4;
+        }
+    } else {
+        switch (number) {
+            case 0:
+                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
+                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                break;
+            case 1:
+                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                break;
+            case 2:
+                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
+                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                break;
+            case 3:
+                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
+                break;
+        }
+        StraightUp([0, 3, 2, 1], "Corner", 4 * bet); Pieces += 4;        
+    }
+    if (number + 3 <= 36 && number > 0) {
+        if (number % 3 != 0) {
+            StraightUp(number + 1, "Corner", 4 * bet); Pieces += 4;
+        }
+        if (number % 3 != 1) {
+            StraightUp(number, "Corner", 4 * bet); Pieces += 4;
+        }
+    }
 
-//    // splits
-//    if (number % 3 > 0) {
-//        StraightUp([number + 1, number], "Split", bet);
-//    }
-//    if (number % 3 != 1) {
-//        StraightUp([number, number - 1], "Split", bet);
-//    }
-//    if (number - 3 > 0) {
-//        StraightUp([number - 3, number], "Split", bet);
-//    } else {
-//        switch (number) {
-//        case 0:
-//            StraightUp([0, 1], "Split", bet);
-//            StraightUp([0, 2], "Split", bet);
-//            StraightUp([0, 3], "Split", bet);
-//            break;
-//        case 1:
-//            StraightUp([0, 1], "Split", bet);
-//            break;
-//        case 2:
-//            StraightUp([0, 2], "Split", bet);
-//            break;
-//        case 3:
-//            StraightUp([0, 3], "Split", bet);
-//            break;
-//    }
-//    }
-//    if (number + 3 <= 36 && number > 0) {
-//        StraightUp([number, number + 3], "Split", bet);
-//    }
+    // splits
+    if (number % 3 > 0) {
+        StraightUp([number + 1, number], "Split", 2 * bet); Pieces += 2;
+    }
+    if (number % 3 != 1 && number != 0) {
+        StraightUp([number, number - 1], "Split", 2 * bet); Pieces += 2;
+    }
+    if (number - 3 > 0) {
+        StraightUp([number - 3, number], "Split", 2 * bet); Pieces += 2;
+    } else {
+        switch (number) {
+        case 0:
+            StraightUp([0, 1], "Split", 2 * bet); Pieces += 2;
+            StraightUp([0, 2], "Split", 2 * bet); Pieces += 2;
+            StraightUp([0, 3], "Split", 2 * bet); Pieces += 2;
+            break;
+        case 1:
+            StraightUp([0, 1], "Split", 2 * bet); Pieces += 2;
+            break;
+        case 2:
+            StraightUp([0, 2], "Split", 2 * bet); Pieces += 2;
+            break;
+        case 3:
+            StraightUp([0, 3], "Split", 2 * bet); Pieces += 2;
+            break;
+    }
+    }
+    if (number + 3 <= 36 && number > 0) {
+        StraightUp([number, number + 3], "Split", 2 * bet); Pieces += 2;
+    }
 
     // streets
-    //alert(number - number % 3);
-    //StraightUp([9, 8, 7], "Street", bet);
+    if (number > 0) {
+        var firstInStreet = number - number % 3 + ((number % 3) != 0 ? 3 : 0);
+        StraightUp([firstInStreet--, firstInStreet--, firstInStreet], "Street", 3 * bet); Pieces += 3;
+    }
+
+    // Sixline
+    if (number - 3 > 0) {
+        var leftNumber = number - 3;
+        var firstInStreet = leftNumber - leftNumber % 3 + ((leftNumber % 3) != 0 ? 3 : 0);
+        StraightUp(firstInStreet, "Sixline", 6 * bet); Pieces += 6;
+    }
+    if (number + 3 <= 36 && number > 0) {
+        var firstInStreet = number - number % 3 + ((number % 3) != 0 ? 3 : 0);
+        StraightUp(firstInStreet, "Sixline", 6 * bet); Pieces += 6;
+    }
+
+    alert(Pieces*bet);
+
 }
 
 function BetNeighbors(element) {
@@ -97,7 +116,7 @@ function BetNeighbors(element) {
     var batTo = index + 2;
     for (var i = betFrom; i <= batTo; i++) {
         index = (37 + i) % 37;
-        StraightUp([NUMBERS[index]], "SingleElement", bet);
+        StraightUp(NUMBERS[index], "SingleElement", bet);
     }
 }
 
@@ -147,7 +166,7 @@ function BetTiersduCylindre() {
     StraightUp([33, 36], "Split", bet);
 }
 
-function StraightUp(numbers, type, bet) {
+function StraightUp(numbers, betType, bet) {
     if (numbers.length == undefined) {
         numbers = [numbers];
     }
@@ -174,12 +193,13 @@ function StraightUp(numbers, type, bet) {
     var type;
 
 
-    if (type == "SingleElement" && cell.length == 1) {
+    if (betType == "SingleElement" && cell.length == 1) {
         if (!ContainStakesId(numbers[0], "SingleElement")) {
             absTop = (cell[0].outerHeight() - $(".selected").outerHeight()) / 2;
             absLeft = (cell[0].outerWidth() - $(".selected").outerWidth()) / 2;
+            type = "SingleElement";
         }
-    } else if (type == "Split" && cell.length == 2) {
+    } else if (betType == "Split" && cell.length == 2) {
         if (Math.abs(numbers[0] - numbers[1]) == 1 && numbers[0] != 0) {
             if (!ContainStakesId(numbers[0], "VerticalPair")) {
                 absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2;
@@ -210,9 +230,11 @@ function StraightUp(numbers, type, bet) {
                 type = "HorizontalPair";
             }
         }
-    } else if (type == "Street" && cell.length == 3) {
+    } else if (betType == "Street" && cell.length == 3) {
         if (numbers[0] == 0) {
-            numbers[0] = numbers[1];
+            var temp = numbers[1];
+            numbers[1] = numbers[0];
+            numbers[0] = temp;
             if (!ContainStakesId(numbers[0], "HorizontalWithZeroTrips")) {
                 absTop = -$(".selected").outerHeight() / 2;
                 absLeft = -$(".selected").outerWidth() / 2;
@@ -226,11 +248,22 @@ function StraightUp(numbers, type, bet) {
                 type = "VerticalTrips";
             }
         }
-    } else if (type == "Corner"/* && cell.length == 4*/) {
+    } else if (betType == "Corner"/* && cell.length == 4*/) {
         if (!ContainStakesId(numbers[0], "Quads")) {
-            absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2;
-            absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+            if (numbers[0] != 0) {
+                absTop = cell[0].outerHeight() - $(".selected").outerHeight() / 2;
+                absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+            } else {
+                absTop = cell[1].outerHeight() - $(".selected").outerHeight() / 2;
+                absLeft = - $(".selected").outerWidth() / 2;
+            }
             type = "Quads";
+        }
+    } else if (betType == "Sixline") {
+        if (!ContainStakesId(numbers[0], "TwoVerticalTrips")) {
+            absTop = cell[0].outerHeight()*3 - $(".selected").outerHeight() / 2;
+            absLeft = cell[0].outerWidth() - $(".selected").outerWidth() / 2;
+            type = "TwoVerticalTrips";
         }
     }
 
@@ -244,15 +277,24 @@ function StraightUp(numbers, type, bet) {
 
         stakes.push({ Id: numbers[0], Price: bet, Type: type });
 
-        if (type == "SingleElement" || type == "HorizontalPair" || type == "VerticalPair" || type == "HorizontalWithZeroPair" || type == "Quads") {
+        if (type == "SingleElement" || type == "HorizontalPair" || type == "VerticalPair" || type == "HorizontalWithZeroPair") {
             cell[0].children(".push-item").eq(0).append(element);
         } else if (type == "HorizontalWithZeroTrips" || type == "VerticalTrips") {
-            if (numbers[0] != 0) {
+            if (numbers[1] != 0) {
                 cell[1].children(".push-item").eq(0).append(element);
             }
             else {
                 cell[2].children(".push-item").eq(0).append(element);
             }
+        } else if (type == "Quads") {
+            if (numbers[0] != 0)
+            {
+                cell[0].children(".push-item").eq(0).append(element);
+            } else {
+                cell[3].children(".push-item").eq(0).append(element); 
+            }
+        } else if (type == "TwoVerticalTrips") {
+            cell[0].children(".push-item").eq(0).append(element);
         }
 
         $.ajax({
@@ -408,11 +450,14 @@ $(function () {
         }
         else if ($(".highlighted").length == 4) {
             if (!ContainStakesId(id, "Quads")) {
-
-                absTop = $(".highlighted").eq(0).outerHeight() - $(".selected").outerHeight() / 2;
-                absLeft = $(".highlighted").eq(0).outerWidth() - $(".selected").outerWidth() / 2;
+                if ($(".highlighted").eq(0).attr("id") != "zero") {
+                    absTop = $(".highlighted").eq(0).outerHeight() - $(".selected").outerHeight() / 2;
+                    absLeft = $(".highlighted").eq(0).outerWidth() - $(".selected").outerWidth() / 2;
+                } else {
+                    absTop = $(".highlighted").eq(1).outerHeight() - $(".selected").outerHeight() / 2;
+                    absLeft = - $(".selected").outerWidth() / 2;
+                }
                 type = "Quads";
-
             }
         }
         else if ($(".highlighted").length == 6) {
@@ -473,7 +518,7 @@ $(function () {
             });
 
             stakes.push({ Id: id, Price: $(".selected").data("value"), Type: type });
-            if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6) {
+            if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6 && $(".highlighted").length != 4) {
                 $(".highlighted").eq(0).children(".push-item").eq(0).append(element);
             }
             else if ($(this).hasClass("number") && $(".highlighted").length == 3) {
@@ -482,6 +527,14 @@ $(function () {
                 }
                 else {
                     $(".highlighted").eq(2).children(".push-item").eq(0).append(element);
+                }
+            }
+            else if ($(this).hasClass("number") && $(".highlighted").length == 4) {
+                if ($(".highlighted").eq(0).attr("id") != "zero") {
+                    $(".highlighted").eq(0).children(".push-item").eq(0).append(element);
+                }
+                else {
+                    $(".highlighted").eq(3).children(".push-item").eq(0).append(element);
                 }
             }
             else if ($(this).hasClass("number") && $(".highlighted").length == 6) {
