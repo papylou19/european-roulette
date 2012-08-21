@@ -61,9 +61,15 @@
             <td>@item.CreateDate.ToString("MM/dd/yyyy HH:mm:ss")</td>
             <td>@item.Sum</td>
             <td>@item.PossibleWinning</td>
-            <td>@(item.IsWinningTicket==true? "выгрыш":"проигрыш")</td>
-            <td>@(item.PaymentDate!=null? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss"): "")</td>
-            <td>@(item.IsWinningTicket==true? item.PossibleWinning.ToString() : "")</td>
+            @if (item.IsWinningTicket)
+            { 
+                <td style="color:#DF1111">выигрыш</td>
+            }
+            else { 
+                <td style="color:#11aa11">проигрыш</td>
+            }            
+            <td>@(item.PaymentDate != null ? item.PaymentDate.Value.ToString("MM/dd/yyyy HH:mm:ss") : "")</td>
+            <td>@(item.WinningSum)</td>
             <td>
                 <input type="hidden" value="@item.ContractNumber" />
                 <input type="button" value="Показать чек" class="showCheck admin-button" style="width: 140px;" />

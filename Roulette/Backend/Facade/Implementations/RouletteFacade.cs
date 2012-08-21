@@ -561,14 +561,55 @@ namespace Backend.Facade.Implementations
         public Report GetReportsByDate(DateTime startDate, DateTime endDate, Guid UserId)
         {
             endDate = endDate.AddDays(1);
-            var stake = ctx.Stakes.Where(m => m.CreateDate >= startDate && m.CreateDate <= endDate && m.Game.Cashier.UserId == UserId).ToList();
+            //var stake = ctx.Stakes.Where(m => m.CreateDate >= startDate && m.CreateDate <= endDate && m.Game.Cashier.UserId == UserId).ToList();
+
+            var stakes = (from stake in ctx.Stakes
+                       where stake.CreateDate >= startDate && stake.CreateDate <= endDate && stake.Game.Cashier.UserId == UserId 
+                       group stake by stake.ContractNumber into check
+                       select new
+                       {
+                           ContractNumber = check.Key,
+                           CreateDate = check.FirstOrDefault().CreateDate,
+                           Sum = check.Sum(m => m.Sum),
+                           PossibleWinning = check.Sum(m => m.PossibleWinning),
+                           IsWinningTicket = check.FirstOrDefault(m => m.IsWinningTicket) != null ? true : false,
+                           PaymentDate = check.FirstOrDefault(m => m.IsPayed) != null ? check.FirstOrDefault(m => m.PaymentDate != null).PaymentDate : null,
+                           IsPayed = check.Count(m => m.IsPayed) > 0 ? true : false,
+                           WinningSum = check.Sum(m => m.IsWinningTicket ? m.PossibleWinning : 0)
+                       });
+
+           
 
             var reports = new Report();
-            reports.Stakes = stake;
-            reports.Stake = stake.Sum(m => m.Sum);
-            reports.CountStake = stake.Count;
-            reports.WinSum = stake.Where(m => (m.IsWinningTicket == true && m.IsPayed==true)).Sum(m => m.PossibleWinning);
-            reports.WaitingSum = stake.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
+            reports.Stakes = new List<Stake>();
+
+            foreach (var item in stakes)
+            {
+                reports.Stakes.Add(new Stake
+                {
+                    ContractNumber = item.ContractNumber,
+                    CreateDate = item.CreateDate,
+                    Sum = item.Sum,
+                    PossibleWinning = item.PossibleWinning,
+                    IsWinningTicket = item.IsWinningTicket,
+                    PaymentDate = item.PaymentDate,
+                    IsPayed = item.IsPayed,
+                    WinningSum = item.WinningSum
+                });
+
+            }
+
+            reports.Stake = stakes.Sum(m => m.Sum);
+            reports.CountStake = stakes.Count();
+            var payedStake = stakes.Where(m => (m.IsWinningTicket && m.IsPayed)).ToList();
+            if (payedStake != null && payedStake.Count > 0)
+            {
+                reports.WinSum = payedStake.Sum(m => m.PossibleWinning);
+            }
+            else {
+                reports.WinSum = 0;
+            }
+            reports.WaitingSum = stakes.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
 
             return reports;
         }
