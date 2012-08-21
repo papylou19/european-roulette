@@ -239,7 +239,7 @@ namespace Backend.Facade.Implementations
                 var check = new Check();
 
                 var cashierId = ctx.Cashiers.FirstOrDefault(p => p.UserId == userId).Id;
-                check.ContractNumber = ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value; ;
+                check.ContractNumber = ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value;
                 check.UserId = userId;
                 check.BoardCurrentStates = board;
                 foreach (var item in stakes)
@@ -251,7 +251,7 @@ namespace Backend.Facade.Implementations
 
                 check.GameID = ctx.Games.Where(p => p.CashierId == cashierId).OrderByDescending(p => p.Id).FirstOrDefault().Id;
                 check.CreateDate = DateTime.Now;
-                check.PossibleWinningString = check.PossibleWinningString.Remove(check.PossibleWinningString.Length - 1);
+                check.PossibleWinningString = check.PossibleWinningString.Remove(check.PossibleWinningString.Length - 3);
                 ctx.Checks.Add(check);
 
                 ctx.Identities.FirstOrDefault(p => p.Name == "ContractNumber").Value++;
@@ -561,8 +561,7 @@ namespace Backend.Facade.Implementations
         public Report GetReportsByDate(DateTime startDate, DateTime endDate, Guid UserId)
         {
             endDate = endDate.AddDays(1);
-            //var stake = ctx.Stakes.Where(m => m.CreateDate >= startDate && m.CreateDate <= endDate && m.Game.Cashier.UserId == UserId).ToList();
-
+            
             var stakes = (from stake in ctx.Stakes
                        where stake.CreateDate >= startDate && stake.CreateDate <= endDate && stake.Game.Cashier.UserId == UserId 
                        group stake by stake.ContractNumber into check
