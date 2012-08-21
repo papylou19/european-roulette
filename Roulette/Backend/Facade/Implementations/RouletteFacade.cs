@@ -603,12 +603,12 @@ namespace Backend.Facade.Implementations
             var payedStake = stakes.Where(m => (m.IsWinningTicket && m.IsPayed)).ToList();
             if (payedStake != null && payedStake.Count > 0)
             {
-                reports.WinSum = payedStake.Sum(m => m.PossibleWinning);
+                reports.WinSum = payedStake.Sum(m => m.WinningSum);
             }
             else {
                 reports.WinSum = 0;
             }
-            reports.WaitingSum = stakes.Where(m => m.IsWinningTicket == true).Sum(m => m.PossibleWinning) - reports.WinSum;
+            reports.WaitingSum = stakes.Where(m => m.IsWinningTicket == true).Sum(m => m.WinningSum) - reports.WinSum;
 
             return reports;
         }
