@@ -207,13 +207,13 @@
         <input type="button" value="Submit" id="submit-button" class="admin-button" />
         <input type="button" value="Check" id="check-button" class="admin-button" />
         <input type="button" value="Report" id="report-button" class="admin-button" />
-        <input type="button" value="Complect" id="complect-button" class="admin-button clicked" />
+        <input type="button" value="Complect" id="complect-button" class="admin-button" />
     </div>
     <div id="centered-div">
         @Html.Partial("_Board", Model)
     </div>
     <div id="sectors-div" style="margin-top: 40px;">
-        @Html.Partial("_Sectors", Model)
+        @Html.Partial("_Sectors", true)
     </div>
 
     <div class="roulette-chips">

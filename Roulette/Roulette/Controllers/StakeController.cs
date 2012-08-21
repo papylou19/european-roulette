@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Roulette.Models;
-using Domain.Helpers;
-using Domain;
 using System.Drawing;
-using System.IO;
 using System.Drawing.Imaging;
-using Roulette.Utilits;
-using Domain.MemberShip;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 using System.Web.Security;
+using Domain.Helpers;
+using Roulette.Models;
+using Roulette.Utilits;
 
 namespace Roulette.Controllers
 {

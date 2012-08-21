@@ -16,7 +16,7 @@ body {
     color: White;
     height:100%;
     background: #393534;
-    /*overflow-y:hidden;*/
+    overflow-y:hidden;
 }
 
 a:link {
@@ -347,7 +347,7 @@ table th {
     border:1px solid #FFE399;
 }
 
-#zero
+/*#zero
 {
     height:120px;
     width:60px;
@@ -365,6 +365,27 @@ table th {
 {
     position:absolute;
     top:39px;
+    left:9px;
+    line-height:40px;
+}*/
+#zero
+{
+    height:109px;
+    width:60px;
+    background: url('/img/green-texture.jpg');
+    margin-top:27px;
+    float:left;
+    border-radius:61px 0 0 61px;
+    border-left: 1px solid #FFE399;
+    border-top: 1px solid #FFE399;
+    border-bottom: 1px solid #FFE399;
+    position:relative;
+}
+
+#zero .round
+{
+    position:absolute;
+    top:34px;
     left:9px;
     line-height:40px;
 }

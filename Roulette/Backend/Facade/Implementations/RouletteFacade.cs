@@ -244,7 +244,7 @@ namespace Backend.Facade.Implementations
                 check.BoardCurrentStates = board;
                 foreach (var item in stakes)
                 {
-                    check.PossibleWinningString += Constant.Coeffecent[item.Type].ToString() + '*' + item.Price.ToString() + "+";
+                    check.PossibleWinningString += Constant.Coeffecent[item.Type].ToString() + '*' + item.Price.ToString() + " + ";
                     check.PossibleWinning += Constant.Coeffecent[item.Type] * item.Price;
                     check.Stake += item.Price;
                 }
@@ -656,6 +656,27 @@ namespace Backend.Facade.Implementations
                 return false;
                 throw;
             }
+        }
+
+
+        public bool RemoveGameRefuse(DateTime removeUntil)
+        {            
+            using (ctx = new RouletteContext())
+            {
+                foreach (var entry in ctx.Games.Where(m => (m.Stackes.Count == 0) || (m.Stackes.FirstOrDefault(n => n.CreateDate > removeUntil) == null)))
+                {
+                    ctx.Entry(entry).State = System.Data.EntityState.Deleted;
+                }
+                try
+                {
+                    ctx.SaveChanges();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }            
         }
     }
 }

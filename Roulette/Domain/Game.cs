@@ -16,7 +16,9 @@ namespace Domain
         public int GameNumber { get; set; }
 
         [ForeignKey("CashierId")]
-        public virtual Cashier Cashier{get;set;}
+        public virtual Cashier Cashier { get; set; }
+
+        public virtual ICollection<Stake> Stackes { get; set; }
 
     }
 }
