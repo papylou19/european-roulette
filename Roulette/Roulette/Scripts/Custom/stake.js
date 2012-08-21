@@ -302,12 +302,14 @@ $(function () {
             }
         }
         else {
-            $('.bet').val($(this).find('.text').text());
-            $(this).siblings().removeClass("selected");
-            if ($(this).hasClass("selected"))
-                $(this).removeClass("selected");
-            else
-                $(this).addClass("selected");
+            if (!$(this).hasClass("onboard")) {
+                $('.bet').val($(this).find('.text').text());
+                $(this).siblings().removeClass("selected");
+                if ($(this).hasClass("selected"))
+                    $(this).removeClass("selected");
+                else
+                    $(this).addClass("selected");
+            }
         }
     });
 
