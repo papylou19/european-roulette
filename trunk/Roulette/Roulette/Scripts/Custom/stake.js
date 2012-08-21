@@ -11,7 +11,7 @@ function ContainStakesId(id, type) {
 }
 
 function BetComplect(number) {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     var Pieces = 0;
     number = parseInt(number);
@@ -108,7 +108,7 @@ function BetComplect(number) {
 }
 
 function BetNeighbors(element) {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     bet = Math.round(bet / 5 - 0.49);
     var index = element.data("index");
@@ -121,7 +121,7 @@ function BetNeighbors(element) {
 }
 
 function BetJeuZero() {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     bet = Math.round(bet / 4 - 0.49);
     StraightUp([12, 15], "Split", bet);
@@ -131,7 +131,7 @@ function BetJeuZero() {
 }
 
 function BetVoisinsduZero() {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     bet = Math.round(bet / 9 - 0.49);
     StraightUp([4,7], "Split", bet);
@@ -144,7 +144,7 @@ function BetVoisinsduZero() {
 }
 
 function BetOrphelins() {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     bet = Math.round(bet / 5 - 0.49);
     StraightUp([6, 9], "Split", bet);
@@ -155,7 +155,7 @@ function BetOrphelins() {
 }
 
 function BetTiersduCylindre() {
-    if ($(".selected").length === 0) return false;
+    if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
     bet = Math.round(bet / 6 - 0.49);
     StraightUp([5, 8], "Split", bet);
@@ -305,16 +305,24 @@ function StraightUp(numbers, betType, bet) {
     }
 }
 
+function IsValidConditionForBet() {
+    return ($(".selected").length != 0 && currentState == 0);
+}
+
+function IsComplectBet() {
+    return ($("#complect-button").hasClass("clicked") && !$("#cancel-any-button").hasClass("clicked"));
+}
+
 $(function () {
     $("td.number").click(function () {
-        if ($("#complect-button").hasClass("clicked")) {
+        if (IsComplectBet()) {
             var number = $(this).find("div.round").html();
             BetComplect(number);
         }
     });
 
     $("#zero").click(function () {
-        if ($("#complect-button").hasClass("clicked")) {
+        if (IsComplectBet()) {
             BetComplect(0);
         }
     })
@@ -369,7 +377,8 @@ $(function () {
 
 
     $.fn.setStake = function () {
-        if ($(".selected").length === 0 || $("#complect-button").hasClass("clicked")) {
+
+        if (!IsValidConditionForBet() || $("#complect-button").hasClass("clicked")) {
             return false;
         }
 
