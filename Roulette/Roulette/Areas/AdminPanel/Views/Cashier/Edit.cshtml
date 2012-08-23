@@ -4,7 +4,7 @@
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
 }
 <div class="centerContainer">
-<h1>Edit Cashier</h1>
+<h1>Редактировать кассира</h1>
 <div class="editModel cashierForm">
 @using (Html.BeginForm())
 {
@@ -27,8 +27,8 @@
     <div style="display: none;">
         @Html.EditorFor(m => m.OldUserName)
     </div>
-    <input type="submit" value="Edit" />
-    <input type="button" value="Cancel" onclick="window.location='@Url.Action("Index")';"/>
+    <input type="submit" value="Редактировать" />
+    <input type="button" value="Отменить " onclick="window.location='@Url.Action("Index")';"/>
                                  
 }
 </div>

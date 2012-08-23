@@ -2,6 +2,7 @@
 
 function setProgressBar() {
     setTimeout(function () {
+        var requestStartAt = new Date();
         $.ajax({
             type: "POST",
             url: '/Home/GetCurrentState',
@@ -12,9 +13,12 @@ function setProgressBar() {
                     seconds = 0;
                 }
                 else {
-                    seconds = Math.round((new Date() - Date.parse(state.StartTime)) / 1000);
+                    var requestEndAt = new Date();
+                    var requsetTime = requestEndAt - requestStartAt;
+                    //seconds = Math.round((new Date() - Date.parse(state.StartTime)) / 1000);
+                    seconds = Math.round((Date.parse(state.CurrentTime) - Date.parse(state.StartTime) + requsetTime) / 1000);
                     currentState = state.State;
-                   
+
                 }
                 $(".progress-bar progress").val(seconds);
             }

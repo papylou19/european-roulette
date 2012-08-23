@@ -9,7 +9,7 @@ var ballAngle;
 var ballRotateStarted = false;
 var winnerHighlighted = false;
 var number = 0;
-var cycleNumber = 11;
+var cycleNumber = 9;
 
 var bouncingRadius = 0;
 var isRadiusGrowing = undefined;

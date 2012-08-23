@@ -202,12 +202,12 @@
 <div id="admin-board">
 
     <div id="buttons">
-        <input type="button" value="Clear Any" id="cancel-any-button" class="admin-button"/>
-        <input type="button" value="Clear" id="cancel-button" class="admin-button"/>
-        <input type="button" value="Submit" id="submit-button" class="admin-button" />
-        <input type="button" value="Check" id="check-button" class="admin-button" />
-        <input type="button" value="Report" id="report-button" class="admin-button" />
-        <input type="button" value="Complect" id="complect-button" class="admin-button" />
+        <input type="button" value="Удалить фишку" id="cancel-any-button" class="admin-button"/>
+        <input type="button" value="Удалить все" id="cancel-button" class="admin-button"/>
+        <input type="button" value="Ставить " id="submit-button" class="admin-button" />
+        <input type="button" value="Проверить " id="check-button" class="admin-button" />
+        <input type="button" value="Oтчет" id="report-button" class="admin-button" />
+        <input type="button" value="Комплект" id="complect-button" class="admin-button" />
     </div>
     <div id="centered-div">
         @Html.Partial("_Board", Model)
@@ -217,21 +217,25 @@
     </div>
 
     <div class="roulette-chips">
-        <div class="chip" data-value="1">
-            <img src="/img/red-chip.png" alt="1"/>
-            <div class="text">1</div>
+        <div class="chip" data-value="50">
+            <img src="/img/green-chip.png" alt="50"/>
+            <div class="text">50</div>
         </div>
-        <div class="chip" data-value="2">
-            <img src="/img/purple-chip.png" alt="2"/>
-            <div class="text">2</div>
+        <div class="chip" data-value="100">
+            <img src="/img/purple-chip.png" alt="100"/>
+            <div class="text">100</div>
         </div>
-        <div class="chip" data-value="5">
-            <img src="/img/blue-chip.png" alt="5"/>
-            <div class="text">5</div>
+        <div class="chip" data-value="250">
+            <img src="/img/blue-chip.png" alt="250"/>
+            <div class="text">250</div>
         </div>
-        <div class="chip" data-value="10">
-            <img src="/img/orange-chip.png" alt="10"/>
-            <div class="text">10</div>
+        <div class="chip" data-value="500">
+            <img src="/img/orange-chip.png" alt="500"/>
+            <div class="text">500</div>
+        </div>
+        <div class="chip" data-value="1000">
+            <img src="/img/red-chip.png" alt="1000"/>
+            <div class="text">1000</div>
         </div>
     </div>
     <div><input class="bet" type="text" value="" /></div>
