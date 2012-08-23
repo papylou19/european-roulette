@@ -24,7 +24,7 @@ namespace Backend.Facade.Implementations
             this.ctx = context;
         }
 
-        private GameState SetState(GameState state)
+        private GameState SetState(GameState state, RouletteContext ctx)
         {
             ctx.GameStates.Add(state);
             try
@@ -40,7 +40,10 @@ namespace Backend.Facade.Implementations
 
         public GameState GetCurrentState()
         {
-            return ctx.GameStates.FirstOrDefault();
+            using (var ctx = new RouletteContext())
+            {
+                return ctx.GameStates.FirstOrDefault();
+            }
         }
 
         public int? ChangeGameState()
@@ -69,7 +72,7 @@ namespace Backend.Facade.Implementations
                     {
                         State = 0,
                         StartTime = DateTime.Now
-                    });
+                    }, ctx);
                 }
                 else
                 {

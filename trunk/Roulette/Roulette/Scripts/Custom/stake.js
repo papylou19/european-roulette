@@ -17,90 +17,90 @@ function BetComplect(number) {
     number = parseInt(number);
 
     // Straight Up	
-    StraightUp(number, "SingleElement", bet); Pieces += 1;
+    if (StraightUp(number, "SingleElement", bet)) Pieces += 1;
 
     // Corners and 0 streets
     if (number - 3 >= 1) {
         if (number % 3 != 0) {
-            StraightUp(number - 2, "Corner", 4 * bet); Pieces += 4;
+            if (StraightUp(number - 2, "Corner", 4 * bet)) Pieces += 4;
         }
         if (number % 3 != 1) {
-            StraightUp(number - 3, "Corner", 4 * bet); Pieces += 4;
+            if (StraightUp(number - 3, "Corner", 4 * bet)) Pieces += 4;
         }
     } else {
         switch (number) {
             case 0:
-                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
-                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                if (StraightUp([0, 3, 2], "Street", 3 * bet)) Pieces += 3;
+                if (StraightUp([0, 2, 1], "Street", 3 * bet)) Pieces += 3;
                 break;
             case 1:
-                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                if (StraightUp([0, 2, 1], "Street", 3 * bet)) Pieces += 3;
                 break;
             case 2:
-                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
-                StraightUp([0, 2, 1], "Street", 3 * bet); Pieces += 3;
+                if (StraightUp([0, 3, 2], "Street", 3 * bet)) Pieces += 3;
+                if (StraightUp([0, 2, 1], "Street", 3 * bet)) Pieces += 3;
                 break;
             case 3:
-                StraightUp([0, 3, 2], "Street", 3 * bet); Pieces += 3;
+                if (StraightUp([0, 3, 2], "Street", 3 * bet)) Pieces += 3;
                 break;
         }
-        StraightUp([0, 3, 2, 1], "Corner", 4 * bet); Pieces += 4;        
+        if (StraightUp([0, 3, 2, 1], "Corner", 4 * bet)) Pieces += 4;        
     }
     if (number + 3 <= 36 && number > 0) {
         if (number % 3 != 0) {
-            StraightUp(number + 1, "Corner", 4 * bet); Pieces += 4;
+            if (StraightUp(number + 1, "Corner", 4 * bet)) Pieces += 4;
         }
         if (number % 3 != 1) {
-            StraightUp(number, "Corner", 4 * bet); Pieces += 4;
+            if (StraightUp(number, "Corner", 4 * bet)) Pieces += 4;
         }
     }
 
     // splits
     if (number % 3 > 0) {
-        StraightUp([number + 1, number], "Split", 2 * bet); Pieces += 2;
+        if (StraightUp([number + 1, number], "Split", 2 * bet)) Pieces += 2;
     }
     if (number % 3 != 1 && number != 0) {
-        StraightUp([number, number - 1], "Split", 2 * bet); Pieces += 2;
+        if (StraightUp([number, number - 1], "Split", 2 * bet)) Pieces += 2;
     }
     if (number - 3 > 0) {
-        StraightUp([number - 3, number], "Split", 2 * bet); Pieces += 2;
+        if (StraightUp([number - 3, number], "Split", 2 * bet)) Pieces += 2;
     } else {
         switch (number) {
         case 0:
-            StraightUp([0, 1], "Split", 2 * bet); Pieces += 2;
-            StraightUp([0, 2], "Split", 2 * bet); Pieces += 2;
-            StraightUp([0, 3], "Split", 2 * bet); Pieces += 2;
+            if (StraightUp([0, 1], "Split", 2 * bet)) Pieces += 2;
+            if (StraightUp([0, 2], "Split", 2 * bet)) Pieces += 2;
+            if (StraightUp([0, 3], "Split", 2 * bet)) Pieces += 2;
             break;
         case 1:
-            StraightUp([0, 1], "Split", 2 * bet); Pieces += 2;
+            if (StraightUp([0, 1], "Split", 2 * bet)) Pieces += 2;
             break;
         case 2:
-            StraightUp([0, 2], "Split", 2 * bet); Pieces += 2;
+            if (StraightUp([0, 2], "Split", 2 * bet)) Pieces += 2;
             break;
         case 3:
-            StraightUp([0, 3], "Split", 2 * bet); Pieces += 2;
+            if (StraightUp([0, 3], "Split", 2 * bet)) Pieces += 2;
             break;
     }
     }
     if (number + 3 <= 36 && number > 0) {
-        StraightUp([number, number + 3], "Split", 2 * bet); Pieces += 2;
+        if (StraightUp([number, number + 3], "Split", 2 * bet)) Pieces += 2;
     }
 
     // streets
     if (number > 0) {
         var firstInStreet = number - number % 3 + ((number % 3) != 0 ? 3 : 0);
-        StraightUp([firstInStreet--, firstInStreet--, firstInStreet], "Street", 3 * bet); Pieces += 3;
+        if (StraightUp([firstInStreet--, firstInStreet--, firstInStreet], "Street", 3 * bet)) Pieces += 3;
     }
 
     // Sixline
     if (number - 3 > 0) {
         var leftNumber = number - 3;
         var firstInStreet = leftNumber - leftNumber % 3 + ((leftNumber % 3) != 0 ? 3 : 0);
-        StraightUp(firstInStreet, "Sixline", 6 * bet); Pieces += 6;
+        if (StraightUp(firstInStreet, "Sixline", 6 * bet)) Pieces += 6;
     }
     if (number + 3 <= 36 && number > 0) {
         var firstInStreet = number - number % 3 + ((number % 3) != 0 ? 3 : 0);
-        StraightUp(firstInStreet, "Sixline", 6 * bet); Pieces += 6;
+        if (StraightUp(firstInStreet, "Sixline", 6 * bet)) Pieces += 6;
     }
 
     alert(Pieces*bet);
@@ -110,60 +110,65 @@ function BetComplect(number) {
 function BetNeighbors(element) {
     if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
-    bet = Math.round(bet / 5 - 0.49);
+    eachBet = Math.round(bet / 5 - 0.49);
     var index = element.data("index");
     var betFrom = index - 2;
     var batTo = index + 2;
     for (var i = betFrom; i <= batTo; i++) {
         index = (37 + i) % 37;
-        StraightUp(NUMBERS[index], "SingleElement", bet);
+        StraightUp(NUMBERS[index], "SingleElement", eachBet);
     }
+    if (bet != eachBet * 5) alert(eachBet * 5);   
 }
 
 function BetJeuZero() {
     if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
-    bet = Math.round(bet / 4 - 0.49);
-    StraightUp([12, 15], "Split", bet);
-    StraightUp([32, 35], "Split", bet);
-    StraightUp([0, 3], "Split", bet);
-    StraightUp([26], "SingleElement", bet);
+    eachBet = Math.round(bet / 4 - 0.49);
+    StraightUp([12, 15], "Split", eachBet);
+    StraightUp([32, 35], "Split", eachBet);
+    StraightUp([0, 3], "Split", eachBet);
+    StraightUp([26], "SingleElement", eachBet);
+    if (bet != eachBet * 4) alert(eachBet * 4);   
 }
 
 function BetVoisinsduZero() {
     if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
-    bet = Math.round(bet / 9 - 0.49);
-    StraightUp([4,7], "Split", bet);
-    StraightUp([12,15], "Split", bet);
-    StraightUp([18,21], "Split", bet);
-    StraightUp([19,22], "Split", bet);
-    StraightUp([32,35], "Split", bet);
-    StraightUp([26, 25, 28, 29], "Corner", 2 * bet);
-    StraightUp([0,3,2], "Street", 2*bet);
+    eachBet = Math.round(bet / 9 - 0.49);
+    StraightUp([4, 7], "Split", eachBet);
+    StraightUp([12, 15], "Split", eachBet);
+    StraightUp([18, 21], "Split", eachBet);
+    StraightUp([19, 22], "Split", eachBet);
+    StraightUp([32, 35], "Split", eachBet);
+    StraightUp([26, 25, 28, 29], "Corner", 2 * eachBet);
+    StraightUp([0, 3, 2], "Street", 2 * eachBet);
+    if (bet != eachBet * 9) alert(eachBet * 9);    
 }
 
 function BetOrphelins() {
     if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
-    bet = Math.round(bet / 5 - 0.49);
-    StraightUp([6, 9], "Split", bet);
-    StraightUp([14, 17], "Split", bet);
-    StraightUp([17, 20], "Split", bet);
-    StraightUp([31, 34], "Split", bet);
-    StraightUp([1], "SingleElement", bet);
+    eachBet = Math.round(bet / 5 - 0.49);
+    StraightUp([6, 9], "Split", eachBet);
+    StraightUp([14, 17], "Split", eachBet);
+    StraightUp([17, 20], "Split", eachBet);
+    StraightUp([31, 34], "Split", eachBet);
+    StraightUp([1], "SingleElement", eachBet);
+    if (bet != eachBet * 5) alert(eachBet * 5);   
 }
 
 function BetTiersduCylindre() {
     if (!IsValidConditionForBet()) return false;
     var bet = $(".selected").data("value");
-    bet = Math.round(bet / 6 - 0.49);
-    StraightUp([5, 8], "Split", bet);
-    StraightUp([11, 10], "Split", bet);
-    StraightUp([13, 16], "Split", bet);
-    StraightUp([24, 23], "Split", bet);
-    StraightUp([27, 30], "Split", bet);
-    StraightUp([33, 36], "Split", bet);
+    eachBet = Math.round(bet / 6 - 0.49);
+    StraightUp([5, 8], "Split", eachBet);
+    StraightUp([11, 10], "Split", eachBet);
+    StraightUp([13, 16], "Split", eachBet);
+    StraightUp([24, 23], "Split", eachBet);
+    StraightUp([27, 30], "Split", eachBet);
+    StraightUp([33, 36], "Split", eachBet);
+    if (bet != eachBet * 6) alert(eachBet * 6);   
 }
 
 function StraightUp(numbers, betType, bet) {
@@ -183,10 +188,33 @@ function StraightUp(numbers, betType, bet) {
                 cell.push($(val).parents().eq(1));
             }
         })
-    }
+    } 
 
 
     var element = $(".selected").clone().removeClass("selected").addClass("onboard");
+
+    switch (bet) {
+        case 50:
+            element.find('img').attr('src', '/img/green-chip.png');
+            break;
+        case 100:
+            element.find('img').attr('src', '/img/purple-chip.png');
+            break;
+        case 250:
+            element.find('img').attr('src', '/img/blue-chip.png');
+            break;
+        case 500:
+            element.find('img').attr('src', '/img/orange-chip.png');
+            break;
+        case 1000:
+            element.find('img').attr('src', '/img/red-chip.png');
+            break;
+        default:
+            element.find('img').attr('src', '/img/cyan-chip.png');
+            break;        
+    }
+
+
     element.find("div.text").html(bet);
     var absHeight;
     var absWidth;
@@ -287,11 +315,10 @@ function StraightUp(numbers, betType, bet) {
                 cell[2].children(".push-item").eq(0).append(element);
             }
         } else if (type == "Quads") {
-            if (numbers[0] != 0)
-            {
+            if (numbers[0] != 0) {
                 cell[0].children(".push-item").eq(0).append(element);
             } else {
-                cell[3].children(".push-item").eq(0).append(element); 
+                cell[3].children(".push-item").eq(0).append(element);
             }
         } else if (type == "TwoVerticalTrips") {
             cell[0].children(".push-item").eq(0).append(element);
@@ -302,16 +329,20 @@ function StraightUp(numbers, betType, bet) {
             url: '/Stake/RememberCurrentState',
             data: { currentState: $("#centered-div").html() }
         });
+        return true;
+    } else {
+        return false;
     }
 }
 
 function IsValidConditionForBet() {
-    return ($(".selected").length != 0 && currentState == 0);
+    return ($(".selected").length != 0 && currentState == 0 && !$("#cancel-any-button").hasClass("clicked"));
 }
 
 function IsComplectBet() {
     return ($("#complect-button").hasClass("clicked") && !$("#cancel-any-button").hasClass("clicked"));
 }
+
 
 $(function () {
     $("td.number").click(function () {

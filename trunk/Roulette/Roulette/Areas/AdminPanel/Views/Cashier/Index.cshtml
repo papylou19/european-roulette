@@ -72,16 +72,16 @@
     
 
 <div class="cashier-container">
-    <h1>Cashier List</h1>
-    <div class="sub-asdmin-menu"><a href="@Url.Action("Add", "Cashier")" class="edit-link">Add new cashier</a></div>
+    <h1>Список кассиров</h1>
+    <div class="sub-asdmin-menu"><a href="@Url.Action("Add", "Cashier")" class="edit-link">Добавить кассира</a></div>
     <table class="cashires-table">
         <tr>
              <td>Id</td>
-             <td>UserName</td>
-             <td>Percent</td>
-             <td>Current Percent</td>
-             <td>Bet</td>
-             <td>Pay out</td>
+             <td>Имя</td>
+             <td>Процент выдачи</td>
+             <td>Текущий процент</td>
+             <td>Общая ставка</td>
+             <td>Общая выплата</td>
              <td></td>
              <td></td>
              <td></td>
@@ -105,9 +105,9 @@
                 } 
                 <td>@item.Bet</td>
                 <td>@item.PayOut</td>
-                <td><a href="@Url.Action("Edit", "Cashier", new { id = item.Id })"  class="edit-cashier edit-link">Edit</a></td>
-                <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved ? "Disable" : "Enable")</a></td>
-                <td><a href="javascript:showReport(@item.Id)" class="show-cashier-report edit-link">Show Report</a></td>
+                <td><a href="@Url.Action("Edit", "Cashier", new { id = item.Id })"  class="edit-cashier edit-link">Редактировать</a></td>
+                <td><a href="javascript:void" id="id-@item.Id" class="disable-cashier edit-link">@(item.IsApproved ? "Запрещать" : "Разрешать")</a></td>
+                <td><a href="javascript:showReport(@item.Id)" class="show-cashier-report edit-link">Отчет</a></td>
             </tr>
         }
     </table>
@@ -121,4 +121,4 @@
     <input type="text" id="endDate" class="datetext" />
     <input type="button" value="Показать" class="admin-button" id="show"/>
     <div id="reports"></div>
-</div>
+</div> 

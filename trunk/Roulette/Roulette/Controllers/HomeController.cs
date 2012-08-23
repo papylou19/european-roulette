@@ -37,7 +37,7 @@ namespace Roulette.Controllers
             }
 
             if (state != null)
-                return Json(new { State = state.State, StartTime = state.StartTime.ToString() });
+                return Json(new { State = state.State, StartTime = state.StartTime.ToString(), CurrentTime = DateTime.Now.ToString() });
             else
                 return null;
         }

@@ -44,7 +44,7 @@ namespace Roulette
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
             RouletteFcd = new RouletteFacade();
-            timer = new Timer(30000);
+            timer = new Timer(90000);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             timer.Enabled = true;
 
@@ -67,6 +67,7 @@ namespace Roulette
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             int? state = RouletteFcd.ChangeGameState();
+            //int? state = RouletteFcd.GetCurrentState().State;
             var cashierUserIds = RouletteFcd.GetAllCashier().Select(p => p.UserId);
 
             if (state == 1)

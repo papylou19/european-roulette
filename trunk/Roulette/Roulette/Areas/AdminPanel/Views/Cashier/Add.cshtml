@@ -1,11 +1,11 @@
 ﻿@model Roulette.Models.CashierModel
 @{
-    ViewBag.Title = "Add";
+    ViewBag.Title = "Добавить кассира";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="centerContainer">
-    <h1>Add Cashier</h1>
+    <h1>Добавить кассира</h1>
     <div class="addModel cashierForm">
         @using (Html.BeginForm("Add", "Cashier"))
         {
@@ -16,7 +16,7 @@
                 @Html.ValidationMessageFor(m => m.UserName)
              </div>
               <div>
-                <div class="label"> @Html.LabelFor(m => m.NumberPercent, "Percent")</div>
+                <div class="label"> @Html.LabelFor(m => m.NumberPercent)</div>
                 @Html.TextBoxFor(m => m.NumberPercent)
                 @Html.ValidationMessageFor(m => m.NumberPercent)
             </div>
@@ -30,8 +30,8 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
                 @Html.ValidationMessageFor(m => m.ConfirmPassword)
             </div>
-            <input type="submit" value="Add"/>
-            <input type="button" value="Cancel" onclick="window.location='@Url.Action("Index")';"/>
+            <input type="submit" value="Добавить"/>
+            <input type="button" value="Отменить" onclick="window.location='@Url.Action("Index")';"/>
         }
     </div>
 </div>
