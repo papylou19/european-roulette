@@ -11,7 +11,7 @@ namespace Roulette.Models
     {
         public int Id { get; set; }
         public bool IsApproved { get; set; }
-        [Range(1, 300, ErrorMessage = "The Percent must be between 1 and 300.")]
+        [Range(1, System.Int32.MaxValue, ErrorMessage = "The Percent must be greater than 1.")]
         public int NumberPercent { get; set; }
 
         public double CurrentPercent { get; set; }

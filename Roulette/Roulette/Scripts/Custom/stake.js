@@ -464,7 +464,7 @@ $(function () {
                     absLeft = $(".highlighted").eq(0).outerWidth() - $(".selected").outerWidth() / 2;
                 } else {
                     absTop = $(".highlighted").eq(1).outerHeight() - $(".selected").outerHeight() / 2;
-                    absLeft = - $(".selected").outerWidth() / 2;
+                    absLeft = -$(".selected").outerWidth() / 2;
                 }
                 type = "Quads";
             }
@@ -527,6 +527,7 @@ $(function () {
             });
 
             stakes.push({ Id: id, Price: $(".selected").data("value"), Type: type });
+
             if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6 && $(".highlighted").length != 4) {
                 $(".highlighted").eq(0).children(".push-item").eq(0).append(element);
             }
@@ -553,6 +554,8 @@ $(function () {
                 $(this).children(".push-item").eq(0).append(element);
             }
 
+            $(element).data({ Id: id, Type: type });
+
             $.ajax({
                 type: "POST",
                 url: '/Stake/RememberCurrentState',
@@ -563,99 +566,8 @@ $(function () {
 
     $.fn.removeStake = function () {
 
-        var id = parseInt($(".highlighted").eq(0).find(".round").html());
-        var type;
-
-        if ($(".highlighted").length == 1) {
-            if (ContainStakesId(id, "SingleElement")) {
-                type = "SingleElement";
-            }
-        }
-        else if ($(".highlighted").length == 2) {
-
-            if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(1).find(".round").html()) == 1 && $(".highlighted").eq(0).attr("id") != "zero") {
-                if (ContainStakesId(id, "VerticalPair")) {
-                    type = "VerticalPair";
-
-                }
-            }
-            else if ($(".highlighted").eq(0).attr("id") == "zero") {
-
-                id = parseInt($(".highlighted").eq(1).find(".round").html());
-                if (ContainStakesId(id, "HorizontalWithZeroPair")) {
-                    type = "HorizontalWithZeroPair";
-                }
-            }
-            else {
-                if (ContainStakesId(id, "HorizontalPair")) {
-                    type = "HorizontalPair";
-
-                }
-            }
-        }
-        else if ($(".highlighted").length == 3) {
-            if ($(".highlighted").eq(0).attr("id") == "zero") {
-                id = parseInt($(".highlighted").eq(1).find(".round").html());
-                if (ContainStakesId(id, "HorizontalWithZeroTrips")) {
-                    type = "HorizontalWithZeroTrips";
-
-                }
-
-            }
-            else {
-                if (ContainStakesId(id, "VerticalTrips")) {
-                    type = "VerticalTrips";
-
-                }
-            }
-        }
-        else if ($(".highlighted").length == 4) {
-            if (ContainStakesId(id, "Quads")) {
-                type = "Quads";
-
-            }
-        }
-        else if ($(".highlighted").length == 6) {
-            if (ContainStakesId(id, "TwoVerticalTrips")) {
-                type = "TwoVerticalTrips";
-
-            }
-        }
-        else {
-            if ($(".highlighted").length == 12) {
-                if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(4).find(".round").html()) == 12) {
-                    if (ContainStakesId(id, "HorizontalLine")) {
-                        type = "HorizontalLine";
-                    }
-                }
-                else {
-                    if (ContainStakesId(id, "TwelveElements")) {
-                        type = "TwelveElements";
-
-                    }
-                }
-            }
-            else if ($(".highlighted").length == 18) {
-                if (!$(".highlighted.black").length || !$(".highlighted.red").length) {
-                    if (ContainStakesId(id, "BlackOrRed")) {
-                        type = "BlackOrRed";
-
-                    }
-                }
-                else if (Math.abs($(".highlighted").eq(0).find(".round").html() - $(".highlighted").eq(1).find(".round").html()) == 3) {
-                    if (ContainStakesId(id, "EighteenElements")) {
-                        type = "EighteenElements";
-
-                    }
-                }
-                else {
-                    if (ContainStakesId(id, "EvenOrOdd")) {
-                        type = "EvenOrOdd";
-
-                    }
-                }
-            }
-        }
+        var id = $(this).data("Id");
+        var type = $(this).data("Type");
 
         if (type !== undefined) {
 

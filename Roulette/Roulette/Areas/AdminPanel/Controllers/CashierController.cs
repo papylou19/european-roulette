@@ -11,7 +11,7 @@ using System.Web.Security;
 
 namespace Roulette.Areas.AdminPanel.Controllers
 {
-    [Authorize(Roles = "SystemAdmin")]
+    [Authorize(Roles = "SystemAdmin, Admin")]
     public class CashierController : Roulette.Controllers.ControllerBase
     {
         //
