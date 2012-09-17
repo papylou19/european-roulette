@@ -25,11 +25,12 @@ var bounsingType = false;
 var bounsingState = 0;
 
 
-var CENTERX = 190; //center X of roulette
-var CENTERY = 190; //center Y of roulette
+var CENTERX = 218; //center X of roulette roulette-board R
+var CENTERY = 218; //center Y of roulette
 var ballheight;
 var ballWidth;
-var r = 140;
+var initialR = 189;
+var r = initialR;
 var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
 var TRANSFORM;
 
@@ -91,7 +92,7 @@ function Start() {
             else {
                 number = json.nextNumber;
                 s = CalculatePath();
-                r = 140;
+                r = initialR;
                 c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
                 ballAngularSpeed = c + rouletteAngularSpeed;
                 ballAngle = rouletteAngle;
@@ -154,7 +155,8 @@ function rotateWheel(d) {
                 ballAngularSpeed = c + rouletteAngularSpeed;
 
                 //ANOTHER HARD CODE for boll bounsingmnm,
-                if (r == 134 && bounsingState == 0 && !bounsingType && switchToNextStep) {
+
+                if ((r >= 176 && r < 179) && bounsingState == 0 && !bounsingType && switchToNextStep) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 25 + Math.floor((Math.random() * 20) + 1);
@@ -167,7 +169,7 @@ function rotateWheel(d) {
                 }
 
                 // ANOTHER BOUNSING
-                if (r == 92 && bounsingState == 0 && bounsingType && switchToNextStep) {
+                if ((r >= 120 && r < 121.5) && bounsingState == 0 && bounsingType && switchToNextStep) {
                     isRadiusGrowing = false;
 
                     bouncingAmplitude = 20;
@@ -217,7 +219,7 @@ function rotateWheel(d) {
 
                 //HARD CODE
                 if (c < 3.5)
-                    if (bollStopSteps < (140 - 80) / 1.5) {
+                    if (bollStopSteps < (initialR - 105) / 1.5) {
                         bollStopSteps += 1;
                         r -= 1.5;
                     }

@@ -15,10 +15,9 @@ function setProgressBar() {
                 else {
                     var requestEndAt = new Date();
                     var requsetTime = requestEndAt - requestStartAt;
-                    //seconds = Math.round((new Date() - Date.parse(state.StartTime)) / 1000);
-                    seconds = Math.round((Date.parse(state.CurrentTime) - Date.parse(state.StartTime) + requsetTime) / 1000);
+                    //alert((Date.parse(state.CurrentTime) - Date.parse(state.StartTime)) + " " + state.RoundeTime);
+                    seconds = Math.round((state.RoundeTime + requsetTime) / 1000);
                     currentState = state.State;
-
                 }
                 $(".progress-bar progress").val(seconds);
             }

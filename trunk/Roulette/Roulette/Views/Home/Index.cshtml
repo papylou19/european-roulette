@@ -6,6 +6,9 @@
 @section Head
 {
     <script type="text/javascript" src="/Scripts/Custom/roulette.js"></script>
+    <script type="text/javascript" src="/Scripts/json2.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.signalR-0.5.0.min.js"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
     <script type="text/javascript">
         var rouletteStarted = false;
 
@@ -17,7 +20,7 @@
                     $("#ball").css({ top: 0, left: 0, display: 'none' });
                     $.ajax({
                         type: "POST",
-                        url: '/Home/UpdateHistory',
+                        url: '/Home/GetHistory',
                         success: function (history) {
                             $(".right .selected-number").fadeOut(1000, function () {
                                 $(this).remove();
@@ -63,13 +66,50 @@
             }
         }
 
-        
+        //////
+        var questions = $.connection.questionsHub;
+        questions.newQuestion = function (data) {
+            drawStakes(data);
+        };
 
         $(function () {
-            getStakes();
+            $.connection.hub.start();
+            //getStakes();
             getRoundNumber();
             setProgressBar();
             main();
+
+
+            function doSomething() {
+                var winW = 1600
+                if (document.body && document.body.offsetWidth) {
+                    winW = document.body.offsetWidth;
+                }
+                if (document.compatMode == 'CSS1Compat' &&
+                    document.documentElement &&
+                    document.documentElement.offsetWidth) {
+                    winW = document.documentElement.offsetWidth;
+                }
+                if (window.innerWidth && window.innerHeight) {
+                    winW = window.innerWidth;
+                }
+
+                if (winW > 1860) {
+                    $("#roulette").addClass("big-wheel");
+                    $("#board-section-container").addClass("big-board");
+                } else {
+                    $("#roulette").removeClass("big-wheel");
+                    $("#board-section-container").removeClass("big-board");
+                }
+            };
+
+            var resizeTimer;
+            $(window).resize(function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(doSomething, 100);
+            });
+
+            doSomething();
         });
 
     </script>
@@ -84,13 +124,14 @@
 <img src="/img/ball.png" alt="Ball" id="ball"/>
 </div>
 
-<div id="board">
-@Html.Partial("_Board",Model)
-</div>
-<div class="clear"></div>
-
-<div id="sectors" style="margin-left: 379px;">
-    @Html.Partial("_Sectors", false)
+<div id="board-section-container">
+    <div id="board">
+        @Html.Partial("_Board",Model)
+    </div>
+    <div class="clear"></div>
+    <div id="sectors" style="margin-top: 40px;">
+        @Html.Partial("_Sectors", false)
+    </div>
 </div>
 
 </div>

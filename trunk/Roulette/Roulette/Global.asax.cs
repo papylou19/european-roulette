@@ -9,6 +9,8 @@ using Backend;
 using Backend.DataContext;
 using Backend.Facade.Interfaces;
 using Backend.Facade.Implementations;
+using SignalR;
+using Roulette.Controllers;
 
 namespace Roulette
 {
@@ -56,7 +58,7 @@ namespace Roulette
 
         void refuseTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (!RouletteFcd.RemoveGameRefuse(DateTime.Now.AddMonths(-6)))
+            if (!RouletteFcd.RemoveGameRefuse(DateTime.UtcNow.AddMonths(-6)))
             {
                 refuseTimer_Elapsed(null, null);
             }
@@ -70,21 +72,23 @@ namespace Roulette
             //int? state = RouletteFcd.GetCurrentState().State;
             var cashierUserIds = RouletteFcd.GetAllCashier().Select(p => p.UserId);
 
-            if (state == 1)
+            if (state == Constants.RollingState)
             {
                 foreach (var userId in cashierUserIds)
                 {
                     var percent = RouletteFcd.GetCashierByUserId(userId).NumberPercent;
                     var currentPercent = RouletteFcd.CountPercent(userId);
                     var numberDic = new Dictionary<int, double>();
-                    var stakeDict = new Dictionary<int, List<int>>();
+                    //var stakeDict = new Dictionary<int, List<int>>();
+                    var stakeList = new List<int>[37];
                     var gameId = RouletteFcd.GetCurrentGameId(userId);
 
                     for (int i = 0; i < 37; i++)
                     {
                         var count = RouletteFcd.CountWinningNumber(gameId, i);
                         numberDic.Add(i, count.Key);
-                        stakeDict.Add(i, count.Value);
+                        //stakeDict.Add(i, count.Value);
+                        stakeList[i] = count.Value;
                     }
 
                     if (percent > currentPercent)
@@ -100,11 +104,20 @@ namespace Roulette
                                      select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
                     }
 
-                    int winNumber = numberDic.ElementAt(new Random().Next(0, 9)).Key;
+                    var possibleVariants = 9;
+                    while ((possibleVariants < 35) && (numberDic[possibleVariants] == numberDic[possibleVariants + 1]))
+                    {
+                        possibleVariants++;
+                    }
+                    int winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
 
                     RouletteFcd.WriteWinnerNumber(gameId, winNumber);
-                    RouletteFcd.MakeWinner(stakeDict[winNumber]);
+                    RouletteFcd.MakeWinner(stakeList[winNumber]);
                 }
+
+                // Send socket for sinchronization
+                var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
+                context.Clients.newQuestion("");
             }
         }
 

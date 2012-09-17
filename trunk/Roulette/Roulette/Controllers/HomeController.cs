@@ -7,6 +7,8 @@ using Roulette.Models;
 using System.Web.Helpers;
 using Domain.Helpers;
 using Domain;
+using Backend;
+using SignalR;
 
 namespace Roulette.Controllers
 {
@@ -17,7 +19,7 @@ namespace Roulette.Controllers
         {
             TableModel model = new TableModel
             {
-                Colors = InitializeColors(),
+                Colors = ColorFields,
                 History = Unit.RouletteSrvc.GetLastHistory(CurrentUserId)
             };
 
@@ -27,26 +29,27 @@ namespace Roulette.Controllers
         public JsonResult GetCurrentState()
         {
             GameState state = Unit.RouletteSrvc.GetCurrentState();
-            if (state == null || state.State == 1)
+            if (state == null || state.State == Constants.RollingState)
             {
                 if (!BoardCurrentStates.ContainsKey(CurrentUserName))
                 {
                     BoardCurrentStates.Add(CurrentUserName, "");
                 }
                 BoardCurrentStates[CurrentUserName] = "";
-            }
+
+            } 
 
             if (state != null)
-                return Json(new { State = state.State, StartTime = state.StartTime.ToString(), CurrentTime = DateTime.Now.ToString() });
+                return Json(new { State = state.State, StartTime = state.StartTime.ToString(DateTimeFormat), CurrentTime = DateTime.UtcNow.ToString(DateTimeFormat), RoundeTime = (DateTime.UtcNow - state.StartTime).TotalMilliseconds });
             else
-                return null;
+                return null; 
         }
 
-        public ActionResult UpdateHistory()
+        public ActionResult GetHistory()
         {
             var model = new TableModel() {
                 History = Unit.RouletteSrvc.GetLastHistory(CurrentUserId),
-                Colors = InitializeColors()
+                Colors = ColorFields,
             };
             return PartialView("_History", model);
         }
