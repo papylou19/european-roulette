@@ -27,6 +27,4 @@ namespace Roulette.Areas.AdminPanel.Models
         [Display(Name = "Процент выдачи")]
         public int Percent { get; set; }
     }
-
-   
 }

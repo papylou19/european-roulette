@@ -14,9 +14,13 @@ namespace Roulette.Controllers
     {
         protected UnitOfWork Unit { get; private set; }
         protected static Dictionary<string, string> BoardCurrentStates { get; set; }
+        protected static ColorField[] ColorFields { get; private set; }
+        protected static string DateTimeFormat = "M/d/yyyy h:mm:ss tt";
+
         static ControllerBase()
         {
             BoardCurrentStates = new Dictionary<string, string>();
+            ColorFields = InitializeColors();
         }
 
         public ControllerBase()
@@ -40,7 +44,8 @@ namespace Roulette.Controllers
             }
         }
 
-        protected ColorField[] InitializeColors()
+        
+        private static ColorField[] InitializeColors()
         {
             return new ColorField[] {
                     new ColorField(1,true),new ColorField(2,false),new ColorField(3,true),new ColorField(4,false),new ColorField(5,true),
@@ -51,6 +56,12 @@ namespace Roulette.Controllers
                     new ColorField(26,false),new ColorField(27,true),new ColorField(28,false),new ColorField(29,false),new ColorField(30,true),
                     new ColorField(31,false),new ColorField(32,true),new ColorField(33,false),new ColorField(34,true),new ColorField(35,false),
                     new ColorField(36,true)};
+        } 
+
+        protected override void Dispose(bool disposing)
+        {
+            Unit.Dispose();
+            base.Dispose(disposing);
         }
 
     }

@@ -8,6 +8,11 @@ using System.Web.Security;
 using Domain.Helpers;
 using Roulette.Models;
 using Roulette.Utilits;
+using Backend;
+using SignalR;
+using SignalR.Hubs;
+using System.Text;
+using System.Collections.Generic;
 
 namespace Roulette.Controllers
 {
@@ -18,37 +23,41 @@ namespace Roulette.Controllers
         {
             TableModel model = new TableModel
             {
-                Colors = InitializeColors()
+                Colors = ColorFields,
             };
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult CreateStake(StakeDTO[] stakes)
+        [ValidateInput(false)]
+        public JsonResult CreateStake(string stake, string currentState)
         {
-            if (stakes != null && stakes.FirstOrDefault(m => m.Price <= 0) == null)
+            StakeDTO[] stakeDTOs = ((List<StakeDTO>)Newtonsoft.Json.JsonConvert.DeserializeObject(stake, typeof(List<StakeDTO>))).ToArray();
+            if (stakeDTOs != null && stakeDTOs.FirstOrDefault(m => m.Price <= 0) == null)
             {
                 bool success = false;
                 long contractNumber = 0;
                 var state = Unit.RouletteSrvc.GetCurrentState();
-                if (state != null && state.State != 1)
+                if (state != null && state.State != Constants.RollingState)
                 {
-                    contractNumber = Unit.RouletteSrvc.CreateCheck(stakes, BoardCurrentStates[CurrentUserName], CurrentUserId);
+                    contractNumber = Unit.RouletteSrvc.CreateCheck(stakeDTOs, BoardCurrentStates[CurrentUserName], CurrentUserId);
                     if (contractNumber != 0)
                     {
-                        success = Unit.RouletteSrvc.CreateStake(stakes, contractNumber, CurrentUserId);
+                        success = Unit.RouletteSrvc.CreateStake(stakeDTOs, contractNumber, CurrentUserId);
                     }
                 }
 
+                // Send socket for sinchronization
+                var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
+                context.Clients.newQuestion("");
                 return Json(new { success = success, contractNumber = contractNumber });
             }
-            return Json(new { success = false});
-        } 
-
-
+            return Json(new { success = false });
+        }
+        
         public ActionResult Report(DateTime startDate, DateTime endDate, int? cashierId)
         {
-            if (cashierId.HasValue && Roles.IsUserInRole("SystemAdmin"))
+            if (cashierId.HasValue && Roles.IsUserInRole("Admin"))
             {
                 var model = new ReportModel();
                 model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate, cashierId.Value);
@@ -59,8 +68,8 @@ namespace Roulette.Controllers
                 var model = new ReportModel();
                 model.Reports = Unit.RouletteSrvc.GetReportsByDate(startDate, endDate, CurrentUserId);
                 return PartialView("_Report", model);
-            } 
-        } 
+            }
+        }
 
     
         public ActionResult Check(long contractNumber)
@@ -160,6 +169,11 @@ namespace Roulette.Controllers
             }
 
             BoardCurrentStates[CurrentUserName] = currentState.Replace("highlighted", "");
+
+            // Send socket for sinchronization
+            var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
+            context.Clients.newQuestion(currentState);
+
             return Json(new { success = true });
         }
 
@@ -178,6 +192,11 @@ namespace Roulette.Controllers
         {
             return Unit.RouletteSrvc.GetCurrentGameId(CurrentUserId);
         }
+
+    }
+
+    public class QuestionsHub : Hub
+    {
 
     }
 }

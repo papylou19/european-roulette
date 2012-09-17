@@ -12,6 +12,8 @@
      <script type="text/javascript" src="/Scripts/Custom/highlighter.js"></script>
      <script type="text/javascript" src="/Scripts/Custom/stake.js?wd=15"></script>
      <script type="text/javascript">
+         var checkSum;
+         var currentRoundNumber;
          var contractNumber = 0;
          var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
          function getStakes() {
@@ -35,11 +37,19 @@
          function setRoundNumber() {
              setTimeout(function () {
                  getRoundNumber();
+
+                 if (currentRoundNumber != $("#round-number").html()) {
+                     //checkSum.val("0");
+                     $("#cancel-button").click();
+                     currentRoundNumber = $("#round-number").html();
+                 }
+
                  setRoundNumber();
              }, 2000);
          }
 
          $(function () {
+             checkSum = $("#check-sum");
              $(".datetext").datepicker();
              $('#check-dialog, #pay-dialog').dialog({
                  modal: true,
@@ -121,6 +131,7 @@
              });
 
              $("#cancel-button").click(function () {
+                 checkSum.val("0");
                  $.ajax({
                      type: "POST",
                      url: '/Stake/RememberCurrentState',
@@ -150,8 +161,8 @@
                  $.ajax({
                      type: "POST",
                      url: '/Stake/CreateStake',
-                     contentType: 'application/json',
-                     data: JSON.stringify(stakes),
+                     //data: JSON.stringify(stakes),
+                     data: { stake: JSON.stringify(stakes), state: $("#centered-div").html() },
                      async: false,
                      success: function (data) {
                          if (data.success) {
@@ -199,9 +210,20 @@
      </script>
 }
 
+@section seperator
+{    
+    @if (Roles.IsUserInRole("SystemAdmin") || Roles.IsUserInRole("Admin"))
+    {
+        <a style="float:right; margin: 4px 30px 0 0; font-size: 14px; color: #fff" href="/Adminpanel">Adminpanel</a>
+    }
+    <a style="float:right; margin: 4px 30px 0 0; font-size: 14px; color: #fff" href="/Account/Logout">Log out</a>
+}
+
 <div id="admin-board">
 
     <div id="buttons">
+        <input type="text" id="check-sum" name="check-sum" value="0" readonly="readonly" />
+
         <input type="button" value="Удалить фишку" id="cancel-any-button" class="admin-button"/>
         <input type="button" value="Удалить все" id="cancel-button" class="admin-button"/>
         <input type="button" value="Ставить " id="submit-button" class="admin-button" />
@@ -237,8 +259,16 @@
             <img src="/img/red-chip.png" alt="1000"/>
             <div class="text">1000</div>
         </div>
+         <div class="chip" data-value="3000">
+            <img src="/img/yellow-chip.png" alt="3000"/>
+            <div class="text">3000</div>
+        </div>
+        <div class="chip" data-value="5000">
+            <img src="/img/dark-chip.png" alt="5000"/>
+            <div class="text">5000</div>
+        </div>
     </div>
-    <div><input class="bet" type="text" value="" /></div>
+    <div style="margin-top: 5px"><input class="bet" type="text" value="" /></div>
 </div>
 <div id="check-dialog">
  <input type="text" class="code-textbox" />

@@ -51,9 +51,9 @@ namespace Backend.Facade.Implementations
             using (var ctx = new RouletteContext())
             {
                 var current = ctx.GameStates.FirstOrDefault();
-                int state = 0;
+                int state = Constants.StakeState;
 
-                if (current == null || current.State == 1)
+                if (current == null || current.State == Constants.RollingState)
                 {
                     var cashiers = ctx.Cashiers.ToList();
                     foreach (var cashier in cashiers)
@@ -70,14 +70,14 @@ namespace Backend.Facade.Implementations
                 {
                     SetState(new GameState()
                     {
-                        State = 0,
-                        StartTime = DateTime.Now
+                        State = Constants.StakeState,
+                        StartTime = DateTime.UtcNow
                     }, ctx);
                 }
                 else
                 {
-                    current.StartTime = DateTime.Now;
-                    current.State = current.State != 1 ? (short)(current.State + 1) : (short)0;
+                    current.StartTime = DateTime.UtcNow;
+                    current.State = current.State != Constants.RollingState ? (short)(current.State + 1) : Constants.StakeState;
                     state = current.State;
                 }
 
@@ -114,7 +114,7 @@ namespace Backend.Facade.Implementations
                     ctx.Stakes.Add(new Stake
                     {                        
                         ContractNumber = contractNumber,
-                        CreateDate = DateTime.Now,
+                        CreateDate = DateTime.UtcNow,
                         Coefficient = coefficient,
                         Number = stake.Id,
                         Sum = stake.Price,
@@ -148,7 +148,7 @@ namespace Backend.Facade.Implementations
                 {
                     NumberPercent = percent,
                     UserId = userId,
-                    LastChangeDate = DateTime.Now,
+                    LastChangeDate = DateTime.UtcNow,
                 });
 
                 ctx.SaveChanges();
@@ -199,7 +199,7 @@ namespace Backend.Facade.Implementations
                 return true;
 
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }
@@ -253,7 +253,7 @@ namespace Backend.Facade.Implementations
                 }
 
                 check.GameID = ctx.Games.Where(p => p.CashierId == cashierId).OrderByDescending(p => p.Id).FirstOrDefault().Id;
-                check.CreateDate = DateTime.Now;
+                check.CreateDate = DateTime.UtcNow;
                 check.PossibleWinningString = check.PossibleWinningString.Remove(check.PossibleWinningString.Length - 3);
                 ctx.Checks.Add(check);
 
@@ -508,9 +508,13 @@ namespace Backend.Facade.Implementations
         public void WriteWinnerNumber(int gameId, int winNumber)
         {
             using (var ctx = new RouletteContext())
-            {
-                ctx.Games.FirstOrDefault(p => p.Id == gameId).Number = Convert.ToByte(winNumber);
-                ctx.SaveChanges();
+            {                
+                try
+                {
+                    ctx.Games.FirstOrDefault(p => p.Id == gameId).Number = Convert.ToByte(winNumber);
+                    ctx.SaveChanges();
+                }
+                catch { }
             }
         }
 
@@ -529,14 +533,14 @@ namespace Backend.Facade.Implementations
         {
             try
             {
-                ctx.Stakes.Where(m => m.ContractNumber == contractNumber && m.IsWinningTicket == true).ToList().ForEach(m => { m.IsPayed = true; m.PaymentDate = DateTime.Now; });
+                ctx.Stakes.Where(m => m.ContractNumber == contractNumber && m.IsWinningTicket == true).ToList().ForEach(m => { m.IsPayed = true; m.PaymentDate = DateTime.UtcNow; });
                 ctx.SaveChanges();
                 return true;
-            }
+            } 
             catch
             {
                 return false;
-            }
+            } 
         }
 
         public int GetCurrentGameId(Guid userId)
@@ -598,7 +602,6 @@ namespace Backend.Facade.Implementations
                     IsPayed = item.IsPayed,
                     WinningSum = item.WinningSum
                 });
-
             }
 
             reports.Stake = stakes.Sum(m => m.Sum);
@@ -611,7 +614,13 @@ namespace Backend.Facade.Implementations
             else {
                 reports.WinSum = 0;
             }
-            reports.WaitingSum = stakes.Where(m => m.IsWinningTicket == true).Sum(m => m.WinningSum) - reports.WinSum;
+
+            var winningTickets = stakes.Where(m => m.IsWinningTicket == true);
+
+            if (winningTickets.FirstOrDefault() != null)
+            {
+                reports.WaitingSum = winningTickets.Sum(m => m.WinningSum) - reports.WinSum;
+            }
 
             return reports;
         }
