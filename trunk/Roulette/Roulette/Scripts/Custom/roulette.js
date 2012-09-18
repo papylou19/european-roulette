@@ -20,6 +20,7 @@ var bouncingAcceleration;
 var stack288 = new Array();
 var bollStopSteps = 0;
 
+
 var switchToNextStep = true;
 var bounsingType = false;
 var bounsingState = 0;
@@ -27,12 +28,21 @@ var bounsingState = 0;
 
 var CENTERX = 218; //center X of roulette roulette-board R
 var CENTERY = 218; //center Y of roulette
-var ballheight;
-var ballWidth;
+var ballHeight = 12;
+var ballWidth = 12;
 var initialR = 189;
 var r = initialR;
 var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
-var TRANSFORM;
+
+
+
+var wheel;
+var board;
+var ball;
+var canvas;
+var context;
+var wheelTopLeft = 64;
+var wheelSize = 309;
 
 Array.prototype.findIndex = function(value){
     var ctr = "";
@@ -51,23 +61,6 @@ function CalculateRotateNumber(rouletteAngularSpeed, s, delta) {
 
 function CalculatePath() {
     return 360 * cycleNumber + 99 + NUMBERS.findIndex(number) * 360/37;
-}
-
-function getTransformProperty(element) {
-    var properties = [
-                        'transform',
-                        'WebkitTransform',
-                        'msTransform',
-                        'MozTransform',
-                        'OTransform'
-                     ];
-    var p;
-    while (p = properties.shift()) {
-        if (typeof element.style[p] != 'undefined') {
-            return p;
-        }
-    }
-    return false;
 }
 
 function getRadian(degree) {
@@ -96,7 +89,6 @@ function Start() {
                 c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
                 ballAngularSpeed = c + rouletteAngularSpeed;
                 ballAngle = rouletteAngle;
-                $("#ball").show();
                 winnerHighlighted = false;
                 ballRotateStarted = true;
 
@@ -109,9 +101,19 @@ function Start() {
     });
 }
 
+
 function rotateWheel(d) {
     setTimeout(function () {
-        $('.roulette-wheel')[0].style[TRANSFORM] = 'rotate(' + (d % 360) + 'deg)';
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(board, 0, 0);
+        context.translate(wheelTopLeft, wheelTopLeft);
+        context.translate(wheelSize / 2, wheelSize/2);
+        context.rotate(getRadian(d));
+        context.drawImage(wheel, -wheelSize / 2, -wheelSize/2);
+        context.rotate(-getRadian(d));
+        context.translate(-wheelSize / 2, -wheelSize / 2); 
+        context.translate(-wheelTopLeft, -wheelTopLeft);
 
         if (ballAngularSpeed == rouletteAngularSpeed) {
             ballRotateStarted = false;
@@ -140,8 +142,10 @@ function rotateWheel(d) {
                     winnerHighlighted = true;
                 });
             }
-            if ($("#ball").is(":visible")) {
-                $("#ball").css("top", CENTERY + (r * Sin(ballAngle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Cos(ballAngle)) - $("#ball").width() / 2);
+
+            if (currentState == 1) {
+                context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
+                //$("#ball").css("top", CENTERY + (r * Sin(ballAngle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Cos(ballAngle)) - $("#ball").width() / 2);
                 ballAngle = (ballAngle - rouletteAngularSpeed) % 360;
             }
         }
@@ -223,11 +227,7 @@ function rotateWheel(d) {
                         bollStopSteps += 1;
                         r -= 1.5;
                     }
-
-                $("#ball").css({
-                    top: CENTERY + (r * Sin(ballAngle)) - ballHeight / 2,
-                    left: CENTERX + (r * Cos(ballAngle)) - ballWidth / 2
-                });
+                context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
             }
         }
 
@@ -266,10 +266,27 @@ function bounseBall() {
 }
 
 $(function () {
-    ballHeight = $("#ball").height();
-    ballWidth = $("#ball").width();
-    TRANSFORM = getTransformProperty($('.roulette-wheel')[0]);
-    if (TRANSFORM) {
-        rotateWheel(0);
-    }
+    canvas = document.getElementById("roulette");
+    context = canvas.getContext("2d");
+
+    board = new Image();
+
+    board.onload = function () {
+        context.drawImage(board, 0, 0);
+        wheel = new Image();
+
+        wheel.onload = function () {
+            context.drawImage(wheel, wheelTopLeft, wheelTopLeft);
+            ball = new Image();
+            ball.onload = function () {
+                rotateWheel(0);
+            }
+            ball.src = "/img/ball.png";
+        };
+
+        wheel.src = "/img/roulette-wheel.png";
+    };
+
+    board.src = "/img/roulette-board.png";
+
 });
