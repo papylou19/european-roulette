@@ -119,6 +119,7 @@ function rotateWheel(d) {
             ballRotateStarted = false;
             if (!winnerHighlighted) {
                 $("#board .round").each(function () {
+                    winnerHighlighted = true;
                     if ($(this).html() === number.toString()) {
 
                         var td;
@@ -139,13 +140,11 @@ function rotateWheel(d) {
                             $(".right .selected-number").fadeIn(1000);
                         });
                     }
-                    winnerHighlighted = true;
                 });
             }
 
             if (currentState == 1) {
                 context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
-                //$("#ball").css("top", CENTERY + (r * Sin(ballAngle)) - $("#ball").height() / 2).css("left", CENTERX + (r * Cos(ballAngle)) - $("#ball").width() / 2);
                 ballAngle = (ballAngle - rouletteAngularSpeed) % 360;
             }
         }
