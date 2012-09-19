@@ -427,6 +427,8 @@ div.round
     border-radius:22px;
     border:2px White solid;
     cursor: pointer;
+    font-size:20px;
+    font-weight:bold;
 }
 .push-item
 {
