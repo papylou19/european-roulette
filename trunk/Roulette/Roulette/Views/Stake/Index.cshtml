@@ -169,6 +169,7 @@
                      success: function (data) {
                          if (data.success) {
                              stakes = new Array();
+                             checkSum.val("0");
                              $('.roulette-board div.chip').remove();
                              $('#zero div.chip').remove();
                              contractNumber = data.contractNumber;
