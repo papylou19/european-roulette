@@ -137,10 +137,20 @@
              });
 
              $("#cancel-any-button").click(function () {
-                 if ($(this).hasClass("clicked"))
+                 if ($(this).hasClass("clicked")) {
                      $(this).removeClass("clicked");
-                 else
+                     $(".push-item").css("cursor", "pointer");
+                     $("div.round").css("cursor", "pointer");
+                     if ($("#complect-button").hasClass("clicked")) {
+                         $(".push-item").css("cursor", "move");
+                         $("div.round").css("cursor", "move");
+                     }
+                 }
+                 else {
                      $(this).addClass("clicked");
+                     $(".push-item").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                     $("div.round").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                 }
              });
 
 
@@ -174,8 +184,18 @@
              $("#complect-button").click(function () {
                  if ($(this).hasClass("clicked")) {
                      $(this).removeClass("clicked");
+                     $(".push-item").css("cursor", "pointer");
+                     $("div.round").css("cursor", "pointer");
+                     if ($("#cancel-any-button").hasClass("clicked")) {
+                         $(".push-item").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                         $("div.round").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                     }
                  } else {
                      $(this).addClass("clicked");
+                     if (!$("#cancel-any-button").hasClass("clicked")) {
+                         $(".push-item").css("cursor", "move");
+                         $("div.round").css("cursor", "move");
+                     }
                  }
              });
 
