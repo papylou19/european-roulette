@@ -12,7 +12,7 @@ namespace Roulette.Models
         public int Id { get; set; }
         public bool IsApproved { get; set; }
         [Display(Name = "Процент выдачи")]
-        [Range(1, System.Int32.MaxValue, ErrorMessage = "The Percent must be greater than 1.")]
+        [Range(0, System.Int32.MaxValue, ErrorMessage = "The Percent must be positive")]
         public int NumberPercent { get; set; }
 
         public double CurrentPercent { get; set; }

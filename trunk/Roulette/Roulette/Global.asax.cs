@@ -91,26 +91,35 @@ namespace Roulette
                         stakeList[i] = count.Value;
                     }
 
+                    int winNumber;
+                    bool isMaxORMin = false;
                     if (percent > currentPercent)
                     {
                         numberDic = (from pair in numberDic
-                                     orderby pair.Value descending
-                                     select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                                        orderby pair.Value descending
+                                        select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        if (percent == int.MaxValue)
+                            isMaxORMin = true;
                     }
                     else
                     {
                         numberDic = (from pair in numberDic
-                                     orderby pair.Value ascending
-                                     select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                                        orderby pair.Value ascending
+                                        select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                        if (percent == 0)
+                            isMaxORMin = true;
                     }
 
-                    var possibleVariants = 9;
+                    //var possibleVariants = 9;
+                    var possibleVariants = isMaxORMin ? 0 : 9;
                     while ((possibleVariants < 35) && (numberDic[possibleVariants] == numberDic[possibleVariants + 1]))
                     {
                         possibleVariants++;
                     }
-                    int winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
 
+                    //int elementAt = isMaxORMin ? 0 : new Random().Next(0, possibleVariants);
+
+                    winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
                     RouletteFcd.WriteWinnerNumber(gameId, winNumber);
                     RouletteFcd.MakeWinner(stakeList[winNumber]);
                 }

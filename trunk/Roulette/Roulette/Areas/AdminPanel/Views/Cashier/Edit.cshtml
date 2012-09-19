@@ -6,6 +6,11 @@
 <div class="centerContainer">
 <h1>Редактировать кассира</h1>
 <div class="editModel cashierForm">
+
+<script type="text/javascript">
+    
+</script>
+
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)
@@ -23,6 +28,8 @@
         <div class="label"> @Html.LabelFor(m => m.Percent)</div>
         @Html.EditorFor(m => m.Percent)
         @Html.ValidationMessageFor(m => m.Percent)
+        <input type="button" value="MIN" onclick="$('#Percent').val('0');"/>
+        <input type="button" value="MAX" onclick="$('#Percent').val('2147483647');"/>
     </div>
     <div style="display: none;">
         @Html.EditorFor(m => m.OldUserName)
