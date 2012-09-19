@@ -552,7 +552,6 @@ $(function () {
 
             stakes.push({ Id: id, Price: $(".selected").data("value"), Type: type });
             checkSum.val(parseInt(checkSum.val()) + parseInt($(".selected").data("value")));
-
             if ($(this).hasClass("number") && $(".highlighted").length != 3 && $(".highlighted").length != 6 && $(".highlighted").length != 4) {
                 $(".highlighted").eq(0).children(".push-item").eq(0).append(element);
             }
