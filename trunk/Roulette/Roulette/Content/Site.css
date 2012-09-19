@@ -324,7 +324,7 @@ table th {
 
 #admin-board
 {
-    margin-top:30px;
+    padding-top:30px;
 }
 
 #admin-board,#user-board
@@ -402,7 +402,7 @@ table th {
     height:40px;
     text-align:center;
     line-height:40px;
-    font-size:18px;
+    font-size:20px;
     position:relative;
     padding: 0;
 }
@@ -914,3 +914,12 @@ check
     -o-transform:scale(1.2); /* Opera */   
 }
 
+.disabled
+{
+    background-color:#999999;
+}
+
+.disabled > *
+{
+    opacity:0.2;
+}

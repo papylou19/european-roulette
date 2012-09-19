@@ -13,7 +13,6 @@
      <script type="text/javascript" src="/Scripts/Custom/stake.js?wd=15"></script>
      <script type="text/javascript">
          var checkSum;
-         var currentRoundNumber;
          var contractNumber = 0;
          var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
          function getStakes() {
@@ -37,13 +36,6 @@
          function setRoundNumber() {
              setTimeout(function () {
                  getRoundNumber();
-
-                 if (currentRoundNumber != $("#round-number").html()) {
-                     //checkSum.val("0");
-                     $("#cancel-button").click();
-                     currentRoundNumber = $("#round-number").html();
-                 }
-
                  setRoundNumber();
              }, 2000);
          }
@@ -202,11 +194,11 @@
              return mm + '/' + dd + '/' + yyyy;
          }
 
-        function PrintCheck(contractNumber) {
-         if (contractNumber != 0) {
-             window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+         function PrintCheck(contractNumber) {
+             if (contractNumber != 0) {
+                 window.open("/Stake/Check?contractNumber=" + contractNumber, "_blank");
+             }
          }
-        }
      </script>
 }
 

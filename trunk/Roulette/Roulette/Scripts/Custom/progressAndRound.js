@@ -1,4 +1,5 @@
 ﻿var currentState = 0;
+var currentRoundNumber;
 
 function setProgressBar() {
     setTimeout(function () {
@@ -15,9 +16,14 @@ function setProgressBar() {
                 else {
                     var requestEndAt = new Date();
                     var requsetTime = requestEndAt - requestStartAt;
-                    //alert((Date.parse(state.CurrentTime) - Date.parse(state.StartTime)) + " " + state.RoundeTime);
                     seconds = Math.round((state.RoundeTime + requsetTime) / 1000);
                     currentState = state.State;
+                    if (currentState == 1 && !$("#main").hasClass("disabled")) {
+                        $("#admin-board").parents("#main").addClass("disabled");
+                    }
+                    else if (currentState == 0 && $("#main").hasClass("disabled")) {
+                        $("#admin-board").parents("#main").removeClass("disabled");
+                    }
                 }
                 $(".progress-bar progress").val(seconds);
             }
@@ -32,6 +38,13 @@ function getRoundNumber() {
         url: '/Home/GetCurrentRound',
         success: function (round) {
             $("#round-number").html(round);
+
+            if (currentRoundNumber != round) {
+
+                currentRoundNumber = round;
+                //checkSum.val("0");
+                $("#cancel-button").click();
+            }
         }
     });
 }
