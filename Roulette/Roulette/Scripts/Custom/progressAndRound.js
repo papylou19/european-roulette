@@ -33,6 +33,7 @@ function setProgressBar() {
 }
 
 function getRoundNumber() {
+
     $.ajax({
         type: "POST",
         url: '/Home/GetCurrentRound',
