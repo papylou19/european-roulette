@@ -112,7 +112,7 @@ namespace Roulette
 
                     //var possibleVariants = 9;
                     var possibleVariants = isMaxORMin ? 0 : 9;
-                    while ((possibleVariants < 35) && (numberDic[possibleVariants] == numberDic[possibleVariants + 1]))
+                    while ((possibleVariants < 35) && (numberDic.ElementAt(possibleVariants).Value == numberDic.ElementAt(possibleVariants + 1).Value))
                     {
                         possibleVariants++;
                     }
