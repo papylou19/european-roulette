@@ -128,6 +128,7 @@
     <Content Include="img\blue-chip.png" />
     <Content Include="img\cyan-chip.png" />
     <Content Include="img\dark-chip.png" />
+    <Content Include="img\delete-cursor.png" />
     <Content Include="img\green-chip.png" />
     <Content Include="img\green-cover.jpg" />
     <Content Include="img\green-texture.jpg" />
