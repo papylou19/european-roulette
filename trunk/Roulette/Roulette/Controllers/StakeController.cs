@@ -25,7 +25,15 @@ namespace Roulette.Controllers
             {
                 Colors = ColorFields,
             };
+
+            ViewBag.CurrentRound = GetCurrentRound();
+
             return View(model);
+        }
+
+        private int GetCurrentRound()
+        {
+            return Unit.RouletteSrvc.GetCurrentRoundNumber(CurrentUserId);
         }
 
         [HttpPost]

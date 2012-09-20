@@ -26,6 +26,7 @@
                              $('.roulette-board div.chip').remove();
                              $('#zero div.chip').remove();
                              stakes = new Array();
+                             checkSum.val("0");
                          }
                          getStakes();
                      }
@@ -144,16 +145,16 @@
                      if ($("#complect-button").hasClass("clicked")) {
                          $(".push-item").css("cursor", "move");
                          $("div.round").css("cursor", "move");
+                         $("#centered-div .chip").css("cursor", "move");
                      }
                  }
                  else {
                      $(this).addClass("clicked");
-                     $(".push-item").css("cursor", "url('/img/delete-cursor.png'),pointer");
-                     $("div.round").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                     $(".push-item").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
+                     $("div.round").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
+                     $("#centered-div .chip").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
                  }
              });
-
-
 
              $("#submit-button").click(function () {
                  if (!isFormValid) {
@@ -188,18 +189,22 @@
                      $(".push-item").css("cursor", "pointer");
                      $("div.round").css("cursor", "pointer");
                      if ($("#cancel-any-button").hasClass("clicked")) {
-                         $(".push-item").css("cursor", "url('/img/delete-cursor.png'),pointer");
-                         $("div.round").css("cursor", "url('/img/delete-cursor.png'),pointer");
+                         $(".push-item").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
+                         $("div.round").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
+                         $("#centered-div .chip").css("cursor", "url('/img/delete-cursor.png') 12 12,pointer");
                      }
                  } else {
                      $(this).addClass("clicked");
                      if (!$("#cancel-any-button").hasClass("clicked")) {
                          $(".push-item").css("cursor", "move");
                          $("div.round").css("cursor", "move");
+                         $("#centered-div .chip").css("cursor", "move");
                      }
                  }
              });
 
+             currentRoundNumber = @ViewBag.CurrentRound;
+             $("#round-number").html(@ViewBag.CurrentRound);
 
              getStakes();
              setRoundNumber();

@@ -102,6 +102,12 @@ function BetComplect(number) {
         var firstInStreet = number - number % 3 + ((number % 3) != 0 ? 3 : 0);
         if (SetBet(firstInStreet, "Sixline", 6 * bet)) Pieces += 6;
     }
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function BetNeighbors(element) {
@@ -115,6 +121,12 @@ function BetNeighbors(element) {
         index = (37 + i) % 37;
         SetBet(NUMBERS[index], "SingleElement", eachBet);
     }
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function BetJeuZero() {
@@ -125,6 +137,13 @@ function BetJeuZero() {
     SetBet([32, 35], "Split", eachBet);
     SetBet([0, 3], "Split", eachBet);
     SetBet([26], "SingleElement", eachBet);
+
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function BetVoisinsduZero() {
@@ -137,7 +156,14 @@ function BetVoisinsduZero() {
     SetBet([19, 22], "Split", eachBet);
     SetBet([32, 35], "Split", eachBet);
     SetBet([26, 25, 28, 29], "Corner", 2 * eachBet);
-    SetBet([0, 3, 2], "Street", 2 * eachBet); 
+    SetBet([0, 3, 2], "Street", 2 * eachBet);
+
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function BetOrphelins() {
@@ -149,6 +175,13 @@ function BetOrphelins() {
     SetBet([17, 20], "Split", eachBet);
     SetBet([31, 34], "Split", eachBet);
     SetBet([1], "SingleElement", eachBet);
+
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function BetTiersduCylindre() {
@@ -160,7 +193,14 @@ function BetTiersduCylindre() {
     SetBet([13, 16], "Split", eachBet);
     SetBet([24, 23], "Split", eachBet);
     SetBet([27, 30], "Split", eachBet);
-    SetBet([33, 36], "Split", eachBet); 
+    SetBet([33, 36], "Split", eachBet);
+
+
+    $.ajax({
+        type: "POST",
+        url: '/Stake/RememberCurrentState',
+        data: { currentState: $("#centered-div").html() }
+    });
 }
 
 function SetBet(numbers, betType, bet) {
@@ -317,12 +357,9 @@ function SetBet(numbers, betType, bet) {
             cell[0].children(".push-item").eq(0).append(element);
         }
 
+        $(element).data({ Id: numbers[0], Type: type });
+
         $('.highlighted').removeClass("highlighted");
-        $.ajax({
-            type: "POST",
-            url: '/Stake/RememberCurrentState',
-            data: { currentState: $("#centered-div").html() }
-        });
         return true;
     } else {
         return false;
@@ -596,6 +633,8 @@ $(function () {
 
         checkSum.val(parseInt(checkSum.val()) - parseInt($(this).find('div.text').html()));
 
+        console.log($(this).data());
+
         if (type !== undefined) {
 
             var index = -1;
@@ -604,7 +643,6 @@ $(function () {
                     index = i;
                 }
             }
-
             stakes.splice(index, 1);
         }
 
