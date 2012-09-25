@@ -13,6 +13,7 @@ using SignalR;
 using SignalR.Hubs;
 using System.Text;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Roulette.Controllers
 {
@@ -48,7 +49,8 @@ namespace Roulette.Controllers
                 var state = Unit.RouletteSrvc.GetCurrentState();
                 if (state != null && state.State != Constants.RollingState)
                 {
-                    contractNumber = Unit.RouletteSrvc.CreateCheck(stakeDTOs, BoardCurrentStates[CurrentUserName], CurrentUserId);
+                    var boardForCheck = Regex.Replace(BoardCurrentStates[CurrentUserName], @"\w+-chip.png", @"check-chip.png");
+                    contractNumber = Unit.RouletteSrvc.CreateCheck(stakeDTOs, boardForCheck, CurrentUserId);
                     if (contractNumber != 0)
                     {
                         success = Unit.RouletteSrvc.CreateStake(stakeDTOs, contractNumber, CurrentUserId);

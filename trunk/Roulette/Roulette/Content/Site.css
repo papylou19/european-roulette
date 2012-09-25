@@ -768,6 +768,18 @@ check
     width: 820px;   
 }
 
+#check-centered-div div.chip, #check-centered-div div.chip img
+{
+    width:35px;
+    height:35px;
+}
+
+#check-centered-div div.chip .text
+{
+    left:6px;
+    top:6px;
+    font-size:10px;
+}
 
 #check-centered-div table
 {
@@ -778,22 +790,24 @@ check
 #check-centered-div .roulette-board tr, #check-centered-div #zero
 {
     background-image: none;
-    background-color: #DCDCDC;
 }
 
 #check-centered-div td,#check-centered-div #zero
 {
-    border:1px solid  #cccccc;
+    border:2px black solid;
 }
 
 #check-centered-div .red div.round ,#check-centered-div  .red-iamge
 {
-    background-color: #FFFFFF;
+    background-color: #FFF;
+    border:2px black solid;
 }
 
 #check-centered-div .black div.round ,#check-centered-div  .black-iamge
 {
-    background-color: #999999;
+    background-color: #000;
+    border:2px black solid;
+    color:White;
 }
 #check-centered-div #zero
 {

@@ -126,6 +126,7 @@
     <Content Include="img\Admin\pencil.png" />
     <Content Include="img\ball.png" />
     <Content Include="img\blue-chip.png" />
+    <Content Include="img\check-chip.png" />
     <Content Include="img\cyan-chip.png" />
     <Content Include="img\dark-chip.png" />
     <Content Include="img\delete-cursor.png" />
