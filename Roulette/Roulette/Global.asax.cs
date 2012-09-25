@@ -20,8 +20,6 @@ namespace Roulette
     public class MvcApplication : System.Web.HttpApplication
     {
         Timer timer;
-        protected static UnitOfWork Unit { get; private set; }
-        protected static RouletteFacade RouletteFcd { get; private set; }
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -45,7 +43,6 @@ namespace Roulette
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            RouletteFcd = new RouletteFacade();
             timer = new Timer(90000);
             timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
             timer.Enabled = true;
@@ -58,9 +55,12 @@ namespace Roulette
 
         void refuseTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (!RouletteFcd.RemoveGameRefuse(DateTime.UtcNow.AddMonths(-6)))
+            using(UnitOfWork Unit = new UnitOfWork())
             {
-                refuseTimer_Elapsed(null, null);
+                if (!Unit.RouletteSrvc.RemoveGameRefuse(DateTime.UtcNow.AddMonths(-6)))
+                {
+                    refuseTimer_Elapsed(null, null);
+                }
             }
         }
 
@@ -68,24 +68,26 @@ namespace Roulette
 
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            int? state = RouletteFcd.ChangeGameState();
-            //int? state = RouletteFcd.GetCurrentState().State;
-            var cashierUserIds = RouletteFcd.GetAllCashier().Select(p => p.UserId);
+            using (UnitOfWork Unit = new UnitOfWork())
+            {
+                int? state = Unit.RouletteSrvc.ChangeGameState();
+                //int? state = RouletteFcd.GetCurrentState().State;
+                var cashierUserIds = Unit.RouletteSrvc.GetAllCashier().Select(p => p.UserId);
 
             if (state == Constants.RollingState)
             {
                 foreach (var userId in cashierUserIds)
                 {
-                    var percent = RouletteFcd.GetCashierByUserId(userId).NumberPercent;
-                    var currentPercent = RouletteFcd.CountPercent(userId);
+                    var percent = Unit.RouletteSrvc.GetCashierByUserId(userId).NumberPercent;
+                    var currentPercent = Unit.RouletteSrvc.CountPercent(userId);
                     var numberDic = new Dictionary<int, double>();
                     //var stakeDict = new Dictionary<int, List<int>>();
                     var stakeList = new List<int>[37];
-                    var gameId = RouletteFcd.GetCurrentGameId(userId);
+                    var gameId = Unit.RouletteSrvc.GetCurrentGameId(userId);
 
                     for (int i = 0; i < 37; i++)
                     {
-                        var count = RouletteFcd.CountWinningNumber(gameId, i);
+                        var count = Unit.RouletteSrvc.CountWinningNumber(gameId, i);
                         numberDic.Add(i, count.Key);
                         //stakeDict.Add(i, count.Value);
                         stakeList[i] = count.Value;
@@ -120,13 +122,15 @@ namespace Roulette
                     //int elementAt = isMaxORMin ? 0 : new Random().Next(0, possibleVariants);
 
                     winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
-                    RouletteFcd.WriteWinnerNumber(gameId, winNumber);
-                    RouletteFcd.MakeWinner(stakeList[winNumber]);
+                    Unit.RouletteSrvc.WriteWinnerNumber(gameId, winNumber);
+                    Unit.RouletteSrvc.MakeWinner(stakeList[winNumber]);
                 }
 
                 // Send socket for sinchronization
                 var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
                 context.Clients.newQuestion("");
+            }
+
             }
         }
 
