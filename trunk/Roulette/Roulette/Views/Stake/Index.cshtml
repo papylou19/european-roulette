@@ -11,6 +11,9 @@
      <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.21/themes/base/jquery-ui.css" type="text/css" media="all" />
      <script type="text/javascript" src="/Scripts/Custom/highlighter.js"></script>
      <script type="text/javascript" src="/Scripts/Custom/stake.js?wd=15"></script>
+     <script type="text/javascript" src="/Scripts/json2.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.signalR-0.5.0.min.js"></script>
+    <script type="text/javascript" src="/signalr/hubs"></script>
      <script type="text/javascript">
          var checkSum;
          var contractNumber = 0;
@@ -41,7 +44,28 @@
              }, 2000);
          }
 
+         
+
+        var questions = $.connection.questionsHub;
+        questions.newQuestion = function (data) {
+            //drawStakes(data);
+         };
+
+         function drawStakes(stakes) {
+            if (stakes == "") {
+                $('.roulette-board div.chip').remove();
+                $('#zero div.chip').remove();
+            }
+        }
+
+
          $(function () {
+             $.connection.hub.start();
+             $.ajax({
+                 type: "POST",
+                 url: '/Stake/RememberCurrentState',
+                 data: { currentState: "" }
+             });
              checkSum = $("#check-sum");
              $(".datetext").datepicker();
              $('#check-dialog, #pay-dialog').dialog({
@@ -117,11 +141,6 @@
              });
 
              $("#report-button").click(function () { $("#report-dialog").dialog("open"); });
-             $.ajax({
-                 type: "POST",
-                 url: '/Stake/RememberCurrentState',
-                 data: { currentState: "" }
-             });
 
              $("#cancel-button").click(function () {
                  checkSum.val("0");
@@ -206,7 +225,7 @@
              currentRoundNumber = @ViewBag.CurrentRound;
              $("#round-number").html(@ViewBag.CurrentRound);
 
-             getStakes();
+             //getStakes();
              setRoundNumber();
              setProgressBar();
          });
