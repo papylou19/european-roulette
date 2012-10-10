@@ -35,7 +35,6 @@ var r = initialR;
 var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
 
 
-
 var wheel;
 var board;
 var ball;
@@ -59,8 +58,8 @@ function CalculateRotateNumber(rouletteAngularSpeed, s, delta) {
     return (delta + Math.sqrt(delta * delta + 8 * delta * s)) / 2 - delta;
 }
 
-function CalculatePath() {
-    return 360 * cycleNumber + 99 + NUMBERS.findIndex(number) * 360/37;
+function CalculatePath(newNumber) {
+    return 360 * cycleNumber - NUMBERS.findIndex(number) * 360 / 37 + NUMBERS.findIndex(newNumber) * 360 / 37 + 9;
 }
 
 function getRadian(degree) {
@@ -83,12 +82,12 @@ function Start() {
         success: function (json) {
             if (json.nextNumber === null) Start();
             else {
-                number = json.nextNumber;
-                s = CalculatePath();
+                s = CalculatePath(json.nextNumber);
                 r = initialR;
                 c = CalculateRotateNumber(rouletteAngularSpeed, s, delta);
                 ballAngularSpeed = c + rouletteAngularSpeed;
-                ballAngle = rouletteAngle;
+                ballAngle = rouletteAngle - NUMBERS.findIndex(number) * 360 / 37 - 90;
+                number = json.nextNumber;
                 winnerHighlighted = false;
                 ballRotateStarted = true;
 
@@ -108,11 +107,11 @@ function rotateWheel(d) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(board, 0, 0);
         context.translate(wheelTopLeft, wheelTopLeft);
-        context.translate(wheelSize / 2, wheelSize/2);
+        context.translate(wheelSize / 2, wheelSize / 2);
         context.rotate(getRadian(d));
-        context.drawImage(wheel, -wheelSize / 2, -wheelSize/2);
+        context.drawImage(wheel, -wheelSize / 2, -wheelSize / 2);
         context.rotate(-getRadian(d));
-        context.translate(-wheelSize / 2, -wheelSize / 2); 
+        context.translate(-wheelSize / 2, -wheelSize / 2);
         context.translate(-wheelTopLeft, -wheelTopLeft);
 
         if (ballAngularSpeed == rouletteAngularSpeed) {
@@ -226,7 +225,8 @@ function rotateWheel(d) {
                         bollStopSteps += 1;
                         r -= 1.5;
                     }
-                context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
+                    context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
+
             }
         }
 
