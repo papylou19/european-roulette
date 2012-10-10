@@ -49,7 +49,7 @@ namespace Roulette.Controllers
                 var state = Unit.RouletteSrvc.GetCurrentState();
                 if (state != null && state.State != Constants.RollingState)
                 {
-                    var boardForCheck = Regex.Replace(BoardCurrentStates[CurrentUserName], @"\w+-chip.png", @"check-chip.png");
+                    var boardForCheck = Regex.Replace(BoardCurrentStates[CurrentUserName], @"\w+-chip.png", @"check-chip.gif");
                     contractNumber = Unit.RouletteSrvc.CreateCheck(stakeDTOs, boardForCheck, CurrentUserId);
                     if (contractNumber != 0)
                     {
