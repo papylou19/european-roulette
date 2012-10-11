@@ -36,7 +36,8 @@ namespace Roulette.Controllers
                     BoardCurrentStates.Add(CurrentUserName, "");
                 }
                 BoardCurrentStates[CurrentUserName] = "";
-
+                var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
+                context.Clients.newQuestion("");
             } 
 
             if (state != null)
