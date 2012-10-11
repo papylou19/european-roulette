@@ -41,20 +41,6 @@
             }, 1000);
         }
 
-        function getStakes() {
-            setTimeout(function () {
-                $.ajax({
-                    type: "POST",
-                    url: '/Stake/GetStakes',
-                    dataType: 'html',
-                    success: function (stakes) {
-                        drawStakes(stakes);
-                        getStakes();
-                    }
-                });
-            }, 200);
-        }
-
         function drawStakes(stakes) {
 
             if (stakes != "") {
@@ -75,7 +61,6 @@
 
         $(function () {
             $.connection.hub.start();
-            //getStakes();
             getRoundNumber();
             setProgressBar();
             main();
