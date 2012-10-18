@@ -940,3 +940,8 @@ check
 {
     opacity:0.2;
 }
+
+#admin-main
+{
+    margin-top: -28px;
+}

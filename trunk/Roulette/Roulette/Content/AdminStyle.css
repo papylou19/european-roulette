@@ -85,8 +85,9 @@ h1
 
 .centerContainer
 {
-    width: 700px;
+    width: 400px;
     margin: 0 auto;
+    padding-top: 40px;
 }
 .cashierForm
 {
