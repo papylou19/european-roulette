@@ -34,7 +34,6 @@ var initialR = 189;
 var r = initialR;
 var NUMBERS = [26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33, 16, 24, 5, 10, 23, 8, 30, 11, 36, 13, 27, 6, 34, 17, 25, 2, 21, 4, 19, 15, 32, 0];
 
-
 var wheel;
 var board;
 var ball;
@@ -95,6 +94,7 @@ function Start() {
                 bounsingState = 0;
 
                 bounsingType = Math.random() > 0.3;
+
             }
         }
     });
@@ -142,7 +142,7 @@ function rotateWheel(d) {
                 });
             }
 
-            if (currentState == 1) {
+            if (currentState == 1 && !rotationInProgress) {
                 context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
                 ballAngle = (ballAngle - rouletteAngularSpeed) % 360;
             }
@@ -153,7 +153,10 @@ function rotateWheel(d) {
 
                 ballAngle = (ballAngle - ballAngularSpeed) % 360;
                 if (c - delta > 0) c -= delta;
-                else c = 0;
+                else {
+                    rotationInProgress = false;
+                    c = 0;
+                }
                 ballAngularSpeed = c + rouletteAngularSpeed;
 
                 //ANOTHER HARD CODE for boll bounsingmnm,
@@ -225,7 +228,7 @@ function rotateWheel(d) {
                         bollStopSteps += 1;
                         r -= 1.5;
                     }
-                    context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
+                context.drawImage(ball, CENTERX + (r * Cos(ballAngle)) - ballWidth / 2, CENTERY + (r * Sin(ballAngle)) - ballHeight / 2, ballWidth, ballHeight);
 
             }
         }

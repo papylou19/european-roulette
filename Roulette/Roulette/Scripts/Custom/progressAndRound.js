@@ -1,5 +1,7 @@
 ﻿var currentState = 0;
 var currentRoundNumber;
+var rotationInProgress = true;
+var stateEnabled = false;
 
 function setProgressBar() {
     setTimeout(function () {
@@ -18,7 +20,15 @@ function setProgressBar() {
                     var requsetTime = requestEndAt - requestStartAt;
                     seconds = Math.round((state.RoundeTime + requsetTime) / 1000);
                     currentState = state.State;
+                    if (currentState == 1 && !stateEnabled) {
+                        rotationInProgress = true;
+                        stateEnabled = true;
+                    }
+                    if (currentState == 0 && stateEnabled) {
+                        stateEnabled = false;
+                    }
                     if (currentState == 1 && !$("#main").hasClass("disabled")) {
+
                         $("#admin-board").parents("#main").addClass("disabled");
                     }
                     else if (currentState == 0 && $("#main").hasClass("disabled")) {
