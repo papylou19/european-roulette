@@ -162,6 +162,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\raphael.js" />
+    <Content Include="Views\StaticPage.htm" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
