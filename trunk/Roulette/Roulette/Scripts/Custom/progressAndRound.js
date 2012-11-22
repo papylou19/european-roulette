@@ -17,8 +17,8 @@ function setProgressBar() {
                 }
                 else {
                     var requestEndAt = new Date();
-                    var requsetTime = requestEndAt - requestStartAt;
-                    seconds = Math.round((state.RoundeTime + requsetTime) / 1000);
+                    var requestTime = requestEndAt - requestStartAt;
+                    seconds = Math.round((state.RoundeTime + requestTime) / 1000);
                     currentState = state.State;
                     if (currentState == 1 && !stateEnabled) {
                         rotationInProgress = true;
@@ -35,6 +35,7 @@ function setProgressBar() {
                         $("#admin-board").parents("#main").removeClass("disabled");
                     }
                 }
+                if (currentState == 1) seconds *= 2;
                 $(".progress-bar progress").val(seconds);
             }
         });
