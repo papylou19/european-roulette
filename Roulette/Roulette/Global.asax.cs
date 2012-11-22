@@ -20,6 +20,7 @@ namespace Roulette
     public class MvcApplication : System.Web.HttpApplication
     {
         Timer timer;
+        bool longStage = false;
 
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
@@ -43,8 +44,11 @@ namespace Roulette
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-            timer = new Timer(90000);
-            timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
+            timer = new Timer(45000);
+            if (timer.Enabled == false)
+            {
+                timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
+            }
             timer.Enabled = true;
 
             var refuseTimer = new Timer(12 * 3600 * 1000); // elapsed once in day
@@ -64,72 +68,81 @@ namespace Roulette
             }
         }
 
-
-
         void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             using (UnitOfWork Unit = new UnitOfWork())
             {
-                int? state = Unit.RouletteSrvc.ChangeGameState();
-                //int? state = RouletteFcd.GetCurrentState().State;
-                var cashierUserIds = Unit.RouletteSrvc.GetAllCashier().Select(p => p.UserId);
-
-            if (state == Constants.RollingState)
-            {
-                foreach (var userId in cashierUserIds)
+                if (!longStage)
                 {
-                    var percent = Unit.RouletteSrvc.GetCashierByUserId(userId).NumberPercent;
-                    var currentPercent = Unit.RouletteSrvc.CountPercent(userId);
-                    var numberDic = new Dictionary<int, double>();
-                    //var stakeDict = new Dictionary<int, List<int>>();
-                    var stakeList = new List<int>[37];
-                    var gameId = Unit.RouletteSrvc.GetCurrentGameId(userId);
+                    int? state = Unit.RouletteSrvc.ChangeGameState();
+                    //int? state = RouletteFcd.GetCurrentState().State;
+                    var cashierUserIds = Unit.RouletteSrvc.GetAllCashier().Select(p => p.UserId);
 
-                    for (int i = 0; i < 37; i++)
+                    if (state == Constants.RollingState)
                     {
-                        var count = Unit.RouletteSrvc.CountWinningNumber(gameId, i);
-                        numberDic.Add(i, count.Key);
-                        //stakeDict.Add(i, count.Value);
-                        stakeList[i] = count.Value;
-                    }
+                        foreach (var userId in cashierUserIds)
+                        {
+                            var percent = Unit.RouletteSrvc.GetCashierByUserId(userId).NumberPercent;
+                            var currentPercent = Unit.RouletteSrvc.CountPercent(userId);
+                            var numberDic = new Dictionary<int, double>();
+                            //var stakeDict = new Dictionary<int, List<int>>();
+                            var stakeList = new List<int>[37];
+                            var gameId = Unit.RouletteSrvc.GetCurrentGameId(userId);
 
-                    int winNumber;
-                    bool isMaxORMin = false;
-                    if (percent > currentPercent)
-                    {
-                        numberDic = (from pair in numberDic
-                                        orderby pair.Value descending
-                                        select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        if (percent == int.MaxValue)
-                            isMaxORMin = true;
+                            for (int i = 0; i < 37; i++)
+                            {
+                                var count = Unit.RouletteSrvc.CountWinningNumber(gameId, i);
+                                numberDic.Add(i, count.Key);
+                                //stakeDict.Add(i, count.Value);
+                                stakeList[i] = count.Value;
+                            }
+
+                            int winNumber;
+                            bool isMaxORMin = false;
+                            if (percent > currentPercent)
+                            {
+                                numberDic = (from pair in numberDic
+                                             orderby pair.Value descending
+                                             select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                                if (percent == int.MaxValue)
+                                    isMaxORMin = true;
+                            }
+                            else
+                            {
+                                numberDic = (from pair in numberDic
+                                             orderby pair.Value ascending
+                                             select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
+                                if (percent == 0)
+                                    isMaxORMin = true;
+                            }
+
+                            //var possibleVariants = 9;
+                            var possibleVariants = isMaxORMin ? 0 : 9;
+                            while ((possibleVariants < 35) && (numberDic.ElementAt(possibleVariants).Value == numberDic.ElementAt(possibleVariants + 1).Value))
+                            {
+                                possibleVariants++;
+                            }
+
+                            //int elementAt = isMaxORMin ? 0 : new Random().Next(0, possibleVariants);
+
+                            winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
+                            Unit.RouletteSrvc.WriteWinnerNumber(gameId, winNumber);
+                            Unit.RouletteSrvc.MakeWinner(stakeList[winNumber]);
+                        }
+
+                        // Send socket for sinchronization
+                        var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
+                        context.Clients.newQuestion("");
                     }
                     else
                     {
-                        numberDic = (from pair in numberDic
-                                        orderby pair.Value ascending
-                                        select pair).ToDictionary(pair => pair.Key, pair => pair.Value);
-                        if (percent == 0)
-                            isMaxORMin = true;
+                        longStage = true;
                     }
-
-                    //var possibleVariants = 9;
-                    var possibleVariants = isMaxORMin ? 0 : 9;
-                    while ((possibleVariants < 35) && (numberDic.ElementAt(possibleVariants).Value == numberDic.ElementAt(possibleVariants + 1).Value))
-                    {
-                        possibleVariants++;
-                    }
-
-                    //int elementAt = isMaxORMin ? 0 : new Random().Next(0, possibleVariants);
-
-                    winNumber = numberDic.ElementAt(new Random().Next(0, possibleVariants)).Key;
-                    Unit.RouletteSrvc.WriteWinnerNumber(gameId, winNumber);
-                    Unit.RouletteSrvc.MakeWinner(stakeList[winNumber]);
                 }
-
-                // Send socket for sinchronization
-                var context = GlobalHost.ConnectionManager.GetHubContext<QuestionsHub>();
-                context.Clients.newQuestion("");
-            }
+                else
+                {
+                    longStage = false;
+                }
 
             }
         }
