@@ -12,7 +12,7 @@ function ContainStakesId(id, type) {
 
 function BetComplect(number) {
     if (!IsValidConditionForBet()) return false;
-    var bet = $(".selected").data("value");
+    var bet = parseInt($(".selected").data("value"));
     var Pieces = 0;
     number = parseInt(number);
 
